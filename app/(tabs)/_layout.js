@@ -7,99 +7,106 @@ const tabComponentColor = "#565657";
 
 const TabLayout = () => {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: "green",
-        tabBarStyle: styles.tabBar,
-        tabBarShowLabel: false,
-        tabBarInactiveTintColor: "yellow",
-      }}
-    >
-      <Tabs.Screen
-        name="profile"
-        options={{
-          headerTitle: "Profile",
-          tabBarIcon: () => (
-            <View>
-              <FontAwesome
-                name="user"
-                size={25}
-                color={tabComponentColor}
-                style={styles.tabIcon}
-              />
-              <Text style={styles.tabText}>Profile</Text>
-            </View>
-          ),
+    <View style={styles.tabBarContainer}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: "green",
+          tabBarStyle: styles.tabBar,
+          tabBarShowLabel: false,
+          tabBarInactiveTintColor: "yellow",
+          tabBarHideOnKeyboard:true,
+          headerShadowVisible: false,
         }}
-      />
-      <Tabs.Screen
-        name="spot"
-        options={{
-          title: "Spots",
-          tabBarIcon: () => (
-            <View>
-              <FontAwesome
-                name="user"
-                size={25}
-                color={tabComponentColor}
-                style={styles.tabIcon}
-              />
-              <Text style={styles.tabText}>Spots</Text>
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="home"
-        options={{
-          tabBarIcon: () => (
-            <View style={styles.homeCircle}>
-              <Feather name="home" size={40} color="black" />
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="events"
-        options={{
-          title: "Events",
-          tabBarIcon: () => (
-            <View>
-              <FontAwesome
-                name="user"
-                size={25}
-                color={tabComponentColor}
-                style={styles.tabIcon}
-              />
-              <Text style={styles.tabText}>Events</Text>
-            </View>
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="meet"
-        options={{
-          title: "Meet",
-          tabBarIcon: () => (
-            <View>
-              <FontAwesome5
-                name="handshake"
-                size={25}
-                color={tabComponentColor}
-                style={styles.tabIcon}
-              />
-              <Text style={styles.tabText}>Meet</Text>
-            </View>
-          ),
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="profile"
+          options={{
+            headerTitle: "Profile",
+            tabBarIcon: () => (
+              <View>
+                <FontAwesome
+                  name="user"
+                  size={25}
+                  color={tabComponentColor}
+                  style={styles.tabIcon}
+                />
+                <Text style={styles.tabText}>Profile</Text>
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="spot"
+          options={{
+            title: "Spots",
+            tabBarIcon: () => (
+              <View>
+                <FontAwesome
+                  name="user"
+                  size={25}
+                  color={tabComponentColor}
+                  style={styles.tabIcon}
+                />
+                <Text style={styles.tabText}>Spots</Text>
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="home"
+          options={{
+            headerStyle: {},
+            tabBarIcon: () => (
+              <View style={styles.homeCircle}>
+                <Feather name="home" size={40} color="black" />
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="events"
+          options={{
+            title: "Events",
+            tabBarIcon: () => (
+              <View>
+                <FontAwesome
+                  name="user"
+                  size={25}
+                  color={tabComponentColor}
+                  style={styles.tabIcon}
+                />
+                <Text style={styles.tabText}>Events</Text>
+              </View>
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="meet"
+          options={{
+            title: "Meet",
+            tabBarIcon: () => (
+              <View>
+                <FontAwesome5
+                  name="handshake"
+                  size={25}
+                  color={tabComponentColor}
+                  style={styles.tabIcon}
+                />
+                <Text style={styles.tabText}>Meet</Text>
+              </View>
+            ),
+          }}
+        />
+      </Tabs>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF" },
   tabBar: {
     margin: 10,
+    paddingColor: "white",
     borderRadius: 60,
     backgroundColor: "#e4feef",
     flex: 0.075,
@@ -123,6 +130,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     fontSize: 10,
     color: tabComponentColor,
+  },
+  header: {
+    backgroundColor: "#FFFFFF",
   },
 });
 
