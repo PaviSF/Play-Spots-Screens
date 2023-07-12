@@ -1,4 +1,4 @@
-import { faker, it } from "@faker-js/faker";
+import { faker } from "@faker-js/faker";
 
 import {
   View,
