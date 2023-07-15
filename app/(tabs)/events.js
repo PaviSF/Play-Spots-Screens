@@ -8,9 +8,10 @@ import {
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
-import GradientButton from "../../components/gradientButton";
+import GradientButton from "../../components/GradientButton";
+import { deviceWidth } from "../../constants/Dimension";
 
-const data = [...Array(8).keys()].map(() => ({
+const data = [...Array(4).keys()].map(() => ({
   key: faker.string.uuid(),
   job: faker.animal.crocodilia(),
 }));
@@ -31,7 +32,7 @@ const Events = () => {
       </View>
       <Text>Sports events nearby you</Text>
       <FlatList
-        style={{ flexGrow: 0, marginBottom: 50 }}
+        style={{ flexGrow: 0 }}
         data={data}
         keyExtractor={(item) => item.key}
         contentContainerStyle={{ paddingLeft: _spacing }}
@@ -39,16 +40,9 @@ const Events = () => {
         horizontal
         renderItem={({ item, index: fIndex }) => {
           return (
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => {}} style={{}}>
               <View
-                style={{
-                  marginRight: _spacing,
-                  padding: _spacing,
-                  borderWidth: 2,
-                  borderColor: _colors.active,
-                  borderRadius: 12,
-                  backgroundColor: _colors.inactive,
-                }}
+                style={styles.category}
               >
                 <Text style={{ color: "#36303F", fontWeight: "700" }}>
                   {item.job}
@@ -93,6 +87,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
   },
+  category: {
+    marginRight: _spacing,
+    padding: _spacing,
+    borderWidth: 2,
+    borderColor: _colors.active,
+    borderRadius: 12,
+    backgroundColor: _colors.inactive,
+  }
 });
 
 export default Events;

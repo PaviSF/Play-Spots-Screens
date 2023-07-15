@@ -5,21 +5,63 @@ import {
   Button,
   StyleSheet,
   Image,
+  FlatList,
+  useWindowDimensions,
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
-import { deviceHeight, deviceWidth } from "../../constants/dimensions";
-import ProfileList from "../../components/profile/profileList";
+// import { useSelector, useDispatch } from "react-redux";
+import { formatDate } from "../../helper/CalculateMonth";
+import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import ProfileList from "../../components/profile/ProfileList";
+import DatePick from "../../components/date-picker/DatePick";
 
 const profileName = faker.person.fullName();
 const profileEmail = faker.internet.email();
 const profileImage = require("../../assets/247181.jpg");
 
 const Profile = () => {
+  const note = useSelector((state) => state.note.value);
+  const { height, width } = useWindowDimensions();
+  const [innerScrollActive, setInnerScrollActive] = useState(false);
+
+  const handleInnerScroll = (scrollEvent) => {
+    const { contentOffset, contentSize, layoutMeasurement } =
+      scrollEvent.nativeEvent;
+    const innerScrollEndReached =
+      contentOffset.y + layoutMeasurement.height >= contentSize.height;
+
+    // Check if the inner scroll is active
+    if (innerScrollEndReached && !innerScrollActive) {
+      setInnerScrollActive(true);
+    } else if (!innerScrollEndReached && innerScrollActive) {
+      setInnerScrollActive(false);
+    }
+  };
+
+  function getDate(str) {
+    // Split the string into an array of words
+    var words = str.split(" ");
+
+    // Return the first word
+    return words[0];
+  }
+
+  function getMonth(str) {
+    // Split the string into an array of words
+    var words = str.split(" ");
+
+    // Return the first word
+    return words[1];
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.mainContainer}
+      scrollEnabled={!innerScrollActive}
     >
       <View style={styles.accountDetailsContainer}>
         <Image style={styles.profileImage} source={profileImage} />
@@ -46,7 +88,62 @@ const Profile = () => {
           style={{ flex: 0.45, backgroundColor: "red", borderRadius: 10 }}
         ></View>
         <View style={styles.scheduleContainer}>
-          <Text>Sports Schedules</Text>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text>Sports Schedules</Text>
+            <DatePick/>
+          </View>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            onScroll={handleInnerScroll}
+            scrollEventThrottle={16}
+          >
+            {note.date.map((date, index) => (
+              <View key={index}>
+                <View style={{ flexDirection: "row" }}>
+                  <View
+                    style={{
+                      backgroundColor: "#02b44f",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: width / 10,
+                      height: height / 20,
+                      borderRadius: 5,
+                    }}
+                  >
+                    <Text
+                      style={{ fontSize: 15, fontWeight: 500, color: "white" }}
+                    >
+                      {getDate(formatDate(date))}
+                    </Text>
+                    <Text
+                      style={{ fontSize: 10, fontWeight: 500, color: "white" }}
+                    >
+                      {getMonth(formatDate(date))}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      marginLeft: 10,
+                      width: width / 3,
+                      fontWeight: 500,
+                      fontSize: 12,
+                    }}
+                  >
+                    {note.note[index]}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    backgroundColor: "black",
+                    height: 0.3,
+                    margin: 10,
+                  }}
+                />
+              </View>
+            ))}
+          </ScrollView>
         </View>
       </View>
       <ProfileList label="My Booking" />
@@ -118,7 +215,7 @@ const styles = StyleSheet.create({
     width: deviceWidth - 20,
     margin: 10,
   },
-  scheduleContainer: { flex: 0.5, backgroundColor: "blue", borderRadius: 10 },
+  scheduleContainer: { flex: 0.5, borderRadius: 10 },
 });
 
 export default Profile;

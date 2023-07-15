@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { BlurView } from "expo-blur";
 
 import {
   View,
@@ -7,11 +8,15 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
+  KeyboardAvoidingView,
+  useWindowDimensions
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Tabs } from "expo-router";
 
 import { Entypo } from "@expo/vector-icons";
+import CustomImageCarousal from "../../components/carousel/Carousel";
+import Header from "../../components/header/Header";
 
 const data = [...Array(5).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -19,73 +24,103 @@ const data = [...Array(5).keys()].map(() => ({
   location: faker.location.city(),
 }));
 
+const data2 = [
+  {
+    image: require("../../assets/image-product-1-landscape.jpg"),
+  },
+  {
+    image: require("../../assets/image-product-2-landscape.jpg"),
+  },
+  {
+    image: require("../../assets/image-product-3-landscape.jpg"),
+  },
+  {
+    image: require("../../assets/image-product-4-landscape.jpg"),
+  },
+];
+
 const Home = () => {
   const fullName = faker.person.fullName();
   const profilePic = require("../../assets/247181.jpg");
   const turfImage = require("../../assets/download.jpeg");
 
+  const windowHeight = useWindowDimensions().height;
+
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
+  const handleSearchFocus = () => {
+    setIsSearchFocused(true);
+  };
+
+  const handleSearchBlur = () => {
+    setIsSearchFocused(false);
+  };
+
   return (
-    <View style={styles.mainContainer}>
-      <Tabs.Screen
-        options={{
-          headerRight: () => {
-            <View></View>;
-          },
-        }}
-      />
-      {/* Profile Details */}
-      <View style={styles.profileContainer}>
-        <Image source={profilePic} style={styles.profilePic} />
-        <View style={styles.profileLabels}>
-          <Text style={styles.greetings}>Good morning</Text>
-          <Text style={styles.profileName}>{fullName}</Text>
+    
+      <View style={[styles.mainContainer,{minHeight: Math.round(windowHeight)}]}>
+        <Tabs.Screen options={{ headerShown: false }} />
+        <Header />
+        {/* Profile Details */}
+        <View style={styles.profileContainer}>
+          <Image source={profilePic} style={styles.profilePic} />
+          <View style={styles.profileLabels}>
+            <Text style={styles.greetings}>Good morning</Text>
+            <Text style={styles.profileName}>{fullName}</Text>
+          </View>
         </View>
-      </View>
 
-      {/* Search Bar */}
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search venues, events, sports"
-        placeholderTextColor={"#707170"}
-      />
+        {/* Search Bar */}
+        <TextInput
+          style={styles.searchBar}
+          onFocus={handleSearchFocus}
+          onBlur={handleSearchBlur}
+          placeholder="Search venues, events, sports"
+          placeholderTextColor={"#707170"}
+        />
 
-      {/* Recent Updates */}
-      <View style={styles.recentUpdates}></View>
+        {/* Recent Updates */}
+        <View style={styles.recentUpdates}></View>
 
-      {/* Recent Spots Heading */}
-      <View style={styles.recentSpots}>
-        <View style={styles.dotAndTextALignment}>
-          <Entypo name="dot-single" size={24} color="black" />
-          <Text style={styles.recentSpotsLabel}>Your recent spots</Text>
+        {/* Recent Spots Heading */}
+        <View style={styles.recentSpots}>
+          <View style={styles.dotAndTextALignment}>
+            <Entypo name="dot-single" size={24} color="black" />
+            <Text style={styles.recentSpotsLabel}>Your recent spots</Text>
+          </View>
+          <Text style={styles.viewText}>View all</Text>
         </View>
-        <Text style={styles.viewText}>View all</Text>
-      </View>
 
-      {/* Recent Spots  */}
-      <View style={styles.overallContainer}>
-        <FlatList
-          data={data}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={190}
-          renderItem={({ item }) => (
-            <View style={styles.cardContainer}>
-              <View style={styles.spotCard}>
-                <Image source={turfImage} style={styles.turfImage} />
-                <View style={styles.turfText}>
-                  <Text style={styles.turfName}>{item.turfName}</Text>
-                  <Text style={styles.turfLocation}>{item.location}</Text>
+        {/* Recent Spots  */}
+        <View style={styles.overallContainer}>
+          <FlatList
+            data={data}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            snapToInterval={190}
+            renderItem={({ item }) => (
+              <View style={styles.cardContainer}>
+                <View style={styles.spotCard}>
+                  <Image source={turfImage} style={styles.turfImage} />
+                  <View style={styles.turfText}>
+                    <Text style={styles.turfName}>{item.turfName}</Text>
+                    <Text style={styles.turfLocation}>{item.location}</Text>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        </View>
+        <CustomImageCarousal data={data2} />
       </View>
-    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  blurContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
   mainContainer: {
     backgroundColor: "#FFFFFF",
     flex: 1,
@@ -167,12 +202,17 @@ const styles = StyleSheet.create({
   },
   spotCard: {
     flex: 1,
-    width: 190,
-    borderRadius: 15,
+    //width: 190,
+    //borderRadius: 15,
     marginRight: 3,
-    
   },
-  turfImage: { height: "65%", width: "100%", borderRadius: 15 },
+  turfImage: {
+    flex: 1,
+    height: undefined,
+    aspectRatio: 16 / 9,
+    width: "100%",
+    borderRadius: 15,
+  },
   fineLine: {
     margin: 3,
   },

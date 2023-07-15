@@ -1,12 +1,13 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text } from "react-native";
+import React from "react";
+import DatePick  from "../../components/date-picker/DatePick";
 
 const Spot = () => {
   return (
-    <View>
-      <Text>Spot</Text>
+    <View style={{flex:1}}>
+      <DatePick />
     </View>
-  )
-}
+  );
+};
 
-export default Spot
+export default Spot;
