@@ -6,32 +6,31 @@ const turfData = [
   {
     turfName: "Green Field",
     turfImage: image,
-    turfLocation: { latitude: 11.2634349, longitude: 75.7749425 },
+    turfLocation: { latitude: 11.246687 , longitude: 75.818117 },
   },
   {
     turfName: "Sunny Meadows",
     turfImage: image,
-    turfLocation: { latitude: 11.2786603, longitude: 75.7860066 },
+    turfLocation: { latitude: 11.246687 , longitude: 75.818117 },
   },
   {
     turfName: "Grassy Park",
     turfImage: image,
-    turfLocation: { latitude: 11.2730415, longitude: 75.7852442 },
+    turfLocation: { latitude: 11.252045470324314, longitude: 75.78491057662076 },
   },
   {
     turfName: "Playful Grounds",
     turfImage: image,
-    turfLocation: { latitude: 11.2656844, longitude: 75.7867741 },
-  },
+    turfLocation: { latitude: 11.246687 , longitude: 75.818117 },  },
   {
     turfName: "Touch Luck",
     turfImage: image,
-    turfLocation: { latitude: 11.2770892, longitude: 75.7735668 },
+    turfLocation: { latitude: 11.276462114141678,  longitude: 75.80203842765236 },
   },
   {
     turfName: "Luck",
     turfImage: image,
-    turfLocation: { latitude: 11.2738527, longitude: 75.7727826 },
+    turfLocation: { latitude: 11.214183905931412,  longitude: 75.83102458869564 },
   },
   {
     turfName: "Luck Go",

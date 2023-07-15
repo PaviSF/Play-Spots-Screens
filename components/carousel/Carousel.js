@@ -49,7 +49,7 @@ const CustomImageCarousal = ({ data }) => {
           return <View style={{ width: SPACER }} key={index} />;
         }
         return (
-          <View style={{ width: SIZE }} key={index}>
+          <View style={{ width: SIZE, }} key={index}>
             <Animated.View style={[styles.imageContainer,style]}>
               <Image source={item.image} style={styles.image} />
             </Animated.View>
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     borderRadius: 20,
     overflow: "hidden",
+
   },
   image: {
     width: "100%",

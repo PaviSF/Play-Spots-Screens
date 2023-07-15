@@ -42,18 +42,12 @@ const Profile = () => {
   };
 
   function getDate(str) {
-    // Split the string into an array of words
     var words = str.split(" ");
-
-    // Return the first word
     return words[0];
   }
 
   function getMonth(str) {
-    // Split the string into an array of words
     var words = str.split(" ");
-
-    // Return the first word
     return words[1];
   }
 

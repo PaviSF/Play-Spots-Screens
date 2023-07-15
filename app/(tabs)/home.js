@@ -14,9 +14,11 @@ import {
 import React, { useState } from "react";
 import { Tabs } from "expo-router";
 
+
 import { Entypo } from "@expo/vector-icons";
 import CustomImageCarousal from "../../components/carousel/Carousel";
 import Header from "../../components/header/Header";
+import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 
 const data = [...Array(5).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -43,6 +45,8 @@ const Home = () => {
   const fullName = faker.person.fullName();
   const profilePic = require("../../assets/247181.jpg");
   const turfImage = require("../../assets/download.jpeg");
+  const football = require('../../assets/football.png');
+  const cricket = require('../../assets/cricket.png')
 
   const windowHeight = useWindowDimensions().height;
 
@@ -105,13 +109,20 @@ const Home = () => {
                   <View style={styles.turfText}>
                     <Text style={styles.turfName}>{item.turfName}</Text>
                     <Text style={styles.turfLocation}>{item.location}</Text>
+                    <View style={{flexDirection:'row',marginTop:5}}>
+                    <Image source={football}/>
+                    <Image source={cricket}/>
+
+                    </View>
                   </View>
                 </View>
               </View>
             )}
           />
         </View>
-        <CustomImageCarousal data={data2} />
+        <View>
+        <CustomImageCarousal data={data2} auto={true} />
+        </View>
       </View>
   );
 };
@@ -193,7 +204,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   cardContainer: {
-    height: "50%",
+    height: deviceHeight/5,
     shadowColor: "black",
     shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 0.5,
@@ -201,15 +212,15 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   spotCard: {
-    flex: 1,
+    flex:1,
     //width: 190,
     //borderRadius: 15,
     marginRight: 3,
   },
   turfImage: {
-    flex: 1,
+    flex: 1.5,
     height: undefined,
-    aspectRatio: 16 / 9,
+    //aspectRatio: 16 / 9,
     width: "100%",
     borderRadius: 15,
   },
@@ -217,7 +228,9 @@ const styles = StyleSheet.create({
     margin: 3,
   },
   turfText: {
+    flex:0.2,
     margin: 8,
+    width: deviceWidth / 2.4
   },
   turfName: {
     fontWeight: "500",
