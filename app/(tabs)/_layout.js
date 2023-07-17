@@ -105,9 +105,10 @@ const TabLayout = () => {
 const styles = StyleSheet.create({
   tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF" },
   tabBar: {
-    margin: 10,
+    marginHorizontal: 10,
+    marginBottom: 10,
     paddingColor: "white",
-    borderRadius: 60,
+    borderRadius: 25,
     backgroundColor: "#e4feef",
     flex: 0.075,
   },

@@ -9,11 +9,11 @@ import {
   TextInput,
   FlatList,
   KeyboardAvoidingView,
-  useWindowDimensions
+  useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
 import { Tabs } from "expo-router";
-
 
 import { Entypo } from "@expo/vector-icons";
 import CustomImageCarousal from "../../components/carousel/Carousel";
@@ -28,16 +28,16 @@ const data = [...Array(5).keys()].map(() => ({
 
 const data2 = [
   {
-    image: require("../../assets/image-product-1-landscape.jpg"),
+    image: require("../../assets/banner.png"),
   },
   {
-    image: require("../../assets/image-product-2-landscape.jpg"),
+    image: require("../../assets/banner.png"),
   },
   {
-    image: require("../../assets/image-product-3-landscape.jpg"),
+    image: require("../../assets/banner.png"),
   },
   {
-    image: require("../../assets/image-product-4-landscape.jpg"),
+    image: require("../../assets/banner.png"),
   },
 ];
 
@@ -45,10 +45,16 @@ const Home = () => {
   const fullName = faker.person.fullName();
   const profilePic = require("../../assets/247181.jpg");
   const turfImage = require("../../assets/download.jpeg");
-  const football = require('../../assets/football.png');
-  const cricket = require('../../assets/cricket.png')
+  const football = require("../../assets/football.png");
+  const cricket = require("../../assets/cricket.png");
+  const book = require("../../assets/book.png");
+  const gift = require("../../assets/gift.png");
+  const coins = require("../../assets/coins.png");
+  const tournament = require("../../assets/tournament.png");
+  const turfBackground = require("../../assets/turf-background.png");
 
   const windowHeight = useWindowDimensions().height;
+  const windowWidth = useWindowDimensions().height;
 
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -61,77 +67,93 @@ const Home = () => {
   };
 
   return (
-    
-      <View style={[styles.mainContainer,{minHeight: Math.round(windowHeight)}]}>
-        <Tabs.Screen options={{ headerShown: false }} />
-        <Header />
-        {/* Profile Details */}
-        <View style={styles.profileContainer}>
-          <Image source={profilePic} style={styles.profilePic} />
-          <View style={styles.profileLabels}>
-            <Text style={styles.greetings}>Good morning</Text>
-            <Text style={styles.profileName}>{fullName}</Text>
-          </View>
+    <View
+      style={[styles.mainContainer, { minHeight: Math.round(windowHeight) }]}
+    >
+      <Tabs.Screen options={{ headerShown: false }} />
+      <Header />
+      {/* Profile Details */}
+      <View style={styles.profileContainer}>
+        <Image source={profilePic} style={styles.profilePic} />
+        <View style={styles.profileLabels}>
+          <Text style={styles.greetings}>Good morning</Text>
+          <Text style={styles.profileName}>{fullName}</Text>
         </View>
+      </View>
 
-        {/* Search Bar */}
-        <TextInput
-          style={styles.searchBar}
-          onFocus={handleSearchFocus}
-          onBlur={handleSearchBlur}
-          placeholder="Search venues, events, sports"
-          placeholderTextColor={"#707170"}
-        />
+      {/* Search Bar */}
+      <TextInput
+        style={styles.searchBar}
+        onFocus={handleSearchFocus}
+        onBlur={handleSearchBlur}
+        placeholder="Search venues, events, sports"
+        placeholderTextColor={"#707170"}
+      />
 
-        {/* Recent Updates */}
-        <View style={styles.recentUpdates}></View>
+      {/* Recent Updates */}
+      <View style={styles.recentUpdates}>
+        <TouchableOpacity style={{ alignItems: "center" }}>
+          <Image source={gift} style={styles.recentUpdatesImage} />
+          <Text style={styles.recentUpdatesTexts}>3 offers for you</Text>
+        </TouchableOpacity>
+        <View style={styles.fineLines} />
+        <TouchableOpacity style={{ alignItems: "center" }}>
+          <Image source={coins} style={styles.recentUpdatesImage} />
+          <Text style={styles.recentUpdatesTexts}>You have 200 coins</Text>
+        </TouchableOpacity>
+        <View style={styles.fineLines} />
+        <TouchableOpacity style={{ alignItems: "center" }}>
+          <Image source={tournament} style={styles.recentUpdatesImage} />
+          <Text style={styles.recentUpdatesTexts}>2 events nearby you</Text>
+        </TouchableOpacity>
+      </View>
 
-        {/* Recent Spots Heading */}
-        <View style={styles.recentSpots}>
-          <View style={styles.dotAndTextALignment}>
-            <Entypo name="dot-single" size={24} color="black" />
-            <Text style={styles.recentSpotsLabel}>Your recent spots</Text>
-          </View>
-          <Text style={styles.viewText}>View all</Text>
+      {/* Recent Spots Heading */}
+      <View style={styles.recentSpots}>
+        <View style={styles.dotAndTextALignment}>
+          <Entypo name="dot-single" size={24} color="black" />
+          <Text style={styles.recentSpotsLabel}>Your recent spots</Text>
         </View>
+        <Text style={styles.viewText}>View all</Text>
+      </View>
 
-        {/* Recent Spots  */}
-        <View style={styles.overallContainer}>
-          <FlatList
-            data={data}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            snapToInterval={190}
-            renderItem={({ item }) => (
-              <View style={styles.cardContainer}>
-                <View style={styles.spotCard}>
-                  <Image source={turfImage} style={styles.turfImage} />
-                  <View style={styles.turfText}>
-                    <Text style={styles.turfName}>{item.turfName}</Text>
-                    <Text style={styles.turfLocation}>{item.location}</Text>
-                    <View style={{flexDirection:'row',marginTop:5}}>
-                    <Image source={football}/>
-                    <Image source={cricket}/>
-
-                    </View>
+      {/* Recent Spots  */}
+      <View style={styles.overallContainer}>
+        <FlatList
+          style={{ flex: 1 }}
+          data={data}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          snapToInterval={190}
+          renderItem={({ item }) => (
+            <View style={styles.cardContainer}>
+              <View style={styles.spotCard}>
+                <Image source={turfImage} style={styles.turfImage} />
+                <View style={styles.turfText}>
+                  <Text style={styles.turfName}>{item.turfName}</Text>
+                  <Text style={styles.turfLocation}>{item.location}</Text>
+                  <View style={{ flexDirection: "row", marginTop: 5 }}>
+                    <Image source={football} />
+                    <Image source={cricket} />
+                    <TouchableOpacity style={{ marginLeft: 70 }}>
+                      <Image source={book} style={{ height: 50, width: 50 }} />
+                    </TouchableOpacity>
                   </View>
                 </View>
               </View>
-            )}
-          />
-        </View>
-        <View>
-        <CustomImageCarousal data={data2} auto={true} />
-        </View>
+            </View>
+          )}
+        />
       </View>
+      <View style={{ flex: 0.7 }}>
+        <CustomImageCarousal data={data2}/>
+        <Image source={turfBackground} style={{width:deviceWidth,height:65,alignSelf:'center'}}/>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  blurContainer: {
-    ...StyleSheet.absoluteFillObject,
-  },
-
   mainContainer: {
     backgroundColor: "#FFFFFF",
     flex: 1,
@@ -179,7 +201,23 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 100,
     elevation: 2,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
+  fineLines: {
+    //flex:1,
+    height: 60,
+    width: 0.65,
+    backgroundColor: "grey",
+  },
+  recentUpdatesTexts: {
+    width: 80,
+    fontSize: 12,
+    fontWeight: "500",
+    textAlign: "center",
+  },
+  recentUpdatesImage: { height: 50, width: 50, marginBottom: 3 },
   recentSpots: {
     flexDirection: "row",
     margin: 10,
@@ -204,23 +242,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   cardContainer: {
-    height: deviceHeight/5,
-    shadowColor: "black",
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 100,
-    elevation: 1,
+    height: deviceHeight / 5,
+    //flexShrink:2,
   },
   spotCard: {
-    flex:1,
-    //width: 190,
-    //borderRadius: 15,
+    flex: 1,
     marginRight: 3,
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
   },
   turfImage: {
     flex: 1.5,
     height: undefined,
-    //aspectRatio: 16 / 9,
     width: "100%",
     borderRadius: 15,
   },
@@ -228,9 +261,9 @@ const styles = StyleSheet.create({
     margin: 3,
   },
   turfText: {
-    flex:0.2,
+    flex: 0.2,
     margin: 8,
-    width: deviceWidth / 2.4
+    width: deviceWidth / 2.4,
   },
   turfName: {
     fontWeight: "500",

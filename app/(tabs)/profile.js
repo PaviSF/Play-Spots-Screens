@@ -15,12 +15,17 @@ import { formatDate } from "../../helper/CalculateMonth";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import { AntDesign } from "@expo/vector-icons";
 import ProfileList from "../../components/profile/ProfileList";
 import DatePick from "../../components/date-picker/DatePick";
 
 const profileName = faker.person.fullName();
 const profileEmail = faker.internet.email();
 const profileImage = require("../../assets/247181.jpg");
+
+const cricket = require("../../assets/cricket-icon.png");
+const football = require("../../assets/football-icon.png");
+const badminton = require("../../assets/badminton.png");
 
 const Profile = () => {
   const note = useSelector((state) => state.note.value);
@@ -79,14 +84,91 @@ const Profile = () => {
       </View>
       <View style={styles.activitiesDetailsContainer}>
         <View
-          style={{ flex: 0.45, backgroundColor: "red", borderRadius: 10 }}
-        ></View>
+          style={{
+            flex: 0.45,
+            justifyContent: "space-between",
+            borderRadius: 10,
+            shadowColor: "rgba(0, 0, 0, 0.4)",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.5,
+            shadowRadius: 4,
+            elevation: 3,
+            backgroundColor: "#FFFFFF",
+          }}
+        >
+          <View style={{ flex: 0.6, justifyContent: "space-between" }}>
+            <View style={styles.sportActivityContainer}>
+              <Image source={football} style={[styles.sportsIcon, {}]} />
+              <View style={{ flex: 0.7, flexDirection: "row" }}>
+                <AntDesign name="clockcircleo" size={15} color="black" />
+                <Text style={styles.sportActivityText}>5h 30 mins</Text>
+              </View>
+            </View>
+            <View style={styles.sportActivityContainer}>
+              <Image source={cricket} style={styles.sportsIcon} />
+              <View style={{ flex: 0.7, flexDirection: "row" }}>
+                <AntDesign name="clockcircleo" size={15} color="black" />
+                <Text style={styles.sportActivityText}>2h 30 mins</Text>
+              </View>
+            </View>
+            <View style={styles.sportActivityContainer}>
+              <Image source={badminton} style={styles.sportsIcon} />
+              <View style={{ flex: 0.7, flexDirection: "row" }}>
+                <AntDesign name="clockcircleo" size={15} color="black" />
+                <Text style={styles.sportActivityText}>1h</Text>
+              </View>
+            </View>
+          </View>
+          <View style={{ flex: 0.2 }}>
+            <View style={{ alignItems: "center" }}>
+              <View
+                style={{
+                  backgroundColor: "#DCD6D0",
+                  borderRadius: 20,
+                  width: "90%",
+                  height: 5,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "green",
+                    borderRadius: 20,
+                    width: "70%",
+                    height: 5,
+                  }}
+                />
+              </View>
+            </View>
+            <Text
+              style={{ width: "90%", alignSelf: "center", fontWeight: "600" }}
+            >
+              8 sports hours
+            </Text>
+            <Text
+              style={{
+                width: "90%",
+                alignSelf: "center",
+                fontSize: 10,
+                fontWeight: "500",
+              }}
+            >
+              spent last week
+            </Text>
+          </View>
+        </View>
         <View style={styles.scheduleContainer}>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{
+              flexDirection: "row",
+            }}
           >
-            <Text>Sports Schedules</Text>
-            <DatePick/>
+            <Text style={{margin:12,fontSize:15,fontWeight:'500'}}>Sports Schedules</Text>
+            <View style={{position:'absolute',right:5,bottom:10}}>
+              <DatePick />
+            </View>
           </View>
           <ScrollView
             showsVerticalScrollIndicator={false}
@@ -98,6 +180,7 @@ const Profile = () => {
                 <View style={{ flexDirection: "row" }}>
                   <View
                     style={{
+                      marginLeft:10,
                       backgroundColor: "#02b44f",
                       justifyContent: "center",
                       alignItems: "center",
@@ -208,8 +291,46 @@ const styles = StyleSheet.create({
     height: deviceHeight / 3.5,
     width: deviceWidth - 20,
     margin: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
-  scheduleContainer: { flex: 0.5, borderRadius: 10 },
+  scheduleContainer: {
+    flex: 0.5,
+    justifyContent: "space-between",
+    borderRadius: 10,
+    shadowColor: "rgba(0, 0, 0, 0.4)",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 3,
+    backgroundColor: "#FFFFFF",
+  },
+  sportsIcon: {
+    height: 60,
+    width: 60,
+    flex: 0.3,
+    marginRight: 10,
+  },
+  sportActivityContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  sportActivityText: {
+    fontSize: 12,
+    color: "green",
+    fontWeight: "500",
+    marginLeft: 5,
+  },
 });
 
 export default Profile;

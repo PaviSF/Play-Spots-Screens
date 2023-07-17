@@ -10,7 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 const CustomImageCarousal = ({ data }) => {
-  const SIZE = deviceWidth * 0.6;
+  const SIZE = deviceWidth * 0.65;
   const SPACER = (deviceWidth - SIZE) / 2;
   const [newData] = useState([
     { key: "spacer-left" },
@@ -33,13 +33,14 @@ const CustomImageCarousal = ({ data }) => {
       snapToInterval={SIZE}
       decelerationRate={"fast"}
       onScroll={onScroll}
+      contentOffset={{ x: SIZE, y: 0 }} // Set the contentOffset to start at the second image
     >
       {newData.map((item, index) => {
         const style = useAnimatedStyle(() => {
           const scale = interpolate(
             x.value,
             [(index - 2) * SIZE, (index - 1) * SIZE, index * SIZE],
-            [0.8, 1, 0.8]
+            [0.7, 1.1, 0.7]
           )
           return{
             transform: [{scale}]
@@ -62,14 +63,14 @@ const CustomImageCarousal = ({ data }) => {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    borderRadius: 20,
+    borderRadius: 10,
     overflow: "hidden",
 
   },
   image: {
     width: "100%",
     height: undefined,
-    aspectRatio: 16 / 9,
+    aspectRatio: 19/9,
   },
 });
 
