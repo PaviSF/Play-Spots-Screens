@@ -40,7 +40,7 @@ const BoxExample = () => {
               size={iconSize}
               color={isChecked ? iconActiveColor : iconInactiveColor}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text style={styles.iconLabel}>Cricket</Text>
           </View>
         );
       case 2:
@@ -51,7 +51,7 @@ const BoxExample = () => {
               size={iconSize}
               color={isChecked ? iconActiveColor : iconInactiveColor}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text style={styles.iconLabel}>Gym</Text>
           </View>
         );
       case 3:
@@ -62,7 +62,7 @@ const BoxExample = () => {
               size={iconSize}
               color={isChecked ? iconActiveColor : iconInactiveColor}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text style={styles.iconLabel}>Tennis</Text>
           </View>
         );
       case 4:
@@ -73,7 +73,7 @@ const BoxExample = () => {
               size={iconSize}
               color={isChecked ? iconActiveColor : iconInactiveColor}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text style={styles.iconLabel}>Volleyball</Text>
           </View>
         );
       case 5:
@@ -84,7 +84,7 @@ const BoxExample = () => {
               size={iconSize}
               color={isChecked ? iconActiveColor : iconInactiveColor}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text style={styles.iconLabel}>Badminton</Text>
           </View>
         );
       default:

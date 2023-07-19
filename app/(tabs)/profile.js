@@ -7,6 +7,7 @@ import {
   Image,
   FlatList,
   useWindowDimensions,
+  TouchableOpacity,
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
@@ -15,7 +16,7 @@ import { formatDate } from "../../helper/CalculateMonth";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Foundation } from "@expo/vector-icons";
 import ProfileList from "../../components/profile/ProfileList";
 import DatePick from "../../components/date-picker/DatePick";
 
@@ -31,6 +32,7 @@ const Profile = () => {
   const note = useSelector((state) => state.note.value);
   const { height, width } = useWindowDimensions();
   const [innerScrollActive, setInnerScrollActive] = useState(false);
+  const [sportReport, setSportReport] = useState("WEEKLY");
 
   const handleInnerScroll = (scrollEvent) => {
     const { contentOffset, contentSize, layoutMeasurement } =
@@ -71,16 +73,16 @@ const Profile = () => {
         </View>
       </View>
       <Text style={styles.activitiesLabel}>My Activities</Text>
-      <View style={{ flexDirection: "row" }}>
-        <View style={styles.reportHeading}>
-          <Text>Weekly</Text>
-        </View>
-        <View style={styles.reportHeading}>
-          <Text>Monthly</Text>
-        </View>
-        <View style={styles.reportHeading}>
-          <Text>Yearly</Text>
-        </View>
+      <View style={{ flexDirection: "row",marginLeft:10 }}>
+        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('WEEKLY')}>
+          <Text style={{fontWeight:'500',color:sportReport === 'WEEKLY'? 'black' : 'grey'}}>Weekly</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('MONTHLY')}>
+          <Text style={{fontWeight:'500',color:sportReport === 'MONTHLY'? 'black' : 'grey'}} >Monthly</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('YEARLY')}>
+          <Text style={{fontWeight:'500',color:sportReport === 'YEARLY'? 'black' : 'grey'}}>Yearly</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.activitiesDetailsContainer}>
         <View
@@ -145,7 +147,7 @@ const Profile = () => {
             <Text
               style={{ width: "90%", alignSelf: "center", fontWeight: "600" }}
             >
-              8 sports hours
+              9 sports hours
             </Text>
             <Text
               style={{
@@ -165,62 +167,85 @@ const Profile = () => {
               flexDirection: "row",
             }}
           >
-            <Text style={{margin:12,fontSize:15,fontWeight:'500'}}>Sports Schedules</Text>
-            <View style={{position:'absolute',right:5,bottom:10}}>
+            <Text style={{ margin: 12, fontSize: 15, fontWeight: "500" }}>
+              Sports Schedules
+            </Text>
+            <View style={{ position: "absolute", right: 5, bottom: 10 }}>
               <DatePick />
             </View>
           </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            onScroll={handleInnerScroll}
-            scrollEventThrottle={16}
-          >
-            {note.date.map((date, index) => (
-              <View key={index}>
-                <View style={{ flexDirection: "row" }}>
-                  <View
-                    style={{
-                      marginLeft:10,
-                      backgroundColor: "#02b44f",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: width / 10,
-                      height: height / 20,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text
-                      style={{ fontSize: 15, fontWeight: 500, color: "white" }}
+          {note.note[0] ? (
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              onScroll={handleInnerScroll}
+              scrollEventThrottle={16}
+            >
+              {note.date.map((date, index) => (
+                <View key={index}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View
+                      style={{
+                        marginLeft: 10,
+                        backgroundColor: "#02b44f",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: width / 10,
+                        height: height / 20,
+                        borderRadius: 5,
+                      }}
                     >
-                      {getDate(formatDate(date))}
-                    </Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+                          fontWeight: 500,
+                          color: "white",
+                        }}
+                      >
+                        {getDate(formatDate(date))}
+                      </Text>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 500,
+                          color: "white",
+                        }}
+                      >
+                        {getMonth(formatDate(date))}
+                      </Text>
+                    </View>
                     <Text
-                      style={{ fontSize: 10, fontWeight: 500, color: "white" }}
+                      style={{
+                        marginLeft: 10,
+                        width: width / 3,
+                        fontWeight: 500,
+                        fontSize: 12,
+                      }}
                     >
-                      {getMonth(formatDate(date))}
+                      {note.note[index]}
                     </Text>
                   </View>
-                  <Text
+                  <View
                     style={{
-                      marginLeft: 10,
-                      width: width / 3,
-                      fontWeight: 500,
-                      fontSize: 12,
+                      backgroundColor: "black",
+                      height: 0.3,
+                      margin: 10,
                     }}
-                  >
-                    {note.note[index]}
-                  </Text>
+                  />
                 </View>
-                <View
-                  style={{
-                    backgroundColor: "black",
-                    height: 0.3,
-                    margin: 10,
-                  }}
-                />
-              </View>
-            ))}
-          </ScrollView>
+              ))}
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Foundation name="clipboard-notes" size={80} color="#DCD6D0" />
+              <Text style={{fontWeight:'700',color:"#DCD6D0"}}>No Notes</Text>
+            </View>
+          )}
         </View>
       </View>
       <ProfileList label="My Booking" />
@@ -230,7 +255,7 @@ const Profile = () => {
       <ProfileList label="Cancellation/Reschedule" />
       <ProfileList label="Refer & Earn playcoin" />
       <ProfileList label="Logout" />
-      <ProfileList label="Delete Account" />
+      <ProfileList label="Delete Account" color={'red'} />
     </ScrollView>
   );
 };
@@ -247,8 +272,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     alignItems: "center",
     backgroundColor: "#fff",
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    borderRadius: 10,
+    marginTop: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -282,8 +307,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 10,
-    marginLeft: 10,
-    borderWidth: 1,
+    marginLeft: 4,
+    borderWidth: 0.5,
+    borderColor: 'grey'
   },
   activitiesDetailsContainer: {
     flexDirection: "row",

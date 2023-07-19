@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const ProfileList = ({ label }) => {
+const ProfileList = ({ label,color }) => {
   return (
     <TouchableOpacity style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label,{color}]}>{label}</Text>
     </TouchableOpacity>
   );
 };

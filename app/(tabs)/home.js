@@ -14,10 +14,10 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { Tabs } from "expo-router";
+import Header from "../../components/header/Header";
 
 import { Entypo } from "@expo/vector-icons";
 import CustomImageCarousal from "../../components/carousel/Carousel";
-import Header from "../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 
 const data = [...Array(5).keys()].map(() => ({

@@ -21,7 +21,9 @@ const TabLayout = () => {
         <Tabs.Screen
           name="profile"
           options={{
-            headerTitle: "Profile",
+            headerTitle: "My profile",
+            headerTitleAlign: "center",
+            headerTitleStyle: {fontWeight:"100",fontSize:18},
             tabBarIcon: () => (
               <View>
                 <FontAwesome
