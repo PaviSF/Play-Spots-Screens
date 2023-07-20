@@ -133,9 +133,9 @@ const Home = () => {
                   <Text style={styles.turfName}>{item.turfName}</Text>
                   <Text style={styles.turfLocation}>{item.location}</Text>
                   <View style={{ flexDirection: "row", marginTop: 5 }}>
-                    <Image source={football} />
+                    <Image source={football} style={{marginRight:5}} />
                     <Image source={cricket} />
-                    <TouchableOpacity style={{ marginLeft: 70 }}>
+                    <TouchableOpacity style={{ marginLeft: 75 }}>
                       <Image source={book} style={{ height: 50, width: 50 }} />
                     </TouchableOpacity>
                   </View>
@@ -243,7 +243,11 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     height: deviceHeight / 5,
-    //flexShrink:2,
+    shadowColor: "00ff87",
+    shadowOffset: { width: 3, height: 5 },
+    shadowOpacity: 1,
+    shadowRadius: 100,
+    elevation: 2,
   },
   spotCard: {
     flex: 1,

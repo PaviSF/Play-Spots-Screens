@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Constants from "expo-constants";
-import {calculateDistance}  from "../../helper/CalculateDistance";
+import {calculateDistance,calculateAngle}  from "../../helper/CalculateDistance";
 
 // You can import from local files
 import SolarSystem from "./SolarSystem";
@@ -22,10 +22,19 @@ const generateOrbits = (spotsData) => {
       75.78003870204095
     ));
 
+    const angle = calculateAngle(
+      spotsData[i].turfLocation.latitude,
+      spotsData[i].turfLocation.longitude,
+      11.271201451658536,
+      75.78003870204095
+    );
+    
+
     const planet = {
       name: spotsData[i].turfName,
       image: spotsData[i].turfImage,
-      distance
+      distance,
+      angle
     };
     if (distance <= 2) {
       if (!distanceToPlanetsMap[1]) {
@@ -50,7 +59,6 @@ const generateOrbits = (spotsData) => {
         distanceToPlanetsMap[3].push(planet);
       }
     }
-    console.log(distanceToPlanetsMap)
 
     if (distance > 6) {
       if (!distanceToPlanetsMap[4]) {
@@ -59,7 +67,12 @@ const generateOrbits = (spotsData) => {
         distanceToPlanetsMap[4].push(planet);
       }
     }
+
+    console.log(distanceToPlanetsMap[i] + "hello")
+
   }
+
+
 
   return Object.keys(distanceToPlanetsMap).map((distanceKey, index) => {
     return {
@@ -73,7 +86,7 @@ const generateOrbits = (spotsData) => {
 export default function CircularOrbit() {
   const orbits = generateOrbits(turfData);
 
-  console.log(orbits);
+ // console.log(orbits);
 
   return (
     <View style={styles.container}>
@@ -86,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Constants.statusBarHeight,
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "white",
     padding: 8,
   },
 });

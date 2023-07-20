@@ -16,12 +16,12 @@ import {
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
 import React, { useRef } from "react";
-import { faker } from "@faker-js/faker";
 import GradientButton from "../../components/GradientButton";
 import { deviceWidth, deviceHeight } from "../../constants/Dimension";
 import { Button } from "react-native";
+import { faker } from "@faker-js/faker";
 
-const data = [...Array(30).keys()].map(() => ({
+const data = [...Array(15).keys()].map(() => ({
   key: faker.string.uuid(),
   job: faker.animal.crocodilia(),
   extra: faker.animal.dog(),

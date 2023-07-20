@@ -53,7 +53,7 @@ const SolarSystem = ({ orbits }) => {
       const scaledRadius = orbit.radius; // Adjust the scaling factor as needed
       
       return (
-        <View key={index} style={[styles.orbit, { width: scaledRadius * 2, height: scaledRadius * 2 }]}>
+        <View key={index} style={[styles.orbit, { width: scaledRadius * 2, height: scaledRadius * 2, }]}>
           <View style={styles.planetContainer}>
             {renderPlanets(orbit.planets, scaledRadius)}
           </View>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: 'green',
     borderRadius: 9999,
   },

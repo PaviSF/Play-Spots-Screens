@@ -29,4 +29,35 @@ const deg2rad = (deg) => {
   return deg * (Math.PI / 180);
 };
 
-export { calculateDistance };
+function calculateAngle(lat1, lon1, lat2, lon2) {
+  const earthRadius = 6371; // Radius of the Earth in kilometers
+
+  // Convert latitude and longitude from degrees to radians
+  const lat1Rad = deg2rad(lat1);
+  const lon1Rad = deg2rad(lon1);
+  const lat2Rad = deg2rad(lat2);
+  const lon2Rad = deg2rad(lon2);
+
+  // Calculate differences between the coordinates
+  const deltaLat = lat2Rad - lat1Rad;
+  const deltaLon = lon2Rad - lon1Rad;
+
+  // Haversine formula
+  const a =
+    Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+    Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  // Calculate the angle in degrees
+  let angle = (c * 180) / Math.PI;
+
+  // Ensure the angle is between 0 and 360 degrees
+  if (angle < 0) {
+    angle += 360;
+  }
+
+  return angle;
+}
+
+export { calculateDistance,calculateAngle };

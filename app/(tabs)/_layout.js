@@ -1,20 +1,33 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
 import { FontAwesome, Feather, FontAwesome5 } from "@expo/vector-icons";
+
+const profileIcon = require("../../assets/tab-icons/inactive-icons/user.png");
+const spotsIcon = require("../../assets/tab-icons/inactive-icons/stadium.png");
+//const homeIcon = require("../../assets/tab-icons/inactive-icons/house.png");
+const meetsIcon = require("../../assets/tab-icons/inactive-icons/support.png");
+const eventsIcon = require("../../assets/tab-icons/inactive-icons/sport.png");
+
+const activeProfileIcon = require("../../assets/tab-icons/active-icons/active-user.png");
+const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
+const activeHomeIcon = require("../../assets/tab-icons/active-icons/active-house.png");
+const activeMeetsIcon = require("../../assets/tab-icons/active-icons/active-support.png");
+const activeEventsIcon = require("../../assets/tab-icons/active-icons/active-sport.png");
 
 const tabComponentColor = "#565657";
 
 const TabLayout = () => {
   return (
     <View style={styles.tabBarContainer}>
+    
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: "green",
           tabBarStyle: styles.tabBar,
           tabBarShowLabel: false,
           tabBarInactiveTintColor: "yellow",
-          tabBarHideOnKeyboard:true,
+          tabBarHideOnKeyboard: true,
           headerShadowVisible: false,
         }}
       >
@@ -23,15 +36,10 @@ const TabLayout = () => {
           options={{
             headerTitle: "My profile",
             headerTitleAlign: "center",
-            headerTitleStyle: {fontWeight:"100",fontSize:18},
+            headerTitleStyle: { fontWeight: "100", fontSize: 18 },
             tabBarIcon: () => (
-              <View>
-                <FontAwesome
-                  name="user"
-                  size={25}
-                  color={tabComponentColor}
-                  style={styles.tabIcon}
-                />
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Feather name="user" color={"black"} size={25} style={styles.icon} />
                 <Text style={styles.tabText}>Profile</Text>
               </View>
             ),
@@ -43,12 +51,7 @@ const TabLayout = () => {
             title: "Spots",
             tabBarIcon: () => (
               <View>
-                <FontAwesome
-                  name="user"
-                  size={25}
-                  color={tabComponentColor}
-                  style={styles.tabIcon}
-                />
+                <Image source={spotsIcon} style={styles.icon} />
                 <Text style={styles.tabText}>Spots</Text>
               </View>
             ),
@@ -60,7 +63,7 @@ const TabLayout = () => {
             headerStyle: {},
             tabBarIcon: () => (
               <View style={styles.homeCircle}>
-                <Feather name="home" size={40} color="black" />
+                <Image source={activeHomeIcon} style={styles.icon} />
               </View>
             ),
           }}
@@ -70,13 +73,8 @@ const TabLayout = () => {
           options={{
             title: "Events",
             tabBarIcon: () => (
-              <View>
-                <FontAwesome
-                  name="user"
-                  size={25}
-                  color={tabComponentColor}
-                  style={styles.tabIcon}
-                />
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Image source={eventsIcon} style={styles.icon} />
                 <Text style={styles.tabText}>Events</Text>
               </View>
             ),
@@ -88,12 +86,7 @@ const TabLayout = () => {
             title: "Meet",
             tabBarIcon: () => (
               <View>
-                <FontAwesome5
-                  name="handshake"
-                  size={25}
-                  color={tabComponentColor}
-                  style={styles.tabIcon}
-                />
+                <Image source={meetsIcon} style={styles.icon} />
                 <Text style={styles.tabText}>Meet</Text>
               </View>
             ),
@@ -127,10 +120,13 @@ const styles = StyleSheet.create({
     shadowRadius: 100,
     elevation: 2,
   },
+  icon: {
+    height: 30,
+    width: 30,
+    padding: 2,
+  },
   tabIcon: { paddingTop: 5, alignSelf: "center" },
   tabText: {
-    justifyContent: "center",
-    alignItems: "center",
     fontSize: 10,
     color: tabComponentColor,
   },
