@@ -1,11 +1,17 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import Constants from "expo-constants";
-import {calculateDistance,calculateAngle}  from "../../helper/CalculateDistance";
+import {
+  calculateDistance,
+  calculateAngle,
+} from "../../helper/CalculateDistance";
 
 // You can import from local files
 import SolarSystem from "./SolarSystem";
 import { turfData } from "../../dataset";
+import { deviceWidth } from "../../constants/Dimension";
+
+const RADIUS_FACTOR = deviceWidth / 8.3;
 
 const distanceToPlanetsMap = {};
 
@@ -15,12 +21,14 @@ const distanceToPlanetsMap = {};
 
 const generateOrbits = (spotsData) => {
   for (let i = 0; i < spotsData.length; i++) {
-    const distance = Math.ceil(calculateDistance(
-      spotsData[i].turfLocation.latitude,
-      spotsData[i].turfLocation.longitude,
-      11.271201451658536,
-      75.78003870204095
-    ));
+    const distance = Math.ceil(
+      calculateDistance(
+        spotsData[i].turfLocation.latitude,
+        spotsData[i].turfLocation.longitude,
+        11.271201451658536,
+        75.78003870204095
+      )
+    );
 
     const angle = calculateAngle(
       spotsData[i].turfLocation.latitude,
@@ -28,56 +36,47 @@ const generateOrbits = (spotsData) => {
       11.271201451658536,
       75.78003870204095
     );
-    
 
     const planet = {
       name: spotsData[i].turfName,
       image: spotsData[i].turfImage,
       distance,
-      angle
+      angle,
     };
+
     if (distance <= 2) {
       if (!distanceToPlanetsMap[1]) {
         distanceToPlanetsMap[1] = [planet];
-      } else {
+      } else if (distanceToPlanetsMap[1].length < 2) {
         distanceToPlanetsMap[1].push(planet);
       }
-    }
-
-    if (distance > 2 && distance <= 4) {
+    } else if (distance > 2 && distance <= 4) {
       if (!distanceToPlanetsMap[2]) {
         distanceToPlanetsMap[2] = [planet];
-      } else {
+      } else if (distanceToPlanetsMap[2].length < 2) {
         distanceToPlanetsMap[2].push(planet);
       }
-    }
-
-    if (distance > 4 && distance <= 6) {
+    } else if (distance > 4 && distance <= 6) {
       if (!distanceToPlanetsMap[3]) {
         distanceToPlanetsMap[3] = [planet];
-      } else {
+      } else if (distanceToPlanetsMap[3].length < 2) {
         distanceToPlanetsMap[3].push(planet);
       }
-    }
-
-    if (distance > 6) {
+    } else if (distance > 6) {
       if (!distanceToPlanetsMap[4]) {
         distanceToPlanetsMap[4] = [planet];
-      } else {
+      } else if (distanceToPlanetsMap[4].length < 2) {
         distanceToPlanetsMap[4].push(planet);
       }
     }
-
-    console.log(distanceToPlanetsMap[i] + "hello")
-
   }
 
-
+  console.log(distanceToPlanetsMap[4] + "bello");
 
   return Object.keys(distanceToPlanetsMap).map((distanceKey, index) => {
     return {
       name: `Orbit ${distanceKey}`,
-      radius: 50 * (index + 1),
+      radius: RADIUS_FACTOR * (index + 1),
       planets: distanceToPlanetsMap[distanceKey],
     };
   });
@@ -86,7 +85,7 @@ const generateOrbits = (spotsData) => {
 export default function CircularOrbit() {
   const orbits = generateOrbits(turfData);
 
- // console.log(orbits);
+  // console.log(orbits);
 
   return (
     <View style={styles.container}>

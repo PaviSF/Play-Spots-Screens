@@ -19,6 +19,7 @@ import Header from "../../components/header/Header";
 import { Entypo } from "@expo/vector-icons";
 import CustomImageCarousal from "../../components/carousel/Carousel";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import { getGreeting } from "../../helper/GiveGreetings";
 
 const data = [...Array(5).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -76,7 +77,7 @@ const Home = () => {
       <View style={styles.profileContainer}>
         <Image source={profilePic} style={styles.profilePic} />
         <View style={styles.profileLabels}>
-          <Text style={styles.greetings}>Good morning</Text>
+          <Text style={styles.greetings}>{getGreeting()}</Text>
           <Text style={styles.profileName}>{fullName}</Text>
         </View>
       </View>

@@ -5,10 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
-  Pressable
 } from "react-native";
 import React, { useState } from "react";
-import DatePick from "../../components/date-picker/DatePick";
 import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
@@ -16,6 +14,15 @@ import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 
 import { faker } from "@faker-js/faker";
 import CardView from "../../components/spots/CardView";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
+import { useEffect } from "react";
 
 const data = [...Array(15).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -39,9 +46,53 @@ const _colors = {
   inactive: `#FCD25900`,
 };
 
+const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
+
 const Spot = () => {
   const [fullModal, setfullModal] = useState(false);
+  const translateY = useSharedValue(0);
+  const context = useSharedValue({ y: 0 });
+  const gesture = Gesture.Pan()
+    .onStart(() => {
+      context.value = { y: translateY.value };
+    })
+    .onUpdate((event) => {
+      translateY.value = event.translationY + context.value.y;
+      translateY.value = Math.max(translateY.value, MAX_TRANSLATAE_Y);
+    })
+    .onEnd(() => {
+      if (translateY.value < -deviceHeight / 2) {
+        translateY.value = withSpring(MAX_TRANSLATAE_Y, { damping: 50 });
+      } else {
+        translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
+      }
+    });
+
+  const rModal = useAnimatedStyle(() => {
+    const borderRadius = interpolate(
+      translateY.value,
+      [MAX_TRANSLATAE_Y + 50, MAX_TRANSLATAE_Y],
+      [25, 5],
+      Extrapolate.CLAMP
+    );
+    const width = interpolate(
+      translateY.value,
+      [MAX_TRANSLATAE_Y + 300, MAX_TRANSLATAE_Y],
+      [deviceWidth - 20, deviceWidth],
+      Extrapolate.CLAMP
+    );
+    return {
+      borderRadius,
+      width,
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
+  useEffect(() => {
+    translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
+  }, []);
   return (
+    <GestureHandlerRootView style={{flex:1}}>
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <Tabs.Screen options={{ headerShown: false }} />
       <View style={{ flex: 0.12 }}>
@@ -52,7 +103,7 @@ const Spot = () => {
         data={sportsData}
         keyExtractor={(item) => item.key}
         contentContainerStyle={{ paddingLeft: _spacing }}
-        showsHorizontalScrollIndicator={false}
+        showsHorizontalScrollIndicator={true}
         horizontal
         renderItem={({ item, index }) => {
           return (
@@ -74,32 +125,38 @@ const Spot = () => {
       />
       <View style={{ flex: 0.55 }}>
         <CircularOrbit />
-        </View>
-      <View
-        style={[
-          styles.modal,
-          {
-            top: fullModal ? StatusBar.currentHeight : deviceHeight / 1.4,
-            width: fullModal ? deviceWidth : deviceWidth - 20,
-            height: fullModal ? deviceHeight : deviceHeight / 3,
-          },
-        ]}
-      >
-        <TouchableOpacity style={styles.modalHeadingLine} onPress={()=>setfullModal(!fullModal)}></TouchableOpacity>
-        <FlatList
-        showsVerticalScrollIndicator={false}
-          data={data}
-          style={{ flex: 1, margin: 20 }}
-          renderItem={({ item, index }) => {
-            return (
-              <View>
-                <CardView/>
-              </View>
-            );
-          }}
-        />
       </View>
+      <GestureDetector gesture={gesture}>
+        <Animated.View
+          style={[
+            styles.modal,
+            {
+              top: deviceHeight,
+              // height: fullModal ? deviceHeight : deviceHeight / 3,
+            },
+            rModal,
+          ]}
+        >
+          <TouchableOpacity
+            style={styles.modalHeadingLine}
+            onPress={() => setfullModal(!fullModal)}
+          ></TouchableOpacity>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data}
+            style={{ flex: 1, margin: 20 }}
+            renderItem={({ item, index }) => {
+              return (
+                <View>
+                  <CardView />
+                </View>
+              );
+            }}
+          />
+        </Animated.View>
+      </GestureDetector>
     </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -117,8 +174,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignSelf: "center",
     position: "absolute",
-    zIndex: 9999,
-    elevation:8,
+    width: deviceWidth - 20,
+    //zIndex: 9999,
+    elevation: 8,
   },
   modalHeadingLine: {
     flex: 1,
