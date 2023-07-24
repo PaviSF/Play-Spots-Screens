@@ -23,8 +23,8 @@ const generateOrbits = (spotsData) => {
   for (let i = 0; i < spotsData.length; i++) {
     const distance = Math.ceil(
       calculateDistance(
-        spotsData[i].turfLocation.latitude,
-        spotsData[i].turfLocation.longitude,
+        spotsData[i].turfLocationCo.latitude,
+        spotsData[i].turfLocationCo.longitude,
         11.271201451658536,
         75.78003870204095
       )
@@ -84,7 +84,9 @@ const generateOrbits = (spotsData) => {
 
 export default function CircularOrbit() {
   const orbits = generateOrbits(turfData);
-
+  // if (orbits.length > 0) {
+  //   orbits[0].radius += RADIUS_FACTOR * 0.2; // Adjust the scaling factor as needed
+  // }
   // console.log(orbits);
 
   return (

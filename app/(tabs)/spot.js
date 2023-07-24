@@ -5,16 +5,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   StatusBar,
+  Image,
 } from "react-native";
 import React, { useState } from "react";
 import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-
 import { faker } from "@faker-js/faker";
+import { turfData } from "../../dataset";
 import CardView from "../../components/spots/CardView";
-import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
@@ -23,6 +28,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+
+const tabComponentColor = "#565657";
+const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
 
 const data = [...Array(15).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -61,7 +69,7 @@ const Spot = () => {
       translateY.value = Math.max(translateY.value, MAX_TRANSLATAE_Y);
     })
     .onEnd(() => {
-      if (translateY.value < -deviceHeight / 2) {
+      if (translateY.value < -deviceHeight / 1.5) {
         translateY.value = withSpring(MAX_TRANSLATAE_Y, { damping: 50 });
       } else {
         translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
@@ -91,71 +99,68 @@ const Spot = () => {
   useEffect(() => {
     translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
   }, []);
+  
   return (
-    <GestureHandlerRootView style={{flex:1}}>
-    <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Tabs.Screen options={{ headerShown: false }} />
-      <View style={{ flex: 0.12 }}>
-        <Header />
-      </View>
-      <FlatList
-        style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
-        data={sportsData}
-        keyExtractor={(item) => item.key}
-        contentContainerStyle={{ paddingLeft: _spacing }}
-        showsHorizontalScrollIndicator={true}
-        horizontal
-        renderItem={({ item, index }) => {
-          return (
-            <TouchableOpacity onPress={() => {}} style={{}}>
-              <View style={styles.category}>
-                <Text
-                  style={{
-                    color: "#36303F",
-                    fontWeight: "700",
-                    marginHorizontal: 15,
-                  }}
-                >
-                  {item.sport}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          );
-        }}
-      />
-      <View style={{ flex: 0.55 }}>
-        <CircularOrbit />
-      </View>
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          style={[
-            styles.modal,
-            {
-              top: deviceHeight,
-              // height: fullModal ? deviceHeight : deviceHeight / 3,
-            },
-            rModal,
-          ]}
-        >
-          <TouchableOpacity
-            style={styles.modalHeadingLine}
-            onPress={() => setfullModal(!fullModal)}
-          ></TouchableOpacity>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={data}
-            style={{ flex: 1, margin: 20 }}
-            renderItem={({ item, index }) => {
-              return (
-                <View>
-                  <CardView />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
+        <Tabs.Screen options={{ headerShown: false }} />
+        <View style={{ flex: 0.12 }}>
+          <Header />
+        </View>
+        <FlatList
+          style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
+          data={sportsData}
+          keyExtractor={(item) => item.key}
+          contentContainerStyle={{ paddingLeft: _spacing }}
+          showsHorizontalScrollIndicator={true}
+          horizontal
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableOpacity onPress={() => {}} style={{}}>
+                <View style={styles.category}>
+                  <Text
+                    style={{
+                      color: "#36303F",
+                      fontWeight: "700",
+                      marginHorizontal: 15,
+                    }}
+                  >
+                    {item.sport}
+                  </Text>
                 </View>
-              );
-            }}
-          />
-        </Animated.View>
-      </GestureDetector>
-    </View>
+              </TouchableOpacity>
+            );
+          }}
+        />
+        <View style={{ flex: 0.55 }}>
+          <CircularOrbit />
+        </View>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={[styles.modal, rModal]}>
+            <TouchableOpacity
+              style={styles.modalHeadingLine}
+              onPress={() => setfullModal(!fullModal)}
+            ></TouchableOpacity>
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={turfData}
+              style={{ flex: 1, marginTop: 20 }}
+              renderItem={({ item, index }) => {
+                return (
+                  <View>
+                    <CardView
+                      spot={item.turfName}
+                      place={item.turfLocation}
+                      price={item.price}
+                      ratings={item.ratings}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </Animated.View>
+        </GestureDetector>
+      </View>
     </GestureHandlerRootView>
   );
 };
@@ -175,6 +180,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     position: "absolute",
     width: deviceWidth - 20,
+    top: deviceHeight,
     //zIndex: 9999,
     elevation: 8,
   },
@@ -185,6 +191,16 @@ const styles = StyleSheet.create({
     flex: 0.02,
     alignSelf: "center",
     backgroundColor: "black",
+  },
+  icon: {
+    height: 30,
+    width: 30,
+    padding: 2,
+  },
+  tabIcon: { paddingTop: 5, alignSelf: "center" },
+  tabText: {
+    fontSize: 10,
+    color: tabComponentColor,
   },
 });
 

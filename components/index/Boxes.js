@@ -7,8 +7,8 @@ import {
 } from "@expo/vector-icons";
 
 const iconSize = 50;
-const iconInactiveColor = "#717071";
-const iconActiveColor = "#FFFFFF";
+const inactiveColor = { icon: "#717071", label: "black" };
+const activeColor = { icon: "#FFFFFF", label: "#FFFFFF" };
 
 const BoxExample = () => {
   const [checkboxes, setCheckboxes] = useState(Array(6).fill(false));
@@ -27,9 +27,16 @@ const BoxExample = () => {
             <Ionicons
               name="football"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Football</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+              Football
+            </Text>
           </View>
         );
       case 1:
@@ -38,9 +45,16 @@ const BoxExample = () => {
             <MaterialCommunityIcons
               name="cricket"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Cricket</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+              Cricket
+            </Text>
           </View>
         );
       case 2:
@@ -49,9 +63,16 @@ const BoxExample = () => {
             <MaterialCommunityIcons
               name="dumbbell"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Gym</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+                Gym
+            </Text>
           </View>
         );
       case 3:
@@ -60,9 +81,16 @@ const BoxExample = () => {
             <Ionicons
               name="tennisball"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Tennis</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+              Tennis
+            </Text>
           </View>
         );
       case 4:
@@ -71,20 +99,34 @@ const BoxExample = () => {
             <FontAwesome5
               name="volleyball-ball"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Volleyball</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+              Volleyball
+            </Text>
           </View>
         );
       case 5:
         return (
-          <View> 
+          <View>
             <MaterialCommunityIcons
               name="badminton"
               size={iconSize}
-              color={isChecked ? iconActiveColor : iconInactiveColor}
+              color={isChecked ? activeColor.icon : inactiveColor.icon}
             />
-            <Text style={styles.iconLabel}>Badminton</Text>
+            <Text
+              style={[
+                styles.iconLabel,
+                { color: isChecked ? activeColor.label : inactiveColor.label },
+              ]}
+            >
+              Badminton
+            </Text>
           </View>
         );
       default:
@@ -124,10 +166,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   boxSelected: {
-    backgroundColor: "green",
+    backgroundColor: "#579565",
   },
   iconLabel: {
-    fontSize: 12,
+    fontSize: 13,
+    fontWeight: "500",
   },
 });
 

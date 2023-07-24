@@ -58,7 +58,7 @@ const SolarSystem = ({ orbits }) => {
             {renderPlanets(orbit.planets, scaledRadius)}
           </View>
           <View style={styles.centerImageContainer}>
-            <Image source={require("../../assets/download.jpeg")} style={styles.centerImage} />
+            <Image source={require("../../assets/247181.jpg")} style={styles.centerImage} />
           </View>
         </View>
       );

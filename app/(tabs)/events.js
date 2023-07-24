@@ -16,10 +16,14 @@ import {
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
 import React, { useRef } from "react";
-import GradientButton from "../../components/GradientButton";
+import LargeGradientButton from "../../components/buttons/LargeGradientButton";
+import SmallGradientButton from "../../components/buttons/SmallGradientButton";
+
 import { deviceWidth, deviceHeight } from "../../constants/Dimension";
 import { Button } from "react-native";
 import { faker } from "@faker-js/faker";
+import { Feather } from "@expo/vector-icons";
+import { useState } from "react";
 
 const data = [...Array(15).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -40,7 +44,8 @@ const _colors = {
   active: `grey`,
   inactive: `#FCD25900`,
 };
-const _spacing = 10;
+
+const _spacing = 5;
 
 const horizontalSpacing = 20;
 const AVATAR_SIZE = 70;
@@ -49,14 +54,17 @@ const turfImage = require("../../assets/download.jpeg");
 
 const Events = () => {
   const scrollY = useRef(new Animated.Value(0)).current;
+  const [selected,setSelected] = useState(false);
   return (
     <View style={styles.mainContainer}>
       <Tabs.Screen options={{ headerShown: false }} />
       <Header />
-      <View style={{ marginHorizontal: 100, marginBottom: 10 }}>
-        <GradientButton title={"Host An Event"} />
-      </View>
-      <Text style={{fontWeight:500,color:'grey',marginLeft:10}}>Sports events nearby you</Text>
+
+      <LargeGradientButton title={"Host An Event"} />
+
+      <Text style={{ fontWeight: 500, color: "grey", marginLeft: 10 }}>
+        Sports events nearby you
+      </Text>
       <FlatList
         style={{ flexGrow: 0, marginTop: 5 }}
         data={sportsData}
@@ -66,11 +74,11 @@ const Events = () => {
         horizontal
         renderItem={({ item, index: fIndex }) => {
           return (
-            <TouchableOpacity onPress={() => {}} style={{}}>
+            <TouchableOpacity onPress={() => setSelected(!selected)}>
               <View style={styles.category}>
                 <Text
                   style={{
-                    color: "#36303F",
+                    color: selected ?"#36303F" : 'grey',
                     fontWeight: "700",
                     marginHorizontal: 15,
                   }}
@@ -113,8 +121,10 @@ const Events = () => {
                 resizeMode="cover"
               >
                 <View style={{ flex: 0.8 }}>
-                  <Text style={styles.title}>{item.job}</Text>
-                  <Text style={styles.description}>{item.extra}</Text>
+                  <Text style={styles.title}>Deega championship 2023</Text>
+                  <Text style={styles.description}>
+                    12 October 2023 | 07:00 PM
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -134,18 +144,8 @@ const Events = () => {
                     <Text style={{ color: "white" }}>{item.job}</Text>
                     <Text style={{ color: "white" }}>{item.job}</Text>
                   </View>
-                  <View
-                    style={{
-                      backgroundColor: "green",
-                      width: 100,
-                      height: 35,
-                      borderRadius: 5,
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text style={{ color: "white" }}>Join</Text>
-                  </View>
+
+                  <SmallGradientButton title={"Join"} />
                 </View>
               </ImageBackground>
             </Animated.View>
@@ -162,15 +162,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   category: {
-    marginRight: _spacing - 6,
+    marginRight: _spacing,
     padding: _spacing,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: _colors.active,
-    borderRadius: 12,
+    borderRadius: 10,
     backgroundColor: _colors.inactive,
   },
   card: {
     width: deviceWidth - 20,
+    alignSelf: "center",
     marginBottom: 10,
     height: deviceHeight / 3.5,
     borderRadius: 10,
@@ -182,14 +183,14 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: "500",
     color: "white",
   },
   description: {
     fontSize: 16,
     color: "white",
-    // padding: 16,
+    //padding: 16,
   },
 });
 

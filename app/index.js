@@ -13,6 +13,7 @@ import { faker } from "@faker-js/faker";
 import Line from "../components/Line";
 import BoxExample from "../components/index/Boxes";
 import { deviceWidth } from "../constants/Dimension";
+import LargeGradientButton from "../components/buttons/LargeGradientButton";
 
 const name = faker.person.firstName();
 
@@ -31,7 +32,7 @@ export default function Page() {
       <View style={styles.main}>
         <Text style={styles.title}>Hello {name}</Text>
         <Text style={styles.subtitle}>Greetings, from playspots team</Text>
-        <Line />
+        <Line/>
         <View style={styles.dotAndTextALignment}>
           <Entypo name="dot-single" size={24} color="black" />
           <Text style={styles.recentSpotsLabel}>Choose your sports</Text>
@@ -47,10 +48,9 @@ export default function Page() {
             alignSelf: "center",
           }}
         >
-          <Button
-            title="CONTINUE"
-            color={"green"}
-            onPress={() => router.push("home")}
+          <LargeGradientButton
+            title="GO"
+            onPress={() => router.replace("home")}
           />
         </View>
       </View>
