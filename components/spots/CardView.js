@@ -9,7 +9,6 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 import { deviceWidth } from "../../constants/Dimension";
-import { Tabs } from "expo-router";
 
 
 const CardView = ({ spot, place, price, ratings }) => {

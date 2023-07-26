@@ -26,6 +26,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 import RandomButton from "../../components/buttons/RandomButton";
+import XSmallGradientButton from "../../components/buttons/XSmallGradientButton";
 
 const rightToLeft = require("../../assets/faces/right-to-left.png");
 const leftToRight = require("../../assets/faces/left-to-right.png");
@@ -69,7 +70,7 @@ const Meet = () => {
 
     const width = interpolate(
       translateY.value,
-      [MAX_TRANSLATAE_Y + 150, MAX_TRANSLATAE_Y],
+      [MAX_TRANSLATAE_Y + 350, MAX_TRANSLATAE_Y],
       [deviceWidth - 20, deviceWidth],
       Extrapolate.CLAMP
     );
@@ -104,7 +105,7 @@ const Meet = () => {
             marginBottom: 30,
             color: "white",
             fontWeight: "500",
-            fontSize: 20
+            fontSize: 20,
           }}
         >
           Discover your sports buddies
@@ -119,33 +120,24 @@ const Meet = () => {
           <Image source={leftToRight} style={styles.faceToFace} />
           <Image source={rightToLeft} style={styles.faceToFace} />
         </View>
-        <RandomButton title={'Host a Match'}/>
+        <RandomButton
+          title={"Host a Match"}
+          onPress={() => console.log(deviceWidth)}
+        />
       </LinearGradient>
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.modal, rModal]}>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              margin: 20,
+              marginHorizontal: deviceWidth / 20,
+              marginTop: deviceWidth / 20,
+              marginBottom: deviceWidth / 40,
             }}
           >
             <View>
-              <Text>Hurry up!!! Join now</Text>
-              <Text>Matches around you</Text>
+              <Text style={styles.modalHeader}>Hurry up!!! Join now</Text>
+              <Text style={styles.modalSubHeading}>Matches around you</Text>
             </View>
-            <Pressable
-              style={{ justifyContent: "center", alignItems: "center" }}
-              onPress={() => {
-                fullModal ? setFullModal(false) : setFullModal(true);
-              }}
-            >
-              <AntDesign
-                name={fullModal ? "downsquare" : "upsquare"}
-                size={24}
-                color="black"
-              />
-            </Pressable>
           </View>
           <FlatList
             data={data}
@@ -153,28 +145,41 @@ const Meet = () => {
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.cardContainer}>
-                  <View style={styles.imageContainer}>
-                    <Image source={random} style={styles.circularImage} />
-                  </View>
+                  <Image source={random} style={styles.circularImage} />
+                  <View
+                    style={{
+                      height: deviceHeight / 8,
+                      width: 0.8,
+                      marginHorizontal: 10,
+                      backgroundColor: "grey",
+                    }}
+                  />
                   <View style={styles.textContainer}>
-                    <View style={{ flexDirection: "row" }}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        // justifyContent: "center",
+                        // alignItems: "center",
+                      }}
+                    >
                       <Ionicons
                         name="md-football-sharp"
                         size={20}
-                        color="black"
+                        color="green"
                       />
                       <Text style={styles.text}>6A Side</Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
-                      <Ionicons name="calendar" size={20} color="black" />
+                      <Ionicons name="calendar" size={20} color="green" />
                       <Text style={styles.text}>19 July 2023 | 7:00 PM</Text>
                     </View>
                     <View style={{ flexDirection: "row" }}>
-                      <Entypo name="location-pin" size={20} color="black" />
+                      <Entypo name="location-pin" size={20} color="green" />
                       <Text style={styles.text}>
                         LaLiga Thondayad Bypass Rd, Kozhikode
                       </Text>
                     </View>
+                    <XSmallGradientButton title={"Join"} />
                   </View>
                 </View>
               );
@@ -205,9 +210,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginVertical: 8,
   },
-  imageContainer: {
-    marginRight: 16,
-  },
   circularImage: {
     width: 100,
     height: 100,
@@ -216,8 +218,12 @@ const styles = StyleSheet.create({
   textContainer: {},
   text: {
     marginBottom: 8,
-    fontSize: 14,
-    width: deviceWidth / 2,
+    fontSize: 10,
+    width: deviceWidth / 2.5,
+    fontWeight: "bold",
+    color: "grey",
+    paddingTop: 2,
+    paddingLeft: 5,
   },
   modal: {
     backgroundColor: "white",
@@ -229,6 +235,16 @@ const styles = StyleSheet.create({
     height: deviceHeight,
     //zIndex: 9999,
     elevation: 8,
+  },
+  modalHeader: {
+    color: "#4A4A4A",
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  modalSubHeading: {
+    color: "#4A4A4A",
+    fontSize: 13,
+    fontWeight: "500",
   },
 });
 

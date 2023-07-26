@@ -28,6 +28,7 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 import { useEffect } from "react";
+import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 
 const tabComponentColor = "#565657";
 const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
@@ -112,23 +113,11 @@ const Spot = () => {
           data={sportsData}
           keyExtractor={(item) => item.key}
           contentContainerStyle={{ paddingLeft: _spacing }}
-          showsHorizontalScrollIndicator={true}
+          showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item, index }) => {
             return (
-              <TouchableOpacity onPress={() => {}} style={{}}>
-                <View style={styles.category}>
-                  <Text
-                    style={{
-                      color: "#36303F",
-                      fontWeight: "700",
-                      marginHorizontal: 15,
-                    }}
-                  >
-                    {item.sport}
-                  </Text>
-                </View>
-              </TouchableOpacity>
+              <HorizontalSportsListItem item={item}/>
             );
           }}
         />
@@ -137,10 +126,6 @@ const Spot = () => {
         </View>
         <GestureDetector gesture={gesture}>
           <Animated.View style={[styles.modal, rModal]}>
-            <TouchableOpacity
-              style={styles.modalHeadingLine}
-              onPress={() => setfullModal(!fullModal)}
-            ></TouchableOpacity>
             <FlatList
               showsVerticalScrollIndicator={false}
               data={turfData}
@@ -172,7 +157,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: _colors.active,
     borderRadius: 12,
-    backgroundColor: _colors.inactive,
   },
   modal: {
     backgroundColor: "white",
