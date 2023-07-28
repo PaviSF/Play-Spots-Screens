@@ -1,6 +1,7 @@
 //React imports
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Expo imports
 import { Entypo } from "@expo/vector-icons";
@@ -14,12 +15,59 @@ import Line from "../components/Line";
 import BoxExample from "../components/index/Boxes";
 import { deviceWidth } from "../constants/Dimension";
 import LargeGradientButton from "../components/buttons/LargeGradientButton";
+import { setLocation } from "../features/location";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { findLocation, reverseGeocode } from "../helper/FindLocation";
+import { setNote } from "../features/notes";
 
 const name = faker.person.firstName();
 
 export default function Page() {
   const router = useRouter();
   const [checkboxes, setCheckboxes] = useState(Array(6).fill(false));
+  const [editedLocation, setEditedLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+    district: "",
+    state: "",
+    country: "",
+  });
+  const dispatch = useDispatch();
+  const note = useSelector((state) => state.note.value);
+
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("my-notes");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    async function fetchLocation() {
+      const currentLocation = await findLocation();
+      const geoLocation = await reverseGeocode(currentLocation);
+      const location = {
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
+        district: geoLocation[0].city,
+        state: geoLocation[0].region,
+        country: geoLocation[0].country,
+      };
+      dispatch(setLocation(location));
+    }
+    async function fetchNotesData() {
+      const notesData = await getData();
+      console.log(notesData);
+      if (notesData !== undefined) {
+        console.log("blah");
+        dispatch(setNote(notesData));
+      }
+      console.log("blaah " + note.date[0])
+    }
+    fetchLocation();
+    fetchNotesData();
+  }, []);
 
   const handleCheckboxClick = (index) => {
     const updatedCheckboxes = [...checkboxes];
@@ -32,7 +80,7 @@ export default function Page() {
       <View style={styles.main}>
         <Text style={styles.title}>Hello {name}</Text>
         <Text style={styles.subtitle}>Greetings, from playspots team</Text>
-        <Line/>
+        <Line />
         <View style={styles.dotAndTextALignment}>
           <Entypo name="dot-single" size={24} color="black" />
           <Text style={styles.recentSpotsLabel}>Choose your sports</Text>

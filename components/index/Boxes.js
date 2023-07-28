@@ -5,6 +5,7 @@ import {
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
+import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 
 const iconSize = 50;
 const inactiveColor = { icon: "#717071", label: "black" };
@@ -157,8 +158,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   box: {
-    width: 100,
-    height: 100,
+    width: deviceWidth / 4.4,
+    height: deviceWidth / 4.4,
     backgroundColor: "#f9f8f9",
     borderRadius: 5,
     margin: 10,

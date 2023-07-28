@@ -8,10 +8,10 @@ import {
 
 // You can import from local files
 import SolarSystem from "./SolarSystem";
-import { turfData } from "../../dataset";
 import { deviceWidth } from "../../constants/Dimension";
 
 const RADIUS_FACTOR = deviceWidth / 8.3;
+const image = require("../../assets/match-box.png");
 
 const distanceToPlanetsMap = {};
 
@@ -19,27 +19,27 @@ const distanceToPlanetsMap = {};
 //   return (Math.random() * 8) % 16;
 // };
 
-const generateOrbits = (spotsData) => {
+const generateOrbits = (spotsData, location) => {
   for (let i = 0; i < spotsData.length; i++) {
     const distance = Math.ceil(
       calculateDistance(
-        spotsData[i].turfLocationCo.latitude,
-        spotsData[i].turfLocationCo.longitude,
-        11.271201451658536,
-        75.78003870204095
+        spotsData[i].location.coordinates[1],
+        spotsData[i].location.coordinates[0],
+        location.latitude,
+        location.longitude
       )
     );
 
     const angle = calculateAngle(
-      spotsData[i].turfLocation.latitude,
-      spotsData[i].turfLocation.longitude,
-      11.271201451658536,
-      75.78003870204095
+      spotsData[i].location.coordinates[1],
+      spotsData[i].location.coordinates[0],
+      location.latitude,
+      location.longitude
     );
 
     const planet = {
-      name: spotsData[i].turfName,
-      image: spotsData[i].turfImage,
+      name: spotsData[i].turf_name,
+      image,
       distance,
       angle,
     };
@@ -82,8 +82,9 @@ const generateOrbits = (spotsData) => {
   });
 };
 
-export default function CircularOrbit() {
-  const orbits = generateOrbits(turfData);
+export default function CircularOrbit({ data, location }) {
+  const orbits = generateOrbits(data, location);
+
   // if (orbits.length > 0) {
   //   orbits[0].radius += RADIUS_FACTOR * 0.2; // Adjust the scaling factor as needed
   // }

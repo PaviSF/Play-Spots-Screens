@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import * as Location from "expo-location";
 
-const FindLocation = async () => {
+const findLocation = async () => {
   let { status } = await Location.requestForegroundPermissionsAsync();
   if (status !== "granted") {
     console.log("Please grant location permissions");
@@ -13,4 +13,13 @@ const FindLocation = async () => {
   return currentLocation;
 };
 
-export default FindLocation;
+const reverseGeocode = async (location) => {
+  const reverseGeocodedAddress = await Location.reverseGeocodeAsync({
+    longitude: location.coords.longitude,
+    latitude: location.coords.latitude,
+  });
+
+  return reverseGeocodedAddress;
+};
+
+export { findLocation,reverseGeocode };

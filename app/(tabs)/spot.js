@@ -6,6 +6,7 @@ import {
   StyleSheet,
   StatusBar,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
@@ -14,6 +15,7 @@ import Header from "../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { faker } from "@faker-js/faker";
 import { turfData } from "../../dataset";
+import { getTurfData } from "../../helper/FetchData";
 import CardView from "../../components/spots/CardView";
 import {
   Gesture,
@@ -29,15 +31,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { useEffect } from "react";
 import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
-
+import { removeAfterSecondComma } from "../../helper/StringManipulation";
+import { useSelector } from "react-redux";
 const tabComponentColor = "#565657";
 const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
-
-const data = [...Array(15).keys()].map(() => ({
-  key: faker.string.uuid(),
-  job: faker.animal.crocodilia(),
-  extra: faker.animal.dog(),
-}));
 
 const sportsData = [
   { key: 0, sport: "Football" },
@@ -58,7 +55,9 @@ const _colors = {
 const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
 const Spot = () => {
-  const [fullModal, setfullModal] = useState(false);
+  const location = useSelector((state) => state.location.value);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [data, setData] = useState([]);
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const gesture = Gesture.Pan()
@@ -99,8 +98,25 @@ const Spot = () => {
 
   useEffect(() => {
     translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
+    const fetchData = async () => {
+      try {
+        const turfData = await getTurfData(location.longitude, location.latitude);
+        setData(turfData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false); // Update loading state when data fetching is done
+      }
+    };
+    fetchData();
   }, []);
-  
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "white" }}>
@@ -116,28 +132,26 @@ const Spot = () => {
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={({ item, index }) => {
-            return (
-              <HorizontalSportsListItem item={item}/>
-            );
+            return <HorizontalSportsListItem item={item} />;
           }}
         />
         <View style={{ flex: 0.55 }}>
-          <CircularOrbit />
+          <CircularOrbit data={data} location={location}/>
         </View>
         <GestureDetector gesture={gesture}>
           <Animated.View style={[styles.modal, rModal]}>
             <FlatList
               showsVerticalScrollIndicator={false}
-              data={turfData}
+              data={data}
               style={{ flex: 1, marginTop: 20 }}
               renderItem={({ item, index }) => {
                 return (
                   <View>
                     <CardView
-                      spot={item.turfName}
-                      place={item.turfLocation}
-                      price={item.price}
-                      ratings={item.ratings}
+                      spot={item.turf_name}
+                      place={removeAfterSecondComma(item.location.place)}
+                      price={item.lowest_price}
+                      ratings={3}
                     />
                   </View>
                 );

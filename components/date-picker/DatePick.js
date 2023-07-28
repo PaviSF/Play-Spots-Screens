@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useState, useEffect } from "react";
 import DatePicker from "react-native-modern-datepicker";
@@ -33,8 +34,19 @@ const DatePick = () => {
 
   useEffect(() => {
     dispatch(setNote(noteAndDate));
+    storeData(noteAndDate);
   }, [noteAndDate]);
 
+  const storeData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem("my-notes", jsonValue);
+    } catch (e) {
+      console.error("Error storing data:", e);
+      // Handle the error here, or show an error message to the user
+    }
+  };
+  
 
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
@@ -61,7 +73,6 @@ const DatePick = () => {
     handleOnPressNext();
     handleOnPressStartDate();
     console.log(selectedStartDate);
-    //dispatch(setNote(noteAndDate))
     setToSendNote();
   };
   return (
@@ -165,11 +176,10 @@ const styles = StyleSheet.create({
     width: deviceWidth / 1.3,
     borderColor: "white",
     margin: 20,
-
   },
   notes: {
     color: "white",
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
   },
 });
 

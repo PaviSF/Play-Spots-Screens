@@ -33,7 +33,7 @@ const CardView = ({ spot, place, price, ratings }) => {
               <View>
                 <Text style={{ fontWeight: "500", fontSize: 15 }}>{spot}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ color: "grey" }}>{place}</Text>
+                  <Text style={{ color: "grey",width: deviceWidth/3 }}>{place}</Text>
                   <Entypo name="dot-single" size={30} color="black" />
                   <Text>4 km</Text>
                 </View>

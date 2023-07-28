@@ -1,15 +1,8 @@
 import {
-  StatusBar,
-  Image,
   Animated,
   Text,
   View,
-  Dimensions,
   StyleSheet,
-  TouchableOpacity,
-  Easing,
-  SafeAreaViewBase,
-  SafeAreaView,
   FlatList,
   ImageBackground,
 } from "react-native";
@@ -20,10 +13,8 @@ import LargeGradientButton from "../../components/buttons/LargeGradientButton";
 import SmallGradientButton from "../../components/buttons/SmallGradientButton";
 
 import { deviceWidth, deviceHeight } from "../../constants/Dimension";
-import { Button } from "react-native";
 import { faker, it } from "@faker-js/faker";
 import { Feather } from "@expo/vector-icons";
-import { useState } from "react";
 import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 
 const sampleDate = "12 October 2023";
@@ -50,18 +41,17 @@ const Events = () => {
   return (
     <View style={styles.mainContainer}>
       <Tabs.Screen options={{ headerShown: false }} />
-      <Header />
-
+      <Header/>
       <LargeGradientButton title={"Host An Event"} />
 
-      <Text style={{ fontWeight: 500, color: "grey", marginLeft: 10 }}>
+      <Text style={{ fontWeight: 500, color: "grey", marginLeft: 10 ,fontSize:15}}>
         Sports events nearby you
       </Text>
       <FlatList
         style={{ flexGrow: 0, marginTop: 5 }}
         data={sportsData}
         keyExtractor={(item) => item.key}
-        contentContainerStyle={{ paddingLeft: _spacing }}
+        contentContainerStyle={{ paddingLeft: 2 * _spacing }}
         showsHorizontalScrollIndicator={false}
         horizontal
         renderItem={({ item, index: fIndex }) => {
@@ -100,8 +90,8 @@ const Events = () => {
               >
                 <View style={{ flex: 0.8, marginTop: 10, marginLeft: 10 }}>
                   <Text style={styles.title}>Deega championship 2023</Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <Feather name="calendar" size={24} color="white" />
+                  <View style={{ flexDirection: "row",alignItems:'center' }}>
+                    <Feather name="calendar" size={18} color="white" />
                     <Text style={styles.description}>
                       {`${sampleDate} | ${sampleTime}`}
                     </Text>
@@ -153,6 +143,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: "white",
+    marginLeft:8
   },
 });
 

@@ -12,7 +12,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
 
@@ -20,6 +20,7 @@ import { Entypo } from "@expo/vector-icons";
 import CustomImageCarousal from "../../components/carousel/Carousel";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { getGreeting } from "../../helper/GiveGreetings";
+import { findLocation, reverseGeocode } from "../../helper/FindLocation";
 
 const data = [...Array(5).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -55,8 +56,6 @@ const Home = () => {
   const turfBackground = require("../../assets/turf-background.png");
 
   const windowHeight = useWindowDimensions().height;
-  const windowWidth = useWindowDimensions().height;
-
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   const handleSearchFocus = () => {
@@ -125,7 +124,7 @@ const Home = () => {
           data={data}
           horizontal
           showsHorizontalScrollIndicator={false}
-          snapToInterval={190}
+          snapToInterval={deviceWidth/2.16}
           renderItem={({ item }) => (
             <View style={styles.cardContainer}>
               <View style={styles.spotCard}>
@@ -134,7 +133,7 @@ const Home = () => {
                   <Text style={styles.turfName}>{item.turfName}</Text>
                   <Text style={styles.turfLocation}>{item.location}</Text>
                   <View style={{ flexDirection: "row", marginTop: 5 }}>
-                    <Image source={football} style={{marginRight:5}} />
+                    <Image source={football} style={{ marginRight: 5 }} />
                     <Image source={cricket} />
                     <TouchableOpacity style={{ marginLeft: 75 }}>
                       <Image source={book} style={{ height: 50, width: 50 }} />
@@ -147,8 +146,11 @@ const Home = () => {
         />
       </View>
       <View style={{ flex: 0.7 }}>
-        <CustomImageCarousal data={data2}/>
-        <Image source={turfBackground} style={{width:deviceWidth,height:65,alignSelf:'center'}}/>
+        <CustomImageCarousal data={data2} />
+        <Image
+          source={turfBackground}
+          style={{ width: deviceWidth, height: 65, alignSelf: "center" }}
+        />
       </View>
     </View>
   );
@@ -241,14 +243,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginHorizontal: 15,
+   // backgroundColor:'black',
   },
   cardContainer: {
+    flexGrow:1,
     height: deviceHeight / 5,
     shadowColor: "00ff87",
     shadowOffset: { width: 3, height: 5 },
     shadowOpacity: 1,
     shadowRadius: 100,
-    elevation: 2,
+    elevation: 7,
   },
   spotCard: {
     flex: 1,

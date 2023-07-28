@@ -2,12 +2,14 @@ import { View, Text } from "react-native";
 import React from "react";
 import { Provider } from "react-redux";
 import noteReducer from "../features/notes";
+import locationReducer from "../features/location";
 import { Stack } from "expo-router";
 import { configureStore } from "@reduxjs/toolkit";
 
 const store = configureStore({
   reducer: {
     note: noteReducer,
+    location: locationReducer,
   },
 });
 

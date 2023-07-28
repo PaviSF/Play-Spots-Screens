@@ -20,13 +20,10 @@ const tabComponentColor = "#565657";
 const TabLayout = () => {
   return (
     <View style={styles.tabBarContainer}>
-    
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "green",
           tabBarStyle: styles.tabBar,
           tabBarShowLabel: false,
-          tabBarInactiveTintColor: "yellow",
           tabBarHideOnKeyboard: true,
           headerShadowVisible: false,
         }}
@@ -98,7 +95,7 @@ const TabLayout = () => {
 };
 
 const styles = StyleSheet.create({
-  tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF" },
+  tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF80", },
   tabBar: {
     marginHorizontal: 10,
     marginBottom: 10,
@@ -115,10 +112,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     shadowColor: "00ff87",
-    shadowOffset: { width: 3, height: 5 },
+    shadowOffset: { width: 1, height: 2 },
     shadowOpacity: 1,
     shadowRadius: 100,
-    elevation: 2,
+    elevation: 1,
   },
   icon: {
     height: 30,

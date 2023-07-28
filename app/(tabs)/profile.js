@@ -1,4 +1,4 @@
-import {
+ import {
   ScrollView,
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 import React from "react";
 import { faker } from "@faker-js/faker";
 // import { useSelector, useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formatDate } from "../../helper/CalculateMonth";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { useSelector } from "react-redux";
@@ -31,22 +32,7 @@ const badminton = require("../../assets/badminton.png");
 const Profile = () => {
   const note = useSelector((state) => state.note.value);
   const { height, width } = useWindowDimensions();
-  const [innerScrollActive, setInnerScrollActive] = useState(false);
   const [sportReport, setSportReport] = useState("WEEKLY");
-
-  const handleInnerScroll = (scrollEvent) => {
-    const { contentOffset, contentSize, layoutMeasurement } =
-      scrollEvent.nativeEvent;
-    const innerScrollEndReached =
-      contentOffset.y + layoutMeasurement.height >= contentSize.height;
-
-    // Check if the inner scroll is active
-    if (innerScrollEndReached && !innerScrollActive) {
-      setInnerScrollActive(true);
-    } else if (!innerScrollEndReached && innerScrollActive) {
-      setInnerScrollActive(false);
-    }
-  };
 
   function getDate(str) {
     var words = str.split(" ");
@@ -62,7 +48,6 @@ const Profile = () => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={styles.mainContainer}
-      scrollEnabled={!innerScrollActive}
     >
       <View style={styles.accountDetailsContainer}>
         <Image style={styles.profileImage} source={profileImage} />
@@ -73,15 +58,48 @@ const Profile = () => {
         </View>
       </View>
       <Text style={styles.activitiesLabel}>My Activities</Text>
-      <View style={{ flexDirection: "row",marginLeft:10 }}>
-        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('WEEKLY')}>
-          <Text style={{fontWeight:'500',color:sportReport === 'WEEKLY'? 'black' : 'grey'}}>Weekly</Text>
+      <View style={{ flexDirection: "row", marginLeft: 10 }}>
+        <TouchableOpacity
+          style={styles.reportHeading}
+          onPress={() => {
+            setSportReport("WEEKLY");
+            console.log(note.date[0]);
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "500",
+              color: sportReport === "WEEKLY" ? "black" : "grey",
+            }}
+          >
+            Weekly
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('MONTHLY')}>
-          <Text style={{fontWeight:'500',color:sportReport === 'MONTHLY'? 'black' : 'grey'}} >Monthly</Text>
+        <TouchableOpacity
+          style={styles.reportHeading}
+          onPress={() => setSportReport("MONTHLY")}
+        >
+          <Text
+            style={{
+              fontWeight: "500",
+              color: sportReport === "MONTHLY" ? "black" : "grey",
+            }}
+          >
+            Monthly
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.reportHeading} onPress={()=>setSportReport('YEARLY')}>
-          <Text style={{fontWeight:'500',color:sportReport === 'YEARLY'? 'black' : 'grey'}}>Yearly</Text>
+        <TouchableOpacity
+          style={styles.reportHeading}
+          onPress={() => setSportReport("YEARLY")}
+        >
+          <Text
+            style={{
+              fontWeight: "500",
+              color: sportReport === "YEARLY" ? "black" : "grey",
+            }}
+          >
+            Yearly
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.activitiesDetailsContainer}>
@@ -177,7 +195,6 @@ const Profile = () => {
           {note.note[0] ? (
             <ScrollView
               showsVerticalScrollIndicator={false}
-              onScroll={handleInnerScroll}
               scrollEventThrottle={16}
             >
               {note.date.map((date, index) => (
@@ -243,7 +260,9 @@ const Profile = () => {
               }}
             >
               <Foundation name="clipboard-notes" size={80} color="#DCD6D0" />
-              <Text style={{fontWeight:'700',color:"#DCD6D0"}}>No Notes</Text>
+              <Text style={{ fontWeight: "700", color: "#DCD6D0" }}>
+                No Notes
+              </Text>
             </View>
           )}
         </View>
@@ -255,7 +274,7 @@ const Profile = () => {
       <ProfileList label="Cancellation/Reschedule" />
       <ProfileList label="Refer & Earn playcoin" />
       <ProfileList label="Logout" />
-      <ProfileList label="Delete Account" color={'red'} />
+      <ProfileList label="Delete Account" color={"red"} />
     </ScrollView>
   );
 };
@@ -309,7 +328,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginLeft: 4,
     borderWidth: 0.5,
-    borderColor: 'grey'
+    borderColor: "grey",
   },
   activitiesDetailsContainer: {
     flexDirection: "row",

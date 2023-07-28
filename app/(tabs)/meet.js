@@ -100,12 +100,12 @@ const Meet = () => {
       >
         <Text
           style={{
-            marginTop: StatusBar.currentHeight,
-            marginLeft: 30,
-            marginBottom: 30,
+            marginTop: deviceWidth / 13.7,
+            marginLeft: deviceWidth / 16.14,
+            marginBottom: deviceWidth / 25,
             color: "white",
             fontWeight: "500",
-            fontSize: 20,
+            fontSize: deviceWidth / 20.55,
           }}
         >
           Discover your sports buddies
@@ -193,8 +193,8 @@ const Meet = () => {
 
 const styles = StyleSheet.create({
   faceToFace: {
-    width: 180,
-    height: 180,
+    width: deviceHeight / 4.66,
+    height: deviceHeight / 4.66,
   },
   cardContainer: {
     flexDirection: "row",
