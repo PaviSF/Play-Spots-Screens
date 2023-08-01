@@ -9,21 +9,27 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 import { deviceWidth } from "../../constants/Dimension";
+import { useFonts } from "expo-font";
 
+const defaultImage =
+  "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
 
-const CardView = ({ spot, place, price, ratings }) => {
+const CardView = ({ spot, place, price, ratings, image }) => {
   const [like, setLike] = useState(false);
+  const [fontsLoaded] = useFonts({
+    Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
+  });
+  const completeImage = "https://d3th8mtd05b6hz.cloudfront.net/turf/" + image;
   return (
-    <View style={{ justifyContent: "center", alignItems: "center" }}>
+    <View style={{ justifyContent: "center" }}>
       <View style={styles.cardContainer}>
         {/* Square Image with Curved Corners */}
-        <View style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/match-box.png")}
-            style={styles.image}
-          />
-        </View>
-
+        <Image
+          source={{ uri: completeImage }}
+          style={styles.image}
+          defaultSource={require("../../assets/247181.jpg")}
+          resizeMode="cover" // Resize the image to cover the container
+        />
         {/* Column with 5 Text Elements */}
         <View style={styles.textContainer}>
           <View>
@@ -31,13 +37,30 @@ const CardView = ({ spot, place, price, ratings }) => {
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
               <View>
-                <Text style={{ fontWeight: "500", fontSize: 15 }}>{spot}</Text>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ color: "grey",width: deviceWidth/3 }}>{place}</Text>
-                  <Entypo name="dot-single" size={30} color="black" />
-                  <Text>4 km</Text>
-                </View>
+                <Text
+                  style={{
+                    fontWeight: "700",
+                    fontSize: 15,
+                    fontFamily: "Roboto",
+                    paddingBottom: 2,
+                  }}
+                >
+                  {spot}
+                </Text>
                 <View style={{ flexDirection: "row" }}>
+                  <Text
+                    style={{
+                      color: "grey",
+                      width: deviceWidth / 2,
+                      fontSize: 12,
+                      fontWeight: "500",
+                      paddingBottom: 2,
+                    }}
+                  >
+                    {place}
+                  </Text>
+                </View>
+                <View style={{ flexDirection: "row", paddingBottom: 2 }}>
                   <MaterialIcons
                     name="sports-cricket"
                     size={20}
@@ -58,18 +81,6 @@ const CardView = ({ spot, place, price, ratings }) => {
                   />
                 </View>
               </View>
-              <TouchableOpacity
-                onPress={() => {
-                  setLike(!like);
-                }}
-              >
-                <AntDesign
-                  name={like ? "heart" : "hearto"}
-                  size={24}
-                  color="green"
-                  style={{ marginLeft: 20 }}
-                />
-              </TouchableOpacity>
             </View>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -82,39 +93,53 @@ const CardView = ({ spot, place, price, ratings }) => {
                   {` Rs ${price}`}
                 </Text>
               </View>
-              <View style={{ flexDirection: "row", marginTop: 20 }}>
-                <FontAwesome
-                  name={ratings > 0 ? "star" : "star-o"}
-                  size={20}
-                  color="#FFC400"
-                />
-                <FontAwesome
-                  name={ratings > 1 ? "star" : "star-o"}
-                  size={20}
-                  color="#FFC400"
-                />
-                <FontAwesome
-                  name={ratings > 2 ? "star" : "star-o"}
-                  size={20}
-                  color="#FFC400"
-                />
-                <FontAwesome
-                  name={ratings > 3 ? "star" : "star-o"}
-                  size={20}
-                  color="#FFC400"
-                />
-                
-              </View>
             </View>
+          </View>
+        </View>
+        <View style={styles.likeAndStarContainer}>
+          <TouchableOpacity
+            onPress={() => {
+              setLike(!like);
+            }}
+          >
+            <AntDesign
+              name={like ? "heart" : "hearto"}
+              size={24}
+              color="green"
+              style={{ marginLeft: 20 }}
+            />
+          </TouchableOpacity>
+          <View style={{ flexDirection: "row", marginTop: 20 }}>
+            <FontAwesome
+              name={ratings > 0 ? "star" : "star-o"}
+              size={20}
+              color="#FFC400"
+            />
+            <FontAwesome
+              name={ratings > 1 ? "star" : "star-o"}
+              size={20}
+              color="#FFC400"
+            />
+            <FontAwesome
+              name={ratings > 2 ? "star" : "star-o"}
+              size={20}
+              color="#FFC400"
+            />
+            <FontAwesome
+              name={ratings > 3 ? "star" : "star-o"}
+              size={20}
+              color="#FFC400"
+            />
           </View>
         </View>
       </View>
       <View
         style={{
-          width: deviceWidth / 1.2,
+          width: "85%",
+          alignSelf: "center",
           height: 0.5,
           backgroundColor: "black",
-          marginBottom:10,
+          marginBottom: 10,
         }}
       />
     </View>
@@ -127,22 +152,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
     borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    marginTop: 10,
+    padding: 20,
+    marginBottom: 5,
+    marginTop: 5,
   },
   imageContainer: {
-    flex: 0.2,
-    borderRadius: 10,
     overflow: "hidden",
   },
   image: {
-    aspectRatio: 1, // Square aspect ratio
-    width: "70%",
-    height: "70%",
+    //aspectRatio: 1, // Square aspect ratio
+    flex: 0.3,
+    borderRadius: 10,
+    width: "100%",
+    height: "100%",
   },
   textContainer: {
-    flex: 0.7,
+    flex: 0.5,
     marginLeft: 10,
     justifyContent: "space-between",
   },
@@ -154,6 +179,11 @@ const styles = StyleSheet.create({
     height: 30,
     width: 30,
     padding: 2,
+  },
+  likeAndStarContainer: {
+    flex: 0.3,
+    justifyContent: "space-between",
+    alignItems: "flex-end",
   },
 });
 

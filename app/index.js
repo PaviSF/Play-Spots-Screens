@@ -66,7 +66,7 @@ export default function Page() {
       console.log("blaah " + note.date[0])
     }
     fetchLocation();
-    fetchNotesData();
+    //fetchNotesData();
   }, []);
 
   const handleCheckboxClick = (index) => {

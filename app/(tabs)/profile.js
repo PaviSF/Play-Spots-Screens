@@ -11,7 +11,6 @@
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
-// import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formatDate } from "../../helper/CalculateMonth";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
@@ -121,7 +120,7 @@ const Profile = () => {
         >
           <View style={{ flex: 0.6, justifyContent: "space-between" }}>
             <View style={styles.sportActivityContainer}>
-              <Image source={football} style={[styles.sportsIcon, {}]} />
+              <Image source={football} style={styles.sportsIcon} />
               <View style={{ flex: 0.7, flexDirection: "row" }}>
                 <AntDesign name="clockcircleo" size={15} color="black" />
                 <Text style={styles.sportActivityText}>5h 30 mins</Text>
@@ -360,8 +359,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   sportsIcon: {
-    height: 60,
-    width: 60,
+    height: deviceWidth / 6.85,
+    width: deviceWidth / 6.85,
     flex: 0.3,
     marginRight: 10,
   },

@@ -33,6 +33,7 @@ import { useEffect } from "react";
 import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 import { removeAfterSecondComma } from "../../helper/StringManipulation";
 import { useSelector } from "react-redux";
+import { useFonts } from "expo-font";
 const tabComponentColor = "#565657";
 const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
 
@@ -56,8 +57,12 @@ const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
 const Spot = () => {
   const location = useSelector((state) => state.location.value);
+  const data = useSelector((state) => state.turfs.value);
   const [isLoading, setIsLoading] = useState(true); // New loading state
-  const [data, setData] = useState([]);
+  const [fonts] = useFonts({
+    Roboto: require('../../assets/fonts/RobotoCondensed-Light.ttf')
+  })
+  //const [data, setData] = useState([]);
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const gesture = Gesture.Pan()
@@ -98,17 +103,18 @@ const Spot = () => {
 
   useEffect(() => {
     translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
-    const fetchData = async () => {
-      try {
-        const turfData = await getTurfData(location.longitude, location.latitude);
-        setData(turfData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false); // Update loading state when data fetching is done
-      }
-    };
-    fetchData();
+    if (data !== null) {
+      setIsLoading(false); // Update loading state when data fetching is done
+
+    }
+    // try {
+    //   //const turfData = await getTurfData(location.longitude, location.latitude);
+    //   setData(tData);
+    // } catch (error) {
+    //   console.error("Error fetching data:", error);
+    // } finally {
+    //   setIsLoading(false); // Update loading state when data fetching is done
+    // }
   }, []);
   if (isLoading) {
     return (
@@ -136,7 +142,7 @@ const Spot = () => {
           }}
         />
         <View style={{ flex: 0.55 }}>
-          <CircularOrbit data={data} location={location}/>
+          <CircularOrbit data={data} location={location} />
         </View>
         <GestureDetector gesture={gesture}>
           <Animated.View style={[styles.modal, rModal]}>
@@ -146,14 +152,13 @@ const Spot = () => {
               style={{ flex: 1, marginTop: 20 }}
               renderItem={({ item, index }) => {
                 return (
-                  <View>
                     <CardView
                       spot={item.turf_name}
                       place={removeAfterSecondComma(item.location.place)}
                       price={item.lowest_price}
                       ratings={3}
+                      image={item.images[0]}
                     />
-                  </View>
                 );
               }}
             />

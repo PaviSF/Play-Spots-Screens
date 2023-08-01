@@ -8,7 +8,7 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
-  KeyboardAvoidingView,
+  ActivityIndicator,
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
@@ -21,8 +21,11 @@ import CustomImageCarousal from "../../components/carousel/Carousel";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { getGreeting } from "../../helper/GiveGreetings";
 import { findLocation, reverseGeocode } from "../../helper/FindLocation";
+import turfs, { setTurfs } from "../../features/turfs";
+import { useDispatch, useSelector } from "react-redux";
+import { getDiscountBanner, getTurfData } from "../../helper/FetchData";
 
-const data = [...Array(5).keys()].map(() => ({
+const data = [...Array(20).keys()].map(() => ({
   key: faker.string.uuid(),
   turfName: faker.company.name(),
   location: faker.location.city(),
@@ -57,6 +60,37 @@ const Home = () => {
 
   const windowHeight = useWindowDimensions().height;
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [bannerData, setBannerData] = useState([]);
+  const [tData, setTData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // New loading state
+  const dispatch = useDispatch();
+  const location = useSelector((state) => state.location.value);
+  const turfImageBaseLink = "https://d3th8mtd05b6hz.cloudfront.net/turf/";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const turfData = await getTurfData(
+          location.longitude,
+          location.latitude
+        );
+        dispatch(setTurfs(turfData));
+        setTData(turfData);
+        const bData = await getDiscountBanner(
+          location.longitude,
+          location.latitude
+        );
+        setBannerData(bData);
+        console.log(bData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false); // Update loading state when data fetching is done
+        // console.log(tData)
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
@@ -65,6 +99,15 @@ const Home = () => {
   const handleSearchBlur = () => {
     setIsSearchFocused(false);
   };
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Tabs.Screen options={{ headerShown: false }} />
+        <ActivityIndicator size="large" color="green" />
+      </View>
+    );
+  }
 
   return (
     <View
@@ -121,17 +164,20 @@ const Home = () => {
       <View style={styles.overallContainer}>
         <FlatList
           style={{ flex: 1 }}
-          data={data}
+          data={tData}
           horizontal
           showsHorizontalScrollIndicator={false}
-          snapToInterval={deviceWidth/2.16}
+          snapToInterval={deviceWidth / 2.16}
           renderItem={({ item }) => (
             <View style={styles.cardContainer}>
               <View style={styles.spotCard}>
-                <Image source={turfImage} style={styles.turfImage} />
+                <Image
+                  source={{ uri: turfImageBaseLink + item.images[0] }}
+                  style={styles.turfImage}
+                />
                 <View style={styles.turfText}>
-                  <Text style={styles.turfName}>{item.turfName}</Text>
-                  <Text style={styles.turfLocation}>{item.location}</Text>
+                  <Text style={styles.turfName}>{item.turf_name}</Text>
+                  <Text style={styles.turfLocation}>{item.location.place}</Text>
                   <View style={{ flexDirection: "row", marginTop: 5 }}>
                     <Image source={football} style={{ marginRight: 5 }} />
                     <Image source={cricket} />
@@ -146,7 +192,7 @@ const Home = () => {
         />
       </View>
       <View style={{ flex: 0.7 }}>
-        <CustomImageCarousal data={data2} />
+        <CustomImageCarousal data={bannerData} />
         <Image
           source={turfBackground}
           style={{ width: deviceWidth, height: 65, alignSelf: "center" }}
@@ -157,6 +203,12 @@ const Home = () => {
 };
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor:'white'
+  },
   mainContainer: {
     backgroundColor: "#FFFFFF",
     flex: 1,
@@ -243,10 +295,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginHorizontal: 15,
-   // backgroundColor:'black',
+    // backgroundColor:'black',
   },
   cardContainer: {
-    flexGrow:1,
+    flexGrow: 1,
     height: deviceHeight / 5,
     shadowColor: "00ff87",
     shadowOffset: { width: 3, height: 5 },

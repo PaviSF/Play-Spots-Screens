@@ -41,7 +41,7 @@ const SolarSystem = ({ orbits }) => {
 
       return (
         <View key={index} style={[styles.planetContainer, planetStyle]}>
-          <Image source={planet.image} style={styles.planetImage} />
+          <Image source={{uri:planet.image}} style={styles.planetImage} />
           <Text style={styles.planetName}>{`${planet.distance} km`}</Text>
         </View>
       );
