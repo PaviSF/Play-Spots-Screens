@@ -13,17 +13,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Tabs } from "expo-router";
-import Header from "../../components/header/Header";
+import { Stack, Tabs } from "expo-router";
+import Header from "../../../components/header/Header";
 
 import { Entypo } from "@expo/vector-icons";
-import CustomImageCarousal from "../../components/carousel/Carousel";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-import { getGreeting } from "../../helper/GiveGreetings";
-import { findLocation, reverseGeocode } from "../../helper/FindLocation";
-import turfs, { setTurfs } from "../../features/turfs";
+import CustomImageCarousal from "../../../components/carousel/Carousel";
+import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
+import { getGreeting } from "../../../helper/GiveGreetings";
+import { findLocation, reverseGeocode } from "../../../helper/FindLocation";
+import turfs, { setTurfs } from "../../../features/turfs";
 import { useDispatch, useSelector } from "react-redux";
-import { getDiscountBanner, getTurfData } from "../../helper/FetchData";
+import { getDiscountBanner, getTurfData } from "../../../helper/FetchData";
+import HorizontalTurfList from "../../../components/home/HorizontalTurfList";
 
 const data = [...Array(20).keys()].map(() => ({
   key: faker.string.uuid(),
@@ -31,32 +32,32 @@ const data = [...Array(20).keys()].map(() => ({
   location: faker.location.city(),
 }));
 
-const data2 = [
-  {
-    image: require("../../assets/banner.png"),
-  },
-  {
-    image: require("../../assets/banner.png"),
-  },
-  {
-    image: require("../../assets/banner.png"),
-  },
-  {
-    image: require("../../assets/banner.png"),
-  },
-];
+// const data2 = [
+//   {
+//     image: require("../../../assets/banner.png"),
+//   },
+//   {
+//     image: require("../../assets/banner.png"),
+//   },
+//   {
+//     image: require("../../assets/banner.png"),
+//   },
+//   {
+//     image: require("../../assets/banner.png"),
+//   },
+// ];
 
 const Home = () => {
   const fullName = faker.person.fullName();
-  const profilePic = require("../../assets/247181.jpg");
-  const turfImage = require("../../assets/download.jpeg");
-  const football = require("../../assets/football.png");
-  const cricket = require("../../assets/cricket.png");
-  const book = require("../../assets/book.png");
-  const gift = require("../../assets/gift.png");
-  const coins = require("../../assets/coins.png");
-  const tournament = require("../../assets/tournament.png");
-  const turfBackground = require("../../assets/turf-background.png");
+  const profilePic = require("../../../assets/247181.jpg");
+  const turfImage = require("../../../assets/download.jpeg");
+  const football = require("../../../assets/football.png");
+  const cricket = require("../../../assets/cricket.png");
+  const book = require("../../../assets/book.png");
+  const gift = require("../../../assets/gift.png");
+  const coins = require("../../../assets/coins.png");
+  const tournament = require("../../../assets/tournament.png");
+  const turfBackground = require("../../../assets/turf-background.png");
 
   const windowHeight = useWindowDimensions().height;
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -113,7 +114,7 @@ const Home = () => {
     <View
       style={[styles.mainContainer, { minHeight: Math.round(windowHeight) }]}
     >
-      <Tabs.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: false }} />
       <Header />
       {/* Profile Details */}
       <View style={styles.profileContainer}>
@@ -161,41 +162,18 @@ const Home = () => {
       </View>
 
       {/* Recent Spots  */}
-      <View style={styles.overallContainer}>
-        <FlatList
-          style={{ flex: 1 }}
-          data={tData}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          snapToInterval={deviceWidth / 2.16}
-          renderItem={({ item }) => (
-            <View style={styles.cardContainer}>
-              <View style={styles.spotCard}>
-                <Image
-                  source={{ uri: turfImageBaseLink + item.images[0] }}
-                  style={styles.turfImage}
-                />
-                <View style={styles.turfText}>
-                  <Text style={styles.turfName}>{item.turf_name}</Text>
-                  <Text style={styles.turfLocation}>{item.location.place}</Text>
-                  <View style={{ flexDirection: "row", marginTop: 5 }}>
-                    <Image source={football} style={{ marginRight: 5 }} />
-                    <Image source={cricket} />
-                    <TouchableOpacity style={{ marginLeft: 75 }}>
-                      <Image source={book} style={{ height: 50, width: 50 }} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </View>
-            </View>
-          )}
-        />
-      </View>
-      <View style={{ flex: 0.7 }}>
+      
+      <HorizontalTurfList data={tData}/>
+      <View style={{ flex: 5 }}>
+        <View style={{flex:0.3}}/>
         <CustomImageCarousal data={bannerData} />
         <Image
           source={turfBackground}
-          style={{ width: deviceWidth, height: 65, alignSelf: "center" }}
+          style={{
+            width: deviceWidth,
+            height: deviceWidth / 7,
+            alignSelf: "center",
+          }}
         />
       </View>
     </View>
@@ -207,7 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:'white'
+    backgroundColor: "white",
   },
   mainContainer: {
     backgroundColor: "#FFFFFF",
@@ -218,20 +196,20 @@ const styles = StyleSheet.create({
     marginLeft: 15,
   },
   profilePic: {
-    width: 50,
-    height: 50,
+    width: deviceWidth / 8.22,
+    height: deviceWidth / 8.22,
     borderRadius: 100,
   },
   profileLabels: {
     marginLeft: 10,
   },
   greetings: {
-    fontSize: 17,
+    fontSize: deviceWidth / 24.17,
     fontWeight: 500,
     color: "grey",
   },
   profileName: {
-    fontSize: 17,
+    fontSize: deviceWidth / 24.17,
     fontWeight: 500,
     color: "#01603d",
   },
@@ -267,12 +245,16 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
   },
   recentUpdatesTexts: {
-    width: 80,
+    width: deviceWidth / 5.13,
     fontSize: 12,
     fontWeight: "500",
     textAlign: "center",
   },
-  recentUpdatesImage: { height: 50, width: 50, marginBottom: 3 },
+  recentUpdatesImage: {
+    height: deviceWidth / 8.22,
+    width: deviceWidth / 8.22,
+    marginBottom: 3,
+  },
   recentSpots: {
     flexDirection: "row",
     margin: 10,
@@ -291,15 +273,14 @@ const styles = StyleSheet.create({
     paddingTop: 3,
   },
   overallContainer: {
-    flex: 1,
+    flex: 0.6, // Set flex to 0.7 to reduce the height of the FlatList
     flexDirection: "row",
     justifyContent: "space-evenly",
     marginHorizontal: 15,
-    // backgroundColor:'black',
   },
   cardContainer: {
     flexGrow: 1,
-    height: deviceHeight / 5,
+    height: deviceHeight / 4.5,
     shadowColor: "00ff87",
     shadowOffset: { width: 3, height: 5 },
     shadowOpacity: 1,
@@ -321,16 +302,24 @@ const styles = StyleSheet.create({
   fineLine: {
     margin: 3,
   },
+  textAndButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   turfText: {
     flex: 0.2,
     margin: 8,
-    width: deviceWidth / 2.4,
+    
   },
   turfName: {
+    fontSize: 13,
+    paddingBottom: 2,
     fontWeight: "500",
   },
   turfLocation: {
     fontSize: 10,
+    paddingBottom: 2,
+    width: deviceWidth / 3.5,
   },
 });
 

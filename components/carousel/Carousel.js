@@ -62,8 +62,8 @@ const CustomImageCarousal = ({ data }) => {
               <Image
                 source={{ uri: imageBaseLink + item.image }}
                 style={styles.image}
+                resizeMode="stretch"
               />
-              {/* <Text>{item.image}</Text> */}
             </Animated.View>
           </View>
         );
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   image: {
     width: "100%",
     height: undefined,
-    aspectRatio: 19 / 9,
+    aspectRatio: 18 / 9,
   },
 });
 

@@ -11,7 +11,6 @@
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { formatDate } from "../../helper/CalculateMonth";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { useSelector } from "react-redux";

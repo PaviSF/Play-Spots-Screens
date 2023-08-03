@@ -1,5 +1,6 @@
 import React, {useRef} from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
+import { deviceWidth } from '../../constants/Dimension';
 
 
 
@@ -50,7 +51,7 @@ const SolarSystem = ({ orbits }) => {
 
   const renderOrbits = () => {
     return orbits.map((orbit, index) => {
-      const scaledRadius = orbit.radius; // Adjust the scaling factor as needed
+      const scaledRadius = orbit.radius * 1.25; // Adjust the scaling factor as needed
       
       return (
         <View key={index} style={[styles.orbit, { width: scaledRadius * 2, height: scaledRadius * 2, }]}>
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 0.5,
     borderColor: 'green',
-    borderRadius: 9999,
+    borderRadius: 999,
   },
   planetContainer: {
     position: 'absolute',
@@ -94,8 +95,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   planetImage: {
-    width: 50,
-    height: 50,
+    width: deviceWidth / 8.22,
+    height: deviceWidth / 8.22,
     borderRadius: 25,
     borderWidth: 2,
     borderColor: 'black'
@@ -111,8 +112,8 @@ const styles = StyleSheet.create({
     // Add any other styles you need
   },
   centerImage: {
-    width: 50,
-    height: 50,
+    width: deviceWidth / 8.22,
+    height: deviceWidth / 8.22,
     borderRadius: 30,
     // Add any other styles you need
   },
