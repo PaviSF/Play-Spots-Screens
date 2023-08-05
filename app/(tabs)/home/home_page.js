@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Stack, Tabs } from "expo-router";
+import { Link, Stack, Tabs, useRouter } from "expo-router";
 import Header from "../../../components/header/Header";
 
 import { Entypo } from "@expo/vector-icons";
@@ -67,6 +67,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const location = useSelector((state) => state.location.value);
   const turfImageBaseLink = "https://d3th8mtd05b6hz.cloudfront.net/turf/";
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +100,10 @@ const Home = () => {
 
   const handleSearchBlur = () => {
     setIsSearchFocused(false);
+  };
+
+  const goToSearchPage = () => {
+    router.push("search_location");
   };
 
   if (isLoading) {
@@ -136,7 +141,7 @@ const Home = () => {
 
       {/* Recent Updates */}
       <View style={styles.recentUpdates}>
-        <TouchableOpacity style={{ alignItems: "center" }}>
+        <TouchableOpacity style={{ alignItems: "center" }} onPress={goToSearchPage}>
           <Image source={gift} style={styles.recentUpdatesImage} />
           <Text style={styles.recentUpdatesTexts}>3 offers for you</Text>
         </TouchableOpacity>
@@ -162,10 +167,10 @@ const Home = () => {
       </View>
 
       {/* Recent Spots  */}
-      
-      <HorizontalTurfList data={tData}/>
+
+      <HorizontalTurfList data={tData} />
       <View style={{ flex: 5 }}>
-        <View style={{flex:0.3}}/>
+        <View style={{ flex: 0.3 }} />
         <CustomImageCarousal data={bannerData} />
         <Image
           source={turfBackground}
@@ -309,7 +314,6 @@ const styles = StyleSheet.create({
   turfText: {
     flex: 0.2,
     margin: 8,
-    
   },
   turfName: {
     fontSize: 13,

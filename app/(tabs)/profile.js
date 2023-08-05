@@ -194,6 +194,7 @@ const Profile = () => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               scrollEventThrottle={16}
+              nestedScrollEnabled
             >
               {note.date.map((date, index) => (
                 <View key={index}>

@@ -57,7 +57,7 @@ const TabLayout = () => {
         <Tabs.Screen
           name="home"
           options={{
-            headerStyle: {},
+            headerShown: false,
             tabBarIcon: () => (
               <View style={styles.homeCircle}>
                 <Image source={activeHomeIcon} style={styles.icon} />

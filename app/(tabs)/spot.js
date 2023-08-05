@@ -60,9 +60,8 @@ const Spot = () => {
   const data = useSelector((state) => state.turfs.value);
   const [isLoading, setIsLoading] = useState(true); // New loading state
   const [fonts] = useFonts({
-    Roboto: require('../../assets/fonts/RobotoCondensed-Light.ttf')
-  })
-  //const [data, setData] = useState([]);
+    Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
+  });
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const gesture = Gesture.Pan()
@@ -105,16 +104,7 @@ const Spot = () => {
     translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
     if (data !== null) {
       setIsLoading(false); // Update loading state when data fetching is done
-
     }
-    // try {
-    //   //const turfData = await getTurfData(location.longitude, location.latitude);
-    //   setData(tData);
-    // } catch (error) {
-    //   console.error("Error fetching data:", error);
-    // } finally {
-    //   setIsLoading(false); // Update loading state when data fetching is done
-    // }
   }, []);
   if (isLoading) {
     return (
@@ -124,48 +114,62 @@ const Spot = () => {
     );
   }
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <View style={{ flex: 1, backgroundColor: "white" }}>
-        <Tabs.Screen options={{ headerShown: false }} />
-        <View style={{ flex: 0.12 }}>
-          <Header />
-        </View>
-        <FlatList
-          style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
-          data={sportsData}
-          keyExtractor={(item) => item.key}
-          contentContainerStyle={{ paddingLeft: _spacing }}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={({ item, index }) => {
-            return <HorizontalSportsListItem item={item} />;
-          }}
-        />
-        <View style={{ flex: 0.55 }}>
-          <CircularOrbit data={data} location={location} />
-        </View>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <Tabs.Screen options={{ headerShown: false }} />
+      <View style={{ flex: 0.12 }}>
+        <Header />
+      </View>
+      <FlatList
+        style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
+        data={sportsData}
+       keyExtractor={(item) => item.key}
+        contentContainerStyle={{ paddingLeft: _spacing }}
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        renderItem={({ item, index }) => {
+          return <HorizontalSportsListItem item={item} />;
+        }}
+      />
+      <View style={{ flex: 0.55 }}>
+        <CircularOrbit data={data} location={location} />
+      </View>
+
+      <Animated.View style={[styles.modal, rModal]}>
         <GestureDetector gesture={gesture}>
-          <Animated.View style={[styles.modal, rModal]}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={data}
-              style={{ flex: 1, marginTop: 20 }}
-              renderItem={({ item, index }) => {
-                return (
-                    <CardView
-                      spot={item.turf_name}
-                      place={removeAfterSecondComma(item.location.place)}
-                      price={item.lowest_price}
-                      ratings={3}
-                      image={item.images[0]}
-                    />
-                );
+          <View style={{ width: "100%", height: 27 }}>
+            <View
+              style={{
+                height: 7,
+                borderRadius: 20,
+                width: "20%",
+                backgroundColor: "#727272",
+                alignSelf: "center",
               }}
             />
-          </Animated.View>
+          </View>
         </GestureDetector>
-      </View>
-    </GestureHandlerRootView>
+        {data!==null ? (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data}
+            // style={{ flex: 1 }}
+            renderItem={({ item, index }) => {
+              return (
+                <CardView
+                  spot={item.turf_name}
+                  place={removeAfterSecondComma(item.location.place)}
+                  price={item.lowest_price}
+                  ratings={3}
+                  image={item.images[0]}
+                />
+              );
+            }}
+          />
+        ) : (
+          <View style={{ height:deviceHeight }}></View>
+        )}
+      </Animated.View>
+    </View>
   );
 };
 
@@ -179,7 +183,7 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: 25,
     alignSelf: "center",
     position: "absolute",
     width: deviceWidth - 20,

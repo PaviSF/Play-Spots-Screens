@@ -139,7 +139,7 @@ const CardView = ({ spot, place, price, ratings, image }) => {
           alignSelf: "center",
           height: 0.5,
           backgroundColor: "black",
-          marginBottom: 10,
+          marginBottom: 15,
         }}
       />
     </View>

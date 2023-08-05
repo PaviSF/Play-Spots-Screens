@@ -125,68 +125,69 @@ const Meet = () => {
           onPress={() => console.log(deviceWidth)}
         />
       </LinearGradient>
-      <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.modal, rModal]}>
-          <View
-            style={{
-              marginHorizontal: deviceWidth / 20,
-              marginTop: deviceWidth / 20,
-              marginBottom: deviceWidth / 40,
-            }}
-          >
+      <Animated.View style={[styles.modal, rModal]}>
+        <View
+          style={{
+            marginHorizontal: deviceWidth / 20,
+            marginTop: deviceWidth / 20,
+            marginBottom: deviceWidth / 40,
+          }}
+        >
+          <GestureDetector gesture={gesture}>
             <View>
               <Text style={styles.modalHeader}>Hurry up!!! Join now</Text>
               <Text style={styles.modalSubHeading}>Matches around you</Text>
             </View>
-          </View>
-          <FlatList
-            data={data}
-            keyExtractor={(item) => item.key}
-            renderItem={({ item, index }) => {
-              return (
-                <View style={styles.cardContainer}>
-                  <Image source={random} style={styles.circularImage} />
+          </GestureDetector>
+        </View>
+        <FlatList
+          data={data}
+          //keyExtractor={(item) => item.key}
+          showsVerticalScrollIndicator={false}
+          renderItem={({ item, index }) => {
+            return (
+              <View style={styles.cardContainer}>
+                <Image source={random} style={styles.circularImage} />
+                <View
+                  style={{
+                    height: deviceHeight / 8,
+                    width: 0.8,
+                    marginHorizontal: 10,
+                    backgroundColor: "grey",
+                  }}
+                />
+                <View style={styles.textContainer}>
                   <View
                     style={{
-                      height: deviceHeight / 8,
-                      width: 0.8,
-                      marginHorizontal: 10,
-                      backgroundColor: "grey",
+                      flexDirection: "row",
+                      // justifyContent: "center",
+                      // alignItems: "center",
                     }}
-                  />
-                  <View style={styles.textContainer}>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        // justifyContent: "center",
-                        // alignItems: "center",
-                      }}
-                    >
-                      <Ionicons
-                        name="md-football-sharp"
-                        size={20}
-                        color="green"
-                      />
-                      <Text style={styles.text}>6A Side</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Ionicons name="calendar" size={20} color="green" />
-                      <Text style={styles.text}>19 July 2023 | 7:00 PM</Text>
-                    </View>
-                    <View style={{ flexDirection: "row" }}>
-                      <Entypo name="location-pin" size={20} color="green" />
-                      <Text style={styles.text}>
-                        LaLiga Thondayad Bypass Rd, Kozhikode
-                      </Text>
-                    </View>
-                    <XSmallGradientButton title={"Join"} />
+                  >
+                    <Ionicons
+                      name="md-football-sharp"
+                      size={20}
+                      color="green"
+                    />
+                    <Text style={styles.text}>6A Side</Text>
                   </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Ionicons name="calendar" size={20} color="green" />
+                    <Text style={styles.text}>19 July 2023 | 7:00 PM</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    <Entypo name="location-pin" size={20} color="green" />
+                    <Text style={styles.text}>
+                      LaLiga Thondayad Bypass Rd, Kozhikode
+                    </Text>
+                  </View>
+                  <XSmallGradientButton title={"Join"} />
                 </View>
-              );
-            }}
-          />
-        </Animated.View>
-      </GestureDetector>
+              </View>
+            );
+          }}
+        />
+      </Animated.View>
     </View>
   );
 };
