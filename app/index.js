@@ -25,7 +25,6 @@ const name = faker.person.firstName();
 
 export default function Page() {
   const router = useRouter();
-  const [checkboxes, setCheckboxes] = useState(Array(6).fill(false));
   const [editedLocation, setEditedLocation] = useState({
     latitude: 0,
     longitude: 0,
@@ -34,14 +33,6 @@ export default function Page() {
     country: "",
   });
   const dispatch = useDispatch();
-  const note = useSelector((state) => state.note.value);
-
-  const getData = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("my-notes");
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {}
-  };
 
   useEffect(() => {
     async function fetchLocation() {
@@ -56,24 +47,10 @@ export default function Page() {
       };
       dispatch(setLocation(location));
     }
-    async function fetchNotesData() {
-      const notesData = await getData();
-      console.log(notesData);
-      if (notesData !== undefined) {
-        console.log("blah");
-        dispatch(setNote(notesData));
-      }
-      console.log("blaah " + note.date[0])
-    }
     fetchLocation();
-    //fetchNotesData();
   }, []);
 
-  const handleCheckboxClick = (index) => {
-    const updatedCheckboxes = [...checkboxes];
-    updatedCheckboxes[index] = !updatedCheckboxes[index];
-    setCheckboxes(updatedCheckboxes);
-  };
+ 
 
   return (
     <View style={styles.container}>

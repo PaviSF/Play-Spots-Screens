@@ -1,16 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
-import MapView from "react-native-maps";
+import { StyleSheet, View } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import React from "react";
 
 const SearchLocation = () => {
-  const onSearchError = React.useCallback((error) => {
-    console.log(error);
-  }, []);
-
-  const onPlaceSelected = React.useCallback((place) => {
-    console.log(place);
-  }, []);
   return (
     <View style={{ justifyContent: "center", flex:1,}}>
       <GooglePlacesAutocomplete
@@ -18,10 +10,6 @@ const SearchLocation = () => {
         placeholder="search"
         debounce={400}
         styles={{container: {width: '90%',alignSelf:'center',marginTop: 30}}}
-
-        //requestConfig={{ countries: ["US"] }}
-        // onPlaceSelected={onPlaceSelected}
-        // onSearchError={onSearchError}
       />
     </View>
   );

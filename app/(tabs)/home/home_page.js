@@ -1,59 +1,37 @@
-import { faker } from "@faker-js/faker";
-import { BlurView } from "expo-blur";
-
+//React imports
 import {
   View,
   Text,
   Image,
   StyleSheet,
   TextInput,
-  FlatList,
   ActivityIndicator,
   useWindowDimensions,
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Link, Stack, Tabs, useRouter } from "expo-router";
-import Header from "../../../components/header/Header";
 
+//Expo imports
+import { Stack, Tabs, useRouter } from "expo-router";
 import { Entypo } from "@expo/vector-icons";
-import CustomImageCarousal from "../../../components/carousel/Carousel";
-import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
-import { getGreeting } from "../../../helper/GiveGreetings";
-import { findLocation, reverseGeocode } from "../../../helper/FindLocation";
-import turfs, { setTurfs } from "../../../features/turfs";
-import { useDispatch, useSelector } from "react-redux";
-import { getDiscountBanner, getTurfData } from "../../../helper/FetchData";
+
+//External imports
+import { faker } from "@faker-js/faker";
+
+//Internal imports
+import Header from "../../../components/header/Header";
 import HorizontalTurfList from "../../../components/home/HorizontalTurfList";
+import CustomImageCarousal from "../../../components/carousel/Carousel";
+import { getDiscountBanner, getTurfData } from "../../../helper/FetchData";
+import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
+import { useDispatch, useSelector } from "react-redux";
+import { getGreeting } from "../../../helper/GiveGreetings";
+import { setTurfs } from "../../../features/turfs";
 
-const data = [...Array(20).keys()].map(() => ({
-  key: faker.string.uuid(),
-  turfName: faker.company.name(),
-  location: faker.location.city(),
-}));
-
-// const data2 = [
-//   {
-//     image: require("../../../assets/banner.png"),
-//   },
-//   {
-//     image: require("../../assets/banner.png"),
-//   },
-//   {
-//     image: require("../../assets/banner.png"),
-//   },
-//   {
-//     image: require("../../assets/banner.png"),
-//   },
-// ];
 
 const Home = () => {
   const fullName = faker.person.fullName();
   const profilePic = require("../../../assets/247181.jpg");
-  const turfImage = require("../../../assets/download.jpeg");
-  const football = require("../../../assets/football.png");
-  const cricket = require("../../../assets/cricket.png");
-  const book = require("../../../assets/book.png");
   const gift = require("../../../assets/gift.png");
   const coins = require("../../../assets/coins.png");
   const tournament = require("../../../assets/tournament.png");
@@ -63,10 +41,9 @@ const Home = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [bannerData, setBannerData] = useState([]);
   const [tData, setTData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // New loading state
+  const [isLoading, setIsLoading] = useState(true); 
   const dispatch = useDispatch();
   const location = useSelector((state) => state.location.value);
-  const turfImageBaseLink = "https://d3th8mtd05b6hz.cloudfront.net/turf/";
   const router = useRouter();
 
   useEffect(() => {
@@ -83,12 +60,10 @@ const Home = () => {
           location.latitude
         );
         setBannerData(bData);
-        console.log(bData);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setIsLoading(false); // Update loading state when data fetching is done
-        // console.log(tData)
       }
     };
     fetchData();
@@ -102,9 +77,6 @@ const Home = () => {
     setIsSearchFocused(false);
   };
 
-  const goToSearchPage = () => {
-    router.push("search_location");
-  };
 
   if (isLoading) {
     return (
@@ -141,7 +113,7 @@ const Home = () => {
 
       {/* Recent Updates */}
       <View style={styles.recentUpdates}>
-        <TouchableOpacity style={{ alignItems: "center" }} onPress={goToSearchPage}>
+        <TouchableOpacity style={{ alignItems: "center" }}>
           <Image source={gift} style={styles.recentUpdatesImage} />
           <Text style={styles.recentUpdatesTexts}>3 offers for you</Text>
         </TouchableOpacity>

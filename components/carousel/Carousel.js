@@ -27,10 +27,6 @@ const CustomImageCarousal = ({ data }) => {
     },
   });
 
-  useEffect(()=>{
-    console.log(newData);
-    console.log(data[0].image);
-  },[])
 
   return (
     <Animated.ScrollView

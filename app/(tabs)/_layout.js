@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
-import { FontAwesome, Feather, FontAwesome5 } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const profileIcon = require("../../assets/tab-icons/inactive-icons/user.png");
 const spotsIcon = require("../../assets/tab-icons/inactive-icons/stadium.png");

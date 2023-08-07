@@ -1,50 +1,49 @@
+//React imports
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   FlatList,
-  Pressable,
   StyleSheet,
   Image,
   StatusBar,
 } from "react-native";
-import Modal from "react-native-modal";
-import React, { useEffect } from "react";
-
-import { Tabs } from "expo-router";
-import { useState } from "react";
-import { AntDesign, Ionicons, Entypo } from "@expo/vector-icons";
-import { faker } from "@faker-js/faker";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  withTiming,
 } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+//Expo imports
+import { Tabs } from "expo-router";
+import { Ionicons, Entypo } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+
+//External imports
+import { faker } from "@faker-js/faker";
+import { useSelector } from "react-redux";
+
+//Internal imports
 import RandomButton from "../../components/buttons/RandomButton";
 import XSmallGradientButton from "../../components/buttons/XSmallGradientButton";
+import { removeAfterSecondComma } from "../../helper/StringManipulation";
+import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 
+//constants
 const rightToLeft = require("../../assets/faces/right-to-left.png");
 const leftToRight = require("../../assets/faces/left-to-right.png");
 const random = require("../../assets/random.png");
 const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
-const data = [...Array(40).keys()].map(() => ({
-  key: faker.string.uuid(),
-  turfName: faker.company.name(),
-  location: faker.location.city(),
-}));
-
 const Meet = () => {
-  const [fullModal, setFullModal] = useState(false);
+  const data = useSelector((state) => state.turfs.value);
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
 
-  const gesture = Gesture.Pan()
+  const gesture = Gesture.Pan() //used to update Y axis position for bottomsheet
     .onStart(() => {
       context.value = { y: translateY.value };
     })
@@ -60,6 +59,7 @@ const Meet = () => {
       }
     });
 
+  //Used to update the changes in style of bottomsheet
   const rModal = useAnimatedStyle(() => {
     const borderRadius = interpolate(
       translateY.value,
@@ -84,9 +84,12 @@ const Meet = () => {
   useEffect(() => {
     translateY.value = withSpring(-deviceHeight / 1.9, { damping: 50 });
   }, []);
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <Tabs.Screen options={{ headerShown: false }} />
+
+      {/* Banner with the host a match button */}
       <LinearGradient
         colors={["#02A949", "#028A39", "#10753E", "#15653B"]}
         start={[0.5, 0]}
@@ -125,6 +128,8 @@ const Meet = () => {
           onPress={() => console.log(deviceWidth)}
         />
       </LinearGradient>
+
+      {/* Bottomsheet of Matches */}
       <Animated.View style={[styles.modal, rModal]}>
         <View
           style={{
@@ -160,8 +165,6 @@ const Meet = () => {
                   <View
                     style={{
                       flexDirection: "row",
-                      // justifyContent: "center",
-                      // alignItems: "center",
                     }}
                   >
                     <Ionicons
@@ -169,7 +172,7 @@ const Meet = () => {
                       size={20}
                       color="green"
                     />
-                    <Text style={styles.text}>6A Side</Text>
+                    <Text style={styles.text}>{item.turf_name}</Text>
                   </View>
                   <View style={{ flexDirection: "row" }}>
                     <Ionicons name="calendar" size={20} color="green" />
@@ -178,7 +181,7 @@ const Meet = () => {
                   <View style={{ flexDirection: "row" }}>
                     <Entypo name="location-pin" size={20} color="green" />
                     <Text style={styles.text}>
-                      LaLiga Thondayad Bypass Rd, Kozhikode
+                      {removeAfterSecondComma(item.location.place)}
                     </Text>
                   </View>
                   <XSmallGradientButton title={"Join"} />
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: deviceWidth - 20,
     top: deviceHeight,
-    height: deviceHeight,
+    height: deviceHeight / 1.08,
     //zIndex: 9999,
     elevation: 8,
   },

@@ -1,27 +1,11 @@
+//React imports
 import {
   View,
-  Text,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
   StatusBar,
-  Image,
   ActivityIndicator,
 } from "react-native";
-import React, { useState } from "react";
-import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
-import { Tabs } from "expo-router";
-import Header from "../../components/header/Header";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-import { faker } from "@faker-js/faker";
-import { turfData } from "../../dataset";
-import { getTurfData } from "../../helper/FetchData";
-import CardView from "../../components/spots/CardView";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
 import Animated, {
   Extrapolate,
   interpolate,
@@ -29,13 +13,30 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+//Expo imports
+import { Tabs } from "expo-router";
+
+//External imports
+import { useSelector } from "react-redux";
+
+//Internal imports
+import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
+import Header from "../../components/header/Header";
+import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import CardView from "../../components/spots/CardView";
 import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 import { removeAfterSecondComma } from "../../helper/StringManipulation";
-import { useSelector } from "react-redux";
-import { useFonts } from "expo-font";
+
+//constant styles
 const tabComponentColor = "#565657";
-const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
+const _spacing = 8;
+const _colors = {
+  active: `grey`,
+  inactive: `#FCD25900`,
+};
 
 const sportsData = [
   { key: 0, sport: "Football" },
@@ -46,25 +47,15 @@ const sportsData = [
   { key: 5, sport: "Volleyball" },
 ];
 
-const _spacing = 8;
-
-const _colors = {
-  active: `grey`,
-  inactive: `#FCD25900`,
-};
-
 const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
 const Spot = () => {
   const location = useSelector((state) => state.location.value);
   const data = useSelector((state) => state.turfs.value);
-  const [isLoading, setIsLoading] = useState(true); // New loading state
-  const [fonts] = useFonts({
-    Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
-  });
+  const [isLoading, setIsLoading] = useState(true);
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
-  const gesture = Gesture.Pan()
+  const gesture = Gesture.Pan() //Used to update Y axis position for bottomsheet
     .onStart(() => {
       context.value = { y: translateY.value };
     })
@@ -80,6 +71,7 @@ const Spot = () => {
       }
     });
 
+  //Used to update the changes in style of bottomsheet
   const rModal = useAnimatedStyle(() => {
     const borderRadius = interpolate(
       translateY.value,
@@ -103,9 +95,10 @@ const Spot = () => {
   useEffect(() => {
     translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
     if (data !== null) {
-      setIsLoading(false); // Update loading state when data fetching is done
+      setIsLoading(false);
     }
   }, []);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -113,16 +106,19 @@ const Spot = () => {
       </View>
     );
   }
+
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <Tabs.Screen options={{ headerShown: false }} />
       <View style={{ flex: 0.12 }}>
         <Header />
       </View>
+
+      {/* Horizontal Sports List */}
       <FlatList
         style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
         data={sportsData}
-       keyExtractor={(item) => item.key}
+        keyExtractor={(item) => item.key}
         contentContainerStyle={{ paddingLeft: _spacing }}
         showsHorizontalScrollIndicator={false}
         horizontal
@@ -130,10 +126,12 @@ const Spot = () => {
           return <HorizontalSportsListItem item={item} />;
         }}
       />
+
       <View style={{ flex: 0.55 }}>
         <CircularOrbit data={data} location={location} />
       </View>
 
+      {/* Bottomsheet of Turfs */}
       <Animated.View style={[styles.modal, rModal]}>
         <GestureDetector gesture={gesture}>
           <View style={{ width: "100%", height: 27 }}>
@@ -148,11 +146,11 @@ const Spot = () => {
             />
           </View>
         </GestureDetector>
-        {data!==null ? (
+        {data !== null ? (
           <FlatList
+            nestedScrollEnabled
             showsVerticalScrollIndicator={false}
             data={data}
-            // style={{ flex: 1 }}
             renderItem={({ item, index }) => {
               return (
                 <CardView
@@ -166,7 +164,7 @@ const Spot = () => {
             }}
           />
         ) : (
-          <View style={{ height:deviceHeight }}></View>
+          <View style={{ height: deviceHeight }}></View>
         )}
       </Animated.View>
     </View>
@@ -188,6 +186,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: deviceWidth - 20,
     top: deviceHeight,
+    height: deviceHeight / 1.08,
     //zIndex: 9999,
     elevation: 8,
   },

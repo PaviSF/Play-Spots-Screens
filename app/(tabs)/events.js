@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { Tabs } from "expo-router";
 import Header from "../../components/header/Header";
-import React, { useRef,useEffect } from "react";
+import React, { useRef } from "react";
 import LargeGradientButton from "../../components/buttons/LargeGradientButton";
 import SmallGradientButton from "../../components/buttons/SmallGradientButton";
 
@@ -41,10 +41,12 @@ const Events = () => {
   return (
     <View style={styles.mainContainer}>
       <Tabs.Screen options={{ headerShown: false }} />
-      <Header/>
+      <Header />
       <LargeGradientButton title={"Host An Event"} />
 
-      <Text style={{ fontWeight: 500, color: "grey", marginLeft: 10 ,fontSize:15}}>
+      <Text
+        style={{ fontWeight: 500, color: "grey", marginLeft: 10, fontSize: 15 }}
+      >
         Sports events nearby you
       </Text>
       <FlatList
@@ -90,7 +92,7 @@ const Events = () => {
               >
                 <View style={{ flex: 0.8, marginTop: 10, marginLeft: 10 }}>
                   <Text style={styles.title}>Deega championship 2023</Text>
-                  <View style={{ flexDirection: "row",alignItems:'center' }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Feather name="calendar" size={18} color="white" />
                     <Text style={styles.description}>
                       {`${sampleDate} | ${sampleTime}`}
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: "white",
-    marginLeft:8
+    marginLeft: 8,
   },
 });
 
