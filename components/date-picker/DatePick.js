@@ -15,7 +15,7 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { setNote } from "../../features/notes";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deviceWidth } from "../../constants/Dimension";
 
 const DatePick = () => {
@@ -31,11 +31,14 @@ const DatePick = () => {
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [startedDate, setStartedDate] = useState("12/12/2023");
   const dispatch = useDispatch();
-
+  const note = useSelector((state)=> state.note.value)
   useEffect(() => {
-    dispatch(setNote(noteAndDate));
-    storeData(noteAndDate);
-  }, [noteAndDate]);
+    if(note.date[0]){
+      setNoteAndDate(note)
+    }
+    // dispatch(setNote(noteAndDate));
+    // storeData(noteAndDate);
+  }, []);
 
   const storeData = async (value) => {
     try {
@@ -67,6 +70,8 @@ const DatePick = () => {
       date: [...noteAndDate.date, selectedStartDate],
     };
     setNoteAndDate(updatedState);
+    dispatch(setNote(updatedState));
+    storeData(updatedState);
   };
 
   const handleCloseModal = () => {

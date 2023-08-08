@@ -34,6 +34,17 @@ export default function Page() {
   });
   const dispatch = useDispatch();
 
+  const getData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("my-notes");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      // error reading value
+      //console.log(e);
+    }
+  };
+
+
   useEffect(() => {
     async function fetchLocation() {
       const currentLocation = await findLocation();
@@ -47,7 +58,15 @@ export default function Page() {
       };
       dispatch(setLocation(location));
     }
+    async function prepare() {
+      const data = await getData();
+      if (data!==null){
+        console.log(data)
+        dispatch(setNote(data))
+      }
+    }
     fetchLocation();
+    prepare();
   }, []);
 
  

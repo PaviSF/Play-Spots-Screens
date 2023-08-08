@@ -23,11 +23,11 @@ import { Tabs } from "expo-router";
 import { useSelector } from "react-redux";
 
 //Internal imports
+import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
+import CardView from "../../components/spots/CardView";
 import Header from "../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-import CardView from "../../components/spots/CardView";
-import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
 import { removeAfterSecondComma } from "../../helper/StringManipulation";
 
 //constant styles
