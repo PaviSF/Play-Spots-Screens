@@ -1,25 +1,33 @@
+//React imports
 import React, { useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
+
+//Expo imports
 import {
-  Entypo,
+  FontAwesome5,
   MaterialIcons,
   Ionicons,
   MaterialCommunityIcons,
   AntDesign,
   FontAwesome,
 } from "@expo/vector-icons";
-import { deviceWidth } from "../../constants/Dimension";
 import { useFonts } from "expo-font";
+
+//Internal imports
+import { removeAfterSecondComma } from "../../helper/StringManipulation";
+import { linearSearch } from "../../helper/DataSorting";
+import { deviceWidth } from "../../constants/Dimension";
 
 const defaultImage =
   "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
 
-const CardView = ({ spot, place, price, ratings, image }) => {
+const CardView = ({  ratings, item }) => {
   const [like, setLike] = useState(false);
   const [fontsLoaded] = useFonts({
     Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
   });
-  const completeImage = "https://d3th8mtd05b6hz.cloudfront.net/turf/" + image;
+  const completeImage =
+    "https://d3th8mtd05b6hz.cloudfront.net/turf/" + item.images[0];
   return (
     <View style={{ justifyContent: "center" }}>
       <View style={styles.cardContainer}>
@@ -30,7 +38,7 @@ const CardView = ({ spot, place, price, ratings, image }) => {
           defaultSource={require("../../assets/247181.jpg")}
           resizeMode="cover" // Resize the image to cover the container
         />
-        {/* Column with 5 Text Elements */}
+        {/* Text container */}
         <View style={styles.textContainer}>
           <View>
             <View
@@ -45,7 +53,7 @@ const CardView = ({ spot, place, price, ratings, image }) => {
                     paddingBottom: 2,
                   }}
                 >
-                  {spot}
+                  {item.turf_name}
                 </Text>
                 <View style={{ flexDirection: "row" }}>
                   <Text
@@ -57,28 +65,60 @@ const CardView = ({ spot, place, price, ratings, image }) => {
                       paddingBottom: 2,
                     }}
                   >
-                    {place}
+                    {removeAfterSecondComma(item.location.place)}
                   </Text>
                 </View>
+
+                {/* Different sports at a venue */}
                 <View style={{ flexDirection: "row", paddingBottom: 2 }}>
-                  <MaterialIcons
-                    name="sports-cricket"
-                    size={20}
-                    color="green"
-                    style={{ margin: 3 }}
-                  />
-                  <Ionicons
-                    name="football"
-                    size={20}
-                    color="green"
-                    style={{ margin: 3 }}
-                  />
-                  <MaterialCommunityIcons
-                    name="badminton"
-                    size={20}
-                    color="green"
-                    style={{ margin: 3 }}
-                  />
+                  {linearSearch(item.sports, "Cricket") ? (
+                    <MaterialIcons
+                      name="sports-cricket"
+                      size={20}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
+                  {linearSearch(item.sports, "Football") ? (
+                    <Ionicons
+                      name="football"
+                      size={20}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
+                  {linearSearch(item.sports, "Badminton") ? (
+                    <MaterialCommunityIcons
+                      name="badminton"
+                      size={20}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
+                  {linearSearch(item.sports, "Volleyball") ? (
+                    <FontAwesome5
+                      name="volleyball-ball"
+                      size={17}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
+                  {linearSearch(item.sports, "Tennis") ? (
+                    <Ionicons
+                      name="tennisball"
+                      size={19}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
+                  {linearSearch(item.sports, "Gym") ? (
+                    <MaterialCommunityIcons
+                      name="dumbbell"
+                      size={20}
+                      color="green"
+                      style={{ margin: 3 }}
+                    />
+                  ) : null}
                 </View>
               </View>
             </View>
@@ -90,12 +130,14 @@ const CardView = ({ spot, place, price, ratings, image }) => {
                 <Text
                   style={{ fontSize: 13, color: "green", fontWeight: "700" }}
                 >
-                  {` Rs ${price}`}
+                  {` Rs ${item.lowest_price}`}
                 </Text>
               </View>
             </View>
           </View>
         </View>
+
+        {/* Like And Rating Container */}
         <View style={styles.likeAndStarContainer}>
           <TouchableOpacity
             onPress={() => {

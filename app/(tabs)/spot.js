@@ -28,7 +28,6 @@ import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
 import CardView from "../../components/spots/CardView";
 import Header from "../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
-import { removeAfterSecondComma } from "../../helper/StringManipulation";
 
 //constant styles
 const tabComponentColor = "#565657";
@@ -154,11 +153,8 @@ const Spot = () => {
             renderItem={({ item, index }) => {
               return (
                 <CardView
-                  spot={item.turf_name}
-                  place={removeAfterSecondComma(item.location.place)}
-                  price={item.lowest_price}
+                  item={item}
                   ratings={3}
-                  image={item.images[0]}
                 />
               );
             }}
