@@ -14,8 +14,8 @@ const Header = () => {
   
   return (
     <View style={{ width: width - 40, height: height / 15, justifyContent: "space-between", flexDirection: "row", marginHorizontal: 15, marginTop: StatusBarHeight }}>
-      <Link href={"/home/search_location"}>
-      <View style={{ flexDirection: "row",alignItems:'center' }}> 
+      <Link href={"/home/search_location"} asChild>
+      <TouchableOpacity style={{ flexDirection: "row" }}> 
         <Entypo name="location-pin" size={27} color="black" />
         <View>
           <Text style={{ fontSize: 12, color: "gray", fontWeight: "500" }}>
@@ -23,7 +23,7 @@ const Header = () => {
           </Text>
           <Text style={{ fontSize: 10, color: "gray" }}>{`${location.state}, ${location.country}`}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
       </Link>
       <TouchableOpacity>
         <EvilIcons name="bell" size={35} color="black" />

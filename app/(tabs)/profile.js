@@ -1,4 +1,4 @@
- import {
+import {
   ScrollView,
   View,
   Text,
@@ -103,9 +103,10 @@ const Profile = () => {
       <View style={styles.activitiesDetailsContainer}>
         <View
           style={{
-            flex: 0.45,
+            flex: 0.3,
             justifyContent: "space-between",
             borderRadius: 10,
+            padding: 10,
             shadowColor: "rgba(0, 0, 0, 0.4)",
             shadowOffset: {
               width: 0,
@@ -117,25 +118,31 @@ const Profile = () => {
             backgroundColor: "#FFFFFF",
           }}
         >
-          <View style={{ flex: 0.6, justifyContent: "space-between" }}>
+          <View
+            style={{
+              flex: 0.4,
+              justifyContent: "space-between",
+              flexDirection: "row",
+            }}
+          >
             <View style={styles.sportActivityContainer}>
               <Image source={football} style={styles.sportsIcon} />
               <View style={{ flex: 0.7, flexDirection: "row" }}>
-                <AntDesign name="clockcircleo" size={15} color="black" />
+                <AntDesign name="clockcircleo" size={10} color="black" />
                 <Text style={styles.sportActivityText}>5h 30 mins</Text>
               </View>
             </View>
             <View style={styles.sportActivityContainer}>
               <Image source={cricket} style={styles.sportsIcon} />
               <View style={{ flex: 0.7, flexDirection: "row" }}>
-                <AntDesign name="clockcircleo" size={15} color="black" />
+                <AntDesign name="clockcircleo" size={10} color="black" />
                 <Text style={styles.sportActivityText}>2h 30 mins</Text>
               </View>
             </View>
             <View style={styles.sportActivityContainer}>
               <Image source={badminton} style={styles.sportsIcon} />
-              <View style={{ flex: 0.7, flexDirection: "row" }}>
-                <AntDesign name="clockcircleo" size={15} color="black" />
+              <View style={{ flexDirection: "row" }}>
+                <AntDesign name="clockcircleo" size={10} color="black" />
                 <Text style={styles.sportActivityText}>1h</Text>
               </View>
             </View>
@@ -161,9 +168,14 @@ const Profile = () => {
               </View>
             </View>
             <Text
-              style={{ width: "90%", alignSelf: "center", fontWeight: "600" }}
+              style={{
+                width: "90%",
+                alignSelf: "center",
+                fontWeight: "600",
+                fontSize: 10,
+              }}
             >
-              9 sports hours
+              9 sports hours spent last week
             </Text>
             <Text
               style={{
@@ -172,9 +184,7 @@ const Profile = () => {
                 fontSize: 10,
                 fontWeight: "500",
               }}
-            >
-              spent last week
-            </Text>
+            ></Text>
           </View>
         </View>
         <View style={styles.scheduleContainer}>
@@ -266,14 +276,20 @@ const Profile = () => {
           )}
         </View>
       </View>
-      <ProfileList label="My Booking" />
-      <ProfileList label="My Rewards" />
-      <ProfileList label="Help & Support" />
-      <ProfileList label="My Favourites" />
-      <ProfileList label="Cancellation/Reschedule" />
-      <ProfileList label="Refer & Earn playcoin" />
-      <ProfileList label="Logout" />
-      <ProfileList label="Delete Account" color={"red"} />
+      <View
+        style={{
+          height: deviceHeight / 8,
+          marginBottom:10,
+          width: "100%",
+          flexDirection:'row',
+          justifyContent:'space-around',
+          paddingHorizontal:10
+        }}
+      >
+        <TouchableOpacity style={styles.extraOptionBoxes}></TouchableOpacity>
+        <TouchableOpacity style={styles.extraOptionBoxes}></TouchableOpacity>
+        <TouchableOpacity style={styles.extraOptionBoxes}></TouchableOpacity>
+      </View>
     </ScrollView>
   );
 };
@@ -330,11 +346,11 @@ const styles = StyleSheet.create({
     borderColor: "grey",
   },
   activitiesDetailsContainer: {
-    flexDirection: "row",
+    // flexDirection: "row",
     justifyContent: "space-evenly",
-    height: deviceHeight / 3.5,
+    height: deviceHeight / 3,
     width: deviceWidth - 20,
-    margin: 10,
+    marginLeft: 10,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -345,7 +361,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   scheduleContainer: {
-    flex: 0.5,
+    flex: 0.6,
     justifyContent: "space-between",
     borderRadius: 10,
     shadowColor: "rgba(0, 0, 0, 0.4)",
@@ -359,22 +375,29 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   sportsIcon: {
-    height: deviceWidth / 6.85,
-    width: deviceWidth / 6.85,
-    flex: 0.3,
-    marginRight: 10,
+    height: deviceWidth / 10,
+    width: deviceWidth / 10,
+    //flex: 0.3,
+    marginRight: 3,
   },
   sportActivityContainer: {
+    flex: 1,
     flexDirection: "row",
-    justifyContent: "center",
+    //justifyContent: "center",
     alignItems: "center",
   },
   sportActivityText: {
-    fontSize: 12,
+    fontSize: 9,
     color: "green",
     fontWeight: "500",
     marginLeft: 5,
   },
+  extraOptionBoxes: {
+    backgroundColor:'white',
+    flex:0.325,
+    borderRadius:5,
+    elevation:1.5
+  }
 });
 
 export default Profile;
