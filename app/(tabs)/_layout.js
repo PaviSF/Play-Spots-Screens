@@ -33,7 +33,7 @@ const TabLayout = () => {
           options={{
             headerTitle: "My profile",
             headerTitleAlign: "center",
-            headerTitleStyle: { fontWeight: "100", fontSize: 18 },
+            headerTitleStyle: { fontWeight: "100", fontSize: 15 },
             tabBarIcon: () => (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Feather name="user" color={"black"} size={25} style={styles.icon} />
