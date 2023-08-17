@@ -85,7 +85,7 @@ const DatePick = () => {
       <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}>
         <View>
           <TouchableOpacity onPress={handleOnPressStartDate}>
-            <FontAwesome name="calendar-plus-o" size={28} color="#02b44f" />
+            <FontAwesome name="calendar" size={40} color="grey" />
           </TouchableOpacity>
 
           {/* Create modal for date picker */}

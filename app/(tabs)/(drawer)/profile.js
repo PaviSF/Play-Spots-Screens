@@ -11,22 +11,22 @@ import {
 } from "react-native";
 import React from "react";
 import { faker } from "@faker-js/faker";
-import { formatDate } from "../../helper/CalculateMonth";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import { formatDate } from "../../../helper/CalculateMonth";
+import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { AntDesign, Foundation } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import DatePick from "../../components/date-picker/DatePick";
+import DatePick from "../../../components/date-picker/DatePick";
 import { Stack } from "expo-router";
 
 const profileName = faker.person.fullName();
 const profileEmail = faker.internet.email();
-const profileImage = require("../../assets/247181.jpg");
+const profileImage = require("../../../assets/247181.jpg");
 
-const cricket = require("../../assets/cricket-icon.png");
-const football = require("../../assets/football-icon.png");
-const badminton = require("../../assets/badminton.png");
+const cricket = require("../../../assets/cricket-icon.png");
+const football = require("../../../assets/football-icon.png");
+const badminton = require("../../../assets/badminton.png");
 
 const Profile = () => {
   const note = useSelector((state) => state.note.value);
@@ -54,7 +54,10 @@ const Profile = () => {
     <>
       <Stack.Screen
         options={{
-          headerRight,
+          headerTitle: "My profile",
+            headerTitleAlign: "center",
+            headerTitleStyle: { fontWeight: "100", fontSize: 15 },
+         // headerRight,
         }}
       />
       <ScrollView
@@ -302,7 +305,7 @@ const Profile = () => {
         >
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../assets/booking.png")}
+              source={require("../../../assets/booking.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -310,7 +313,7 @@ const Profile = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../assets/gift.png")}
+              source={require("../../../assets/gift.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -318,7 +321,7 @@ const Profile = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../assets/heart.png")}
+              source={require("../../../assets/heart.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -334,7 +337,7 @@ const Profile = () => {
           >
             <View style={styles.referIconContainer}>
               <Image
-                source={require("../../assets/referIcon.png")}
+                source={require("../../../assets/referIcon.png")}
                 style={styles.referIcon}
               />
             </View>

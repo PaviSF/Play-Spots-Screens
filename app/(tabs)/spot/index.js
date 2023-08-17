@@ -17,17 +17,17 @@ import React, { useState, useEffect } from "react";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 //Expo imports
-import { Tabs } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 
 //External imports
 import { useSelector } from "react-redux";
 
 //Internal imports
-import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
-import CircularOrbit from "../../components/circular-orbit/CircularOrbit";
-import CardView from "../../components/spots/CardView";
-import Header from "../../components/header/Header";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import HorizontalSportsListItem from "../../../components/spots/HorizontalSportsListItem";
+import CircularOrbit from "../../../components/circular-orbit/CircularOrbit";
+import CardView from "../../../components/spots/CardView";
+import Header from "../../../components/header/Header";
+import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
 
 //constant styles
 const tabComponentColor = "#565657";
@@ -101,6 +101,7 @@ const Spot = () => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Stack.Screen options={{ headerShown: false }} />
         <ActivityIndicator size="large" color="green" />
       </View>
     );
@@ -108,11 +109,10 @@ const Spot = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Tabs.Screen options={{ headerShown: false }} />
+      <Stack.Screen options={{ headerShown: false }} />
       <View style={{ flex: 0.12 }}>
         <Header />
       </View>
-
       {/* Horizontal Sports List */}
       <FlatList
         style={{ flexGrow: 0, marginLeft: 10, height: deviceHeight / 20 }}
@@ -125,11 +125,9 @@ const Spot = () => {
           return <HorizontalSportsListItem item={item} />;
         }}
       />
-
       <View style={{ flex: 0.55 }}>
         <CircularOrbit data={data} location={location} />
       </View>
-
       {/* Bottomsheet of Turfs */}
       <Animated.View style={[styles.modal, rModal]}>
         <GestureDetector gesture={gesture}>
@@ -151,12 +149,7 @@ const Spot = () => {
             showsVerticalScrollIndicator={false}
             data={data}
             renderItem={({ item, index }) => {
-              return (
-                <CardView
-                  item={item}
-                  ratings={3}
-                />
-              );
+              return <CardView item={item} ratings={3} />;
             }}
           />
         ) : (

@@ -17,11 +17,12 @@ import { useFonts } from "expo-font";
 import { removeAfterSecondComma } from "../../helper/StringManipulation";
 import { linearSearch } from "../../helper/DataSorting";
 import { deviceWidth } from "../../constants/Dimension";
+import { Link } from "expo-router";
 
 const defaultImage =
   "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
 
-const CardView = ({  ratings, item }) => {
+const CardView = ({ ratings, item }) => {
   const [like, setLike] = useState(false);
   const [fontsLoaded] = useFonts({
     Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
@@ -32,12 +33,17 @@ const CardView = ({  ratings, item }) => {
     <View style={{ justifyContent: "center" }}>
       <View style={styles.cardContainer}>
         {/* Square Image with Curved Corners */}
-        <Image
-          source={{ uri: completeImage }}
-          style={styles.image}
-          defaultSource={require("../../assets/247181.jpg")}
-          resizeMode="cover" // Resize the image to cover the container
-        />
+        <Link href={"/booking"} asChild>
+          <TouchableOpacity style={styles.imageLayout}>
+            <Image
+              source={{ uri: completeImage }}
+              style={styles.image}
+              defaultSource={require("../../assets/247181.jpg")}
+              resizeMode="cover" // Resize the image to cover the container
+            />
+          </TouchableOpacity>
+        </Link>
+
         {/* Text container */}
         <View style={styles.textContainer}>
           <View>
@@ -201,12 +207,16 @@ const styles = StyleSheet.create({
   imageContainer: {
     overflow: "hidden",
   },
-  image: {
-    //aspectRatio: 1, // Square aspect ratio
+  imageLayout: {
     flex: 0.3,
     borderRadius: 10,
     width: "100%",
     height: "100%",
+  },
+  image: {
+    flex: 1,
+    borderRadius: 10,
+  
   },
   textContainer: {
     flex: 0.5,

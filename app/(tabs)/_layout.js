@@ -29,14 +29,17 @@ const TabLayout = () => {
         }}
       >
         <Tabs.Screen
-          name="profile"
+          name="(drawer)"
           options={{
-            headerTitle: "My profile",
-            headerTitleAlign: "center",
-            headerTitleStyle: { fontWeight: "100", fontSize: 15 },
+            headerShown: false,
             tabBarIcon: () => (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Feather name="user" color={"black"} size={25} style={styles.icon} />
+                <Feather
+                  name="user"
+                  color={"black"}
+                  size={25}
+                  style={styles.icon}
+                />
                 <Text style={styles.tabText}>Profile</Text>
               </View>
             ),
@@ -45,7 +48,7 @@ const TabLayout = () => {
         <Tabs.Screen
           name="spot"
           options={{
-            title: "Spots",
+            headerShown: false,
             tabBarIcon: () => (
               <View>
                 <Image source={spotsIcon} style={styles.icon} />
@@ -95,7 +98,7 @@ const TabLayout = () => {
 };
 
 const styles = StyleSheet.create({
-  tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF80", },
+  tabBarContainer: { flex: 1, backgroundColor: "#FFFFFF80" },
   tabBar: {
     marginHorizontal: 10,
     marginBottom: 10,

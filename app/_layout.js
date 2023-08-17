@@ -25,7 +25,9 @@ const MainLayout = () => {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="(initial)/favourites" options={{ headerShown: false }} />
+        <Stack.Screen name="(initial)" options={{ headerShown: false }} />
+        <Stack.Screen name="booking"options={{headerShadowVisible:false,title:'Booking'}} />
+
       </Stack>
     </Provider>
   );
