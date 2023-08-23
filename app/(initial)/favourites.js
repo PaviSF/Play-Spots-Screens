@@ -1,4 +1,3 @@
-
 //React imports
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
@@ -21,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { findLocation, reverseGeocode } from "../../helper/FindLocation";
 import { setNote } from "../../features/notes";
+import { ActivityIndicator } from "react-native";
 
 const name = faker.person.firstName();
 
@@ -33,6 +33,7 @@ export default function Favourites() {
     state: "",
     country: "",
   });
+  const [isReady, setIsReafdy] = useState(false);
   const dispatch = useDispatch();
 
   const getData = async () => {
@@ -44,7 +45,6 @@ export default function Favourites() {
       //console.log(e);
     }
   };
-
 
   useEffect(() => {
     async function fetchLocation() {
@@ -58,47 +58,50 @@ export default function Favourites() {
         country: geoLocation[0].country,
       };
       dispatch(setLocation(location));
+      setIsReafdy(true);
     }
     async function prepare() {
       const data = await getData();
-      if (data!==null){
-        console.log(data)
-        dispatch(setNote(data))
+      if (data !== null) {
+        console.log(data);
+        dispatch(setNote(data));
       }
     }
     fetchLocation();
     prepare();
   }, []);
 
- 
-
   return (
     <View style={styles.container}>
-      <View style={styles.main}>
-        <Text style={styles.title}>Hello {name}</Text>
-        <Text style={styles.subtitle}>Greetings, from playspots team</Text>
-        <Line />
-        <View style={styles.dotAndTextALignment}>
-          <Entypo name="dot-single" size={24} color="black" />
-          <Text style={styles.recentSpotsLabel}>Choose your sports</Text>
+      {isReady ? (
+        <View style={styles.main}>
+          <Text style={styles.title}>Hello {name}</Text>
+          <Text style={styles.subtitle}>Greetings, from playspots team</Text>
+          <Line />
+          <View style={styles.dotAndTextALignment}>
+            <Entypo name="dot-single" size={24} color="black" />
+            <Text style={styles.recentSpotsLabel}>Choose your sports</Text>
+          </View>
+          <Text style={{ marginLeft: 22 }}>
+            kindly choose your interesting sports for better experience
+          </Text>
+          <BoxExample />
+          <View
+            style={{
+              marginTop: 30,
+              width: deviceWidth / 3,
+              alignSelf: "center",
+            }}
+          >
+            <LargeGradientButton
+              title="GO"
+              onPress={() => router.push("home")}
+            />
+          </View>
         </View>
-        <Text style={{ marginLeft: 22 }}>
-          kindly choose your interesting sports for better experience
-        </Text>
-        <BoxExample />
-        <View
-          style={{
-            marginTop: 30,
-            width: deviceWidth / 3,
-            alignSelf: "center",
-          }}
-        >
-          <LargeGradientButton
-            title="GO"
-            onPress={() => router.push("home")}
-          />
-        </View>
-      </View>
+      ) : (
+        <ActivityIndicator style={{alignSelf:'center',flex:1}}size="large" color="green" />
+      )}
     </View>
   );
 }

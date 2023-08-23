@@ -45,7 +45,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const location = useSelector((state) => state.location.value);
   const router = useRouter();
-
+ 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,6 +53,7 @@ const Home = () => {
           location.longitude,
           location.latitude
         );
+        console.log("hello"+turfData);
         dispatch(setTurfs(turfData));
         setTData(turfData);
         const bData = await getDiscountBanner(

@@ -34,6 +34,41 @@ const getTurfData = async (longitude, latitude) => {
   return data;
 };
 
+const getTiming = async () => {
+  const apiUrl =
+    "https://api.staging.playspots.app/v8/bookings/check_availability";
+
+  const inputData = {
+    turf_id: "5c29baa08ddcf4591c447b69",
+    sport_id: "5bcaf82120e047301b443c06",
+    slot_id: "5c29baa08ddcf4591c447b63",
+    date: "2023-08-22",
+  };
+
+  await fetch(apiUrl, {
+    method: "POST", // or "GET" if it's a GET request
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+    body: JSON.stringify(inputData), // Convert the input data to JSON
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Handle the API response data here
+      console.log("API response:", data);
+    })
+    .catch((error) => {
+      // Handle any errors that occurred during the fetch
+      console.error("API error:", error);
+    });
+};
+
 const getDiscountBanner = async (longitude, latitude) => {
   let data = [];
   let alteredData = [];
@@ -79,4 +114,4 @@ const getDiscountBanner = async (longitude, latitude) => {
   return alteredData;
 };
 
-export { getTurfData, getDiscountBanner };
+export { getTurfData, getDiscountBanner, getTiming };

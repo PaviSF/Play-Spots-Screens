@@ -1,25 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import DatePick from "../date-picker/DatePick";
-import { calculateDate, formatedDates } from "../../helper/CalculateDate";
+import {
+  calculateDate,
+  formatedDates,
+  formatDate,
+} from "../../helper/CalculateDate";
 import { TouchableOpacity } from "react-native";
 
 const DatePicker = () => {
   const dates = formatedDates(calculateDate());
-  const [selectedOption, setSelectedOption] = useState(dates[0]);
+  const [selectedOption, setSelectedOption] = useState(formatDate(dates[0]));
 
   const checkActivity = (index) => {
-    return (
-      selectedOption.weekDay === dates[index].weekDay &&
-      selectedOption.month === dates[index].month &&
-      selectedOption.date === dates[index].date &&
-      selectedOption.year === dates[index].year
-    );
+    return selectedOption === formatDate(dates[index]);
+  };
+  
+  const selectDate = (index) => {
+    setSelectedOption(formatDate(dates[index]));
   };
 
-  const selectDate = (index) => {
-    setSelectedOption(dates[index]);
-  };
   return (
     <View style={styles.mainContainer}>
       <View style={styles.dateRow}>
@@ -57,30 +57,6 @@ const DatePicker = () => {
             {index < 4 && <View style={styles.dividingLine} />}
           </React.Fragment>
         ))}
-
-        {/* <View style={styles.dateContainer}>
-          <Text style={styles.month}>{dates[1].month}</Text>
-          <Text style={styles.date}>{dates[1].date}</Text>
-          <Text style={styles.weekDay}>{dates[1].weekDay}</Text>
-        </View>
-        <View style={styles.dividingLine} />
-        <View style={styles.dateContainer}>
-          <Text style={styles.month}>{dates[2].month}</Text>
-          <Text style={styles.date}>{dates[2].date}</Text>
-          <Text style={styles.weekDay}>{dates[2].weekDay}</Text>
-        </View>
-        <View style={styles.dividingLine} />
-        <View style={styles.dateContainer}>
-          <Text style={styles.month}>{dates[3].month}</Text>
-          <Text style={styles.date}>{dates[3].date}</Text>
-          <Text style={styles.weekDay}>{dates[3].weekDay}</Text>
-        </View>
-        <View style={styles.dividingLine} />
-        <View style={styles.dateContainer}>
-          <Text style={styles.month}>{dates[4].month}</Text>
-          <Text style={styles.date}>{dates[4].date}</Text>
-          <Text style={styles.weekDay}>{dates[4].weekDay}</Text>
-        </View> */}
       </View>
       <View style={{ position: "absolute", right: 0, bottom: 15 }}>
         <DatePick />

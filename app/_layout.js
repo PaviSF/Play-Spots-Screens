@@ -11,12 +11,13 @@ const store = configureStore({
   reducer: {
     note: noteReducer,
     location: locationReducer,
-    turfs: turfsReducer
+    turfs: turfsReducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    immutableCheck: { warnAfter: 128 },
-    serializableCheck: { warnAfter: 128 },
-  })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      immutableCheck: { warnAfter: 128 },
+      serializableCheck: { warnAfter: 128 },
+    }),
 });
 
 const MainLayout = () => {
@@ -26,8 +27,7 @@ const MainLayout = () => {
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(initial)" options={{ headerShown: false }} />
-        <Stack.Screen name="booking"options={{headerShadowVisible:false,title:'Booking'}} />
-
+        <Stack.Screen name="booking" options={{ headerShown: false }} />
       </Stack>
     </Provider>
   );
