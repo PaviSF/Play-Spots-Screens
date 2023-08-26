@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePick from "../date-picker/DatePick";
 import {
   calculateDate,
@@ -7,10 +7,16 @@ import {
   formatDate,
 } from "../../helper/CalculateDate";
 import { TouchableOpacity } from "react-native";
-
+import { setDate } from "../../features/booking";
+import { useDispatch } from "react-redux";
 const DatePicker = () => {
   const dates = formatedDates(calculateDate());
   const [selectedOption, setSelectedOption] = useState(formatDate(dates[0]));
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+    dispatch(setDate(selectedOption));
+  },[]);
 
   const checkActivity = (index) => {
     return selectedOption === formatDate(dates[index]);
@@ -18,6 +24,7 @@ const DatePicker = () => {
   
   const selectDate = (index) => {
     setSelectedOption(formatDate(dates[index]));
+    dispatch(setDate(formatDate(dates[index])))
   };
 
   return (

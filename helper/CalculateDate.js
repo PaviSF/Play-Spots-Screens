@@ -81,27 +81,18 @@ const formatDate = (dateObj) => {
 
 const timestampToIST = (timestamp) => {
   // Create a Date object from the timestamp (in milliseconds)
-  const date = new Date(timestamp);
+  // Create a new Date object and adjust for the IST time zone offset
+  const date = new Date(timestamp * 1000 + 5.5 * 60 * 60 * 1000);
 
-  // Define options for formatting the date and time
-  const options = {
-    timeZone: 'Asia/Kolkata', // Set the time zone to IST
-    weekday: 'long', // Full weekday name (e.g., "Monday")
-    year: 'numeric', // Full year (e.g., "2023")
-    month: 'long', // Full month name (e.g., "August")
-    day: 'numeric', // Day of the month (e.g., "22")
-    hour: '2-digit', // Hours in 12-hour format (e.g., "01")
-    minute: '2-digit', // Minutes (e.g., "30")
-    second: '2-digit', // Seconds (e.g., "45")
-    hour12: true, // Use 12-hour format (true) or 24-hour format (false)
-  };
+  // Get the individual components of the date
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed, so add 1
+  const day = date.getDate().toString().padStart(2, "0");
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
 
-  // Format the date and time to IST
-  const istDate = date.toLocaleString('en-IN', options);
-
-  return istDate;
-}
-
-
+  return `${hours}:${minutes}`;
+};
 
 export { calculateDate, formatedDates, formatDate, timestampToIST };

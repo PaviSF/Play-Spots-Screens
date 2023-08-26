@@ -34,15 +34,16 @@ const getTurfData = async (longitude, latitude) => {
   return data;
 };
 
-const getTiming = async () => {
+const getTiming = async (date) => {
+  let setData = [];
   const apiUrl =
     "https://api.staging.playspots.app/v8/bookings/check_availability";
 
   const inputData = {
-    turf_id: "5c29baa08ddcf4591c447b69",
-    sport_id: "5bcaf82120e047301b443c06",
-    slot_id: "5c29baa08ddcf4591c447b63",
-    date: "2023-08-22",
+    turf_id: "5fbfe36af34259063060776d",
+    sport_id: "5e9a64f8c1639fd99a25290a",
+    slot_id: "5fbfe36af342590630607768",
+    date,
   };
 
   await fetch(apiUrl, {
@@ -61,12 +62,14 @@ const getTiming = async () => {
     })
     .then((data) => {
       // Handle the API response data here
-      console.log("API response:", data);
+     // console.log("API response:", data);
+      setData[0] = data;
     })
     .catch((error) => {
       // Handle any errors that occurred during the fetch
       console.error("API error:", error);
     });
+  return setData;
 };
 
 const getDiscountBanner = async (longitude, latitude) => {

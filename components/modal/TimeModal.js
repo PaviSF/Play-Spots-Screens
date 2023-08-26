@@ -1,6 +1,8 @@
 import Modal from "react-native-modal";
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
+import { useDispatch } from "react-redux";
+import { setStartTime } from "../../features/booking";
 
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { TouchableOpacity } from "react-native";
@@ -63,15 +65,27 @@ let timeArray = [
 // Display the timeArray
 const boxSize = 50;
 
-export default function TimeModal({ state, changeState }) {
+export default function TimeModal({
+  state,
+  changeState,
+  start_time,
+  end_time,
+  bookings,
+  unavailability,
+}) {
   const [isModalVisible, setModalVisible] = useState(false);
-  const [startTime, setStartTime] = useState("00:00");
+  // const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:30");
   const [start, setStart] = useState(true);
+  const dispatch = useDispatch();
   const closeModal = () => {
     setModalVisible(!isModalVisible);
     changeState();
   };
+
+  useState(() => {
+    console.log(bookings);
+  }, []);
 
   const elementsAfterSearch = (arr, searchElement) => {
     const index = arr.indexOf(searchElement);
@@ -85,7 +99,7 @@ export default function TimeModal({ state, changeState }) {
 
   const startClicked = (number) => {
     setStart(!start);
-    setStartTime(number);
+    dispatch(setStartTime(number));
   };
 
   const endClicked = (number) => {
@@ -93,41 +107,47 @@ export default function TimeModal({ state, changeState }) {
     closeModal();
   };
 
-  const timing = {
-    start_time: "08:00",
-    end_time: "23:59",
-  };
+  // const timing = {
+  //   start_time: "08:00",
+  //   end_time: "23:59",
+  // };
 
-  const bookings = [
-    {
-      start_time: "12:00",
-      end_time: "13:00",
-    },
-    {
-      start_time: "13:00",
-      end_time: "14:00",
-    },
-  ];
-  
-  const unavailability = [
-    {
-      start_time: "18:00",
-      end_time: "19:00",
-    },
-    {
-      start_time: "22:00",
-      end_time: "23:00",
-    },
-  ];
+  // const _bookings = [
+  //   {
+  //     start_time: "12:00",
+  //     end_time: "13:00",
+  //   },
+  //   {
+  //     start_time: "13:00",
+  //     end_time: "14:00",
+  //   },
+  // ];
+
+  // const _unavailability = [
+  //   {
+  //     start_time: "18:00",
+  //     end_time: "19:00",
+  //   },
+  //   {
+  //     start_time: "22:00",
+  //     end_time: "23:00",
+  //   },
+  // ];
 
   const BoxRow = ({ data }) => {
     return (
       <View style={styles.row}>
-        {data.map((number,index) => (
+        {data.map((number, index) => (
           <TouchableOpacity
-            style={[styles.box, number.booking ? styles.bookedBox:null,number.unavailable ? styles.unavailability:null]}
+            style={[
+              styles.box,
+              number.booking ? styles.bookedBox : null,
+              number.unavailable ? styles.unavailability : null,
+            ]}
             key={index}
-            onPress={() => (start ? startClicked(number.time) : endClicked(number.time))}
+            onPress={() =>
+              start ? startClicked(number.time) : endClicked(number.time)
+            }
           >
             <Text style={styles.numberText}>{number.time}</Text>
           </TouchableOpacity>
@@ -136,7 +156,11 @@ export default function TimeModal({ state, changeState }) {
     );
   };
 
-  const modifiedRows = generateAvailabilityStatusArray(filterTimeArray(timeArray, timing),bookings,unavailability);
+  const modifiedRows = generateAvailabilityStatusArray(
+    filterTimeArray(timeArray, start_time, end_time),
+    bookings,
+    unavailability
+  );
   const rows = [];
   for (let i = 0; i < modifiedRows.length; i += 6) {
     const row = modifiedRows.slice(i, i + 6);
@@ -204,7 +228,7 @@ const styles = StyleSheet.create({
   },
   selectBox: {},
   bookedBox: { backgroundColor: "#FFEBEB", borderColor: "#E90909" },
-  unavailability: { backgroundColor: "#B4B4B4", borderColor: "black"},
+  unavailability: { backgroundColor: "#B4B4B4", borderColor: "black" },
   numberText: {
     fontSize: 11,
     fontWeight: "bold",

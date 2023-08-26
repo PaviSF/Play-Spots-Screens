@@ -1,3 +1,5 @@
+import { timestampToIST } from "./CalculateDate";
+
 const linearSearch = (arr, target) => {
   for (let i = 0; i < arr.length; i++) {
     if (arr[i].item_name === target) {
@@ -7,28 +9,37 @@ const linearSearch = (arr, target) => {
   return false;
 };
 
-
-
-const filterTimeArray = (timeArray, timing) => {
+const filterTimeArray = (timeArray, start_time, end_time) => {
+  console.log(start_time);
+  console.log(end_time);
   // Convert provided times to minutes since midnight
-  const startMinutes = parseInt(timing.start_time.substring(0, 2)) * 60 + parseInt(timing.start_time.substring(3));
-  const endMinutes = parseInt(timing.end_time.substring(0, 2)) * 60 + parseInt(timing.end_time.substring(3));
+  const startMinutes =
+    parseInt(start_time.substring(0, 2)) * 60 +
+    parseInt(start_time.substring(3));
+  const endMinutes =
+    parseInt(end_time.substring(0, 2)) * 60 +
+    parseInt(end_time.substring(3));
 
   const filteredTimes = [];
 
   for (const time of timeArray) {
     // Convert time to minutes since midnight
-    const timeMinutes = parseInt(time.substring(0, 2)) * 60 + parseInt(time.substring(3));
+    const timeMinutes =
+      parseInt(time.substring(0, 2)) * 60 + parseInt(time.substring(3));
 
     if (timeMinutes >= startMinutes && timeMinutes <= endMinutes) {
       filteredTimes.push(time);
     }
   }
-
+  console.log(filteredTimes);
   return filteredTimes;
-}
+};
 
-const generateAvailabilityStatusArray = (timeArray, bookings, unavailability) => {
+const generateAvailabilityStatusArray = (
+  timeArray,
+  bookings,
+  unavailability
+) => {
   const availabilityStatusArray = [];
 
   if (!Array.isArray(bookings) || !Array.isArray(unavailability)) {
@@ -38,11 +49,14 @@ const generateAvailabilityStatusArray = (timeArray, bookings, unavailability) =>
 
   for (const time of timeArray) {
     const bookingStatus = bookings.some((booking) => {
-      return time >= booking.start_time && time < booking.end_time;
+      
+      return time >= timestampToIST(booking.start_time) && time < timestampToIST(booking.end_time);
     });
 
     const unavailabilityStatus = unavailability.some((unavail) => {
-      return time >= unavail.start_time && time < unavail.end_time;
+      console.log("hello"+timestampToIST(unavail.start_time))
+
+      return time >= timestampToIST(unavail.start_time) && time < timestampToIST(unavail.end_time);
     });
 
     availabilityStatusArray.push({
@@ -55,9 +69,4 @@ const generateAvailabilityStatusArray = (timeArray, bookings, unavailability) =>
   return availabilityStatusArray;
 };
 
-
-
-
-
-
-export { linearSearch,filterTimeArray, generateAvailabilityStatusArray };
+export { linearSearch, filterTimeArray, generateAvailabilityStatusArray };

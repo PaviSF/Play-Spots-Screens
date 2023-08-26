@@ -26,15 +26,15 @@ const DatePick = () => {
   const today = new Date();
   const startDate = getFormatedDate(
     today.setDate(today.getDate() + 1),
-    "YYYY/MM/DD"
+    "YYYY-MM-DD"
   );
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [startedDate, setStartedDate] = useState("12/12/2023");
   const dispatch = useDispatch();
-  const note = useSelector((state)=> state.note.value)
+  const note = useSelector((state) => state.note.value);
   useEffect(() => {
-    if(note.date[0]){
-      setNoteAndDate(note)
+    if (note.date[0]) {
+      setNoteAndDate(note);
     }
     // dispatch(setNote(noteAndDate));
     // storeData(noteAndDate);
@@ -49,7 +49,6 @@ const DatePick = () => {
       // Handle the error here, or show an error message to the user
     }
   };
-  
 
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
@@ -81,7 +80,7 @@ const DatePick = () => {
     setToSendNote();
   };
   return (
-    <SafeAreaView style={{}}>
+    <SafeAreaView>
       <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}>
         <View>
           <TouchableOpacity onPress={handleOnPressStartDate}>
@@ -97,51 +96,32 @@ const DatePick = () => {
           >
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                {dateLayout ? (
-                  <DatePicker
-                    mode="calendar"
-                    minimumDate={startDate}
-                    selected={startedDate}
-                    onDateChanged={handleChangeStartDate}
-                    onSelectedChange={(date) => setSelectedStartDate(date)}
-                    options={{
-                      backgroundColor: "#3C6255",
-                      textHeaderColor: "#AEEEB4",
-                      textDefaultColor: "#FFFFFF",
-                      selectedTextColor: "#FFF",
-                      mainColor: "#AEEEB4",
-                      textSecondaryColor: "#FFFFFF",
-                      borderColor: "rgba(122, 146, 165, 0.1)",
-                    }}
-                  />
-                ) : (
-                  <View style={styles.notesContainer}>
-                    <TextInput
-                      placeholder="Add your reminder"
-                      placeholderTextColor={"#cbdccb"}
-                      numberOfLines={3}
-                      style={styles.notes}
-                      onChangeText={(note) => setNotes(note)}
-                    />
-                  </View>
-                )}
+                <DatePicker
+                  mode="calendar"
+                  minimumDate={startDate}
+                  selected={startedDate}
+                  onDateChanged={handleChangeStartDate}
+                  onSelectedChange={(date) => {
+                    setSelectedStartDate(date);
+                    console.log(date.replace(/\//g, '-'));
+                  }}
+                  options={{
+                    backgroundColor: "#3C6255",
+                    textHeaderColor: "#AEEEB4",
+                    textDefaultColor: "#FFFFFF",
+                    selectedTextColor: "#FFF",
+                    mainColor: "#AEEEB4",
+                    textSecondaryColor: "#FFFFFF",
+                    borderColor: "rgba(122, 146, 165, 0.1)",
+                  }}
+                />
 
-                <TouchableOpacity
-                  onPress={dateLayout ? handleOnPressNext : handleCloseModal}
-                >
-                  {dateLayout ? (
-                    <MaterialIcons
-                      name="navigate-next"
-                      size={30}
-                      color="white"
-                    />
-                  ) : (
-                    <Ionicons
-                      name="checkmark-done-circle-sharp"
-                      size={30}
-                      color="white"
-                    />
-                  )}
+                <TouchableOpacity onPress={handleOnPressNext}>
+                  <Ionicons
+                    name="checkmark-done-circle-sharp"
+                    size={30}
+                    color="white"
+                  />
                 </TouchableOpacity>
               </View>
             </View>

@@ -1,5 +1,5 @@
 //React imports
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 //Expo imports
@@ -17,32 +17,56 @@ import { useFonts } from "expo-font";
 import { removeAfterSecondComma } from "../../helper/StringManipulation";
 import { linearSearch } from "../../helper/DataSorting";
 import { deviceWidth } from "../../constants/Dimension";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { useDispatch } from "react-redux";
+import { setTurfDetails } from "../../features/booking";
 
 const defaultImage =
   "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
 
 const CardView = ({ ratings, item }) => {
   const [like, setLike] = useState(false);
+  const router = useRouter();
+  const dispatch = useDispatch();
   const [fontsLoaded] = useFonts({
     Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
   });
   const completeImage =
     "https://d3th8mtd05b6hz.cloudfront.net/turf/" + item.images[0];
+
+  const sendToBookingPage = () => {
+    const newItem = {
+      turf_id: item._id,
+      sport_id: item.sports,
+      slot_id: item.slot_details,
+    };
+
+   // console.log(newItem);
+
+    dispatch(setTurfDetails(newItem));
+    router.push("/booking");
+  };
+
+  useEffect(() => {
+    console.log(item);
+  }, []);
   return (
     <View style={{ justifyContent: "center" }}>
       <View style={styles.cardContainer}>
         {/* Square Image with Curved Corners */}
-        <Link href={"/booking"} asChild>
-          <TouchableOpacity style={styles.imageLayout}>
-            <Image
-              source={{ uri: completeImage }}
-              style={styles.image}
-              defaultSource={require("../../assets/247181.jpg")}
-              resizeMode="cover" // Resize the image to cover the container
-            />
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity
+          style={styles.imageLayout}
+          onPress={sendToBookingPage}
+        >
+          <Image
+            source={{ uri: completeImage }}
+            style={styles.image}
+            defaultSource={require("../../assets/247181.jpg")}
+            resizeMode="cover" // Resize the image to cover the container
+          />
+        </TouchableOpacity>
+        {/* <Link href={{ pathname: "/booking", params: newItem}} asChild>
+        </Link> */}
 
         {/* Text container */}
         <View style={styles.textContainer}>
@@ -216,7 +240,6 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     borderRadius: 10,
-  
   },
   textContainer: {
     flex: 0.5,

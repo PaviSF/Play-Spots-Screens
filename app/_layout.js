@@ -4,6 +4,7 @@ import { Provider } from "react-redux";
 import noteReducer from "../features/notes";
 import locationReducer from "../features/location";
 import turfsReducer from "../features/turfs";
+import bookingReducer from "../features/booking";
 import { Stack } from "expo-router";
 import { configureStore } from "@reduxjs/toolkit";
 
@@ -12,6 +13,7 @@ const store = configureStore({
     note: noteReducer,
     location: locationReducer,
     turfs: turfsReducer,
+    booking: bookingReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

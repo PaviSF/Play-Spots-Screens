@@ -3,32 +3,51 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
 import Modal from "react-native-modal";
+import { useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import DatePicker from "../../components/booking/DatePicker";
 import ClockCircle from "../../components/booking/ClockCircle";
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter, useSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import TimeModal from "../../components/modal/TimeModal";
 import { getTiming } from "../../helper/FetchData";
+import { FlatList } from "react-native";
 
 const booking = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
-
+  const turfData = useSearchParams();
+  const dateTime = useSelector((state) => state.booking.value);
+  const [data, setData] = useState([]);
   useEffect(() => {
-    console.log("useEffect triggered");
     const getData = async () => {
-      await getTiming();
-    }
+      const data = await getTiming(dateTime.date);
+      setData(data);
+      setLoading(false);
+      console.log("mellow" + dateTime.turf_details.sport_id[0].item_name);
+    };
     getData();
   }, []);
+
+  const timeStringToFloat = (timeString) => {
+    // Split the time string into hours and minutes
+    const [hours, minutes] = timeString.split(":").map(Number);
+
+    // Calculate the time in hours, including minutes as fractions
+    const timeInHours = hours + minutes / 60;
+
+    return timeInHours;
+  };
 
   const changeModalState = () => {
     setModalState(!modalState);
   };
 
-  return (
+  return loading ? (
+    <Text>Loading</Text>
+  ) : (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
         colors={["#ffffff", "#EEEEEE"]}
@@ -37,36 +56,14 @@ const booking = () => {
         end={[0, 1]}
       >
         <View style={styles.groundContainer}>
-          <View style={styles.ground}>
-            <Image
-              source={require("../../assets/spots/football-turf.png")}
-              style={styles.groundImage}
-            />
-            <View style={styles.groundTypesContainer}>
-              <View style={styles.groundType}>
-                <Text style={styles.groundTypeText}>Court 1</Text>
-                <Text style={styles.groundTypeText}>(7*7)</Text>
-              </View>
-              <View style={styles.groundType}>
-                <Text style={styles.groundTypeText}>Court 2</Text>
-                <Text style={styles.groundTypeText}>(5*5)</Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.ground}>
-            <Image
-              source={require("../../assets/spots/tennis-court.png")}
-              style={styles.groundImage}
-            />
-            <View style={styles.groundTypesContainer}>
-              <View style={styles.groundType}>
-                <Text style={styles.groundTypeText}>Court 1</Text>
-              </View>
-              <View style={styles.groundType}>
-                <Text style={styles.groundTypeText}>Court 2</Text>
-              </View>
-            </View>
-          </View>
+          <FlatList
+            data={dateTime.turf_details.sport_id}
+            renderItem={({ item, index }) => (
+              <TouchableOpacity key={index} style={{ flex: 1 }}>
+                <Text style={{ flex: 1 }}>{item.item_name}</Text>
+              </TouchableOpacity>
+  )}
+          />
         </View>
         <View style={{ flex: 1 }}>
           <DatePicker />
@@ -76,13 +73,16 @@ const booking = () => {
         <View
           style={{ flex: 0.7, justifyContent: "center", alignItems: "center" }}
         >
-          <ClockCircle startHourVariable={10} finishHourVariable={14} />
+          <ClockCircle
+            startHourVariable={timeStringToFloat(dateTime.start_time)}
+            finishHourVariable={timeStringToFloat(dateTime.end_time)}
+          />
         </View>
         <View style={styles.timeSelectorContainer}>
           <View style={styles.timeSelector}>
             <Text style={styles.timeSelectorHeading}>From</Text>
-            <TouchableOpacity>
-              <Text style={styles.timeText}>{'12:00 am'}</Text>
+            <TouchableOpacity onPress={changeModalState}>
+              <Text style={styles.timeText}>{dateTime.start_time}</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -91,7 +91,7 @@ const booking = () => {
           <View style={styles.timeSelector}>
             <Text style={styles.timeSelectorHeading}>To</Text>
             <TouchableOpacity onPress={changeModalState}>
-              <Text style={styles.timeText}>01:00 am</Text>
+              <Text style={styles.timeText}>{dateTime.end_time}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -130,7 +130,15 @@ const booking = () => {
           </TouchableOpacity>
         </View>
       </View>
-      <TimeModal state={modalState} changeState={changeModalState} />
+      {/* <Text>{data[0].timing.start_time}</Text> */}
+      <TimeModal
+        state={modalState}
+        changeState={changeModalState}
+        start_time={data[0].timing.start_time}
+        end_time={data[0].timing.end_time}
+        bookings={data[0].bookings}
+        unavailability={data[0].unavailability}
+      />
     </SafeAreaView>
   );
 };

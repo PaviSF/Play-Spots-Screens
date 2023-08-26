@@ -6,7 +6,7 @@ export const locationSlice = createSlice({
     value: {
       latitude: 0,
       longitude: 0,
-      district: "",
+      district: "", 
       state: "",
       country: "",
     },

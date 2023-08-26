@@ -20,7 +20,7 @@ import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Stack, Tabs } from "expo-router";
 
 //External imports
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 //Internal imports
 import HorizontalSportsListItem from "../../../components/spots/HorizontalSportsListItem";
