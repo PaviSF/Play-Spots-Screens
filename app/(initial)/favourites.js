@@ -50,6 +50,10 @@ export default function Favourites() {
     async function fetchLocation() {
       const currentLocation = await findLocation();
       const geoLocation = await reverseGeocode(currentLocation);
+      console.log(
+        currentLocation.coords.latitude,
+        currentLocation.coords.longitude
+      );
       const location = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
@@ -100,7 +104,11 @@ export default function Favourites() {
           </View>
         </View>
       ) : (
-        <ActivityIndicator style={{alignSelf:'center',flex:1}}size="large" color="green" />
+        <ActivityIndicator
+          style={{ alignSelf: "center", flex: 1 }}
+          size="large"
+          color="green"
+        />
       )}
     </View>
   );

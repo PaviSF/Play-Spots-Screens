@@ -28,6 +28,7 @@ import CircularOrbit from "../../../components/circular-orbit/CircularOrbit";
 import CardView from "../../../components/spots/CardView";
 import Header from "../../../components/header/Header";
 import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
+import { getPaginatedTurfData } from "../../../helper/FetchData";
 
 //constant styles
 const tabComponentColor = "#565657";
@@ -49,9 +50,12 @@ const sportsData = [
 const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
 const Spot = () => {
+  const [pageData, setPageData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
   const location = useSelector((state) => state.location.value);
   const data = useSelector((state) => state.turfs.value);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(false);
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const gesture = Gesture.Pan() //Used to update Y axis position for bottomsheet
@@ -70,7 +74,28 @@ const Spot = () => {
       }
     });
 
-  //Used to update the changes in style of bottomsheet
+    useEffect(() => {
+      translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
+      if (data !== null) {
+        setIsLoading(false);
+      }
+    }, []);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        setPageLoading(true);
+        const data = await getPaginatedTurfData(
+          currentPage,
+          location.longitude,
+          location.latitude
+        );
+        setPageData((prevData) => [...prevData, ...data]);
+        setPageLoading(false);
+      };
+      fetchData();
+    }, [currentPage]);
+
+    //Used to update the changes in style of bottomsheet
   const rModal = useAnimatedStyle(() => {
     const borderRadius = interpolate(
       translateY.value,
@@ -91,12 +116,18 @@ const Spot = () => {
     };
   });
 
-  useEffect(() => {
-    translateY.value = withSpring(-deviceHeight / 3, { damping: 50 });
-    if (data !== null) {
-      setIsLoading(false);
-    }
-  }, []);
+  const renderLoader = () => {
+    return pageLoading ? (
+      <View style={{ marginVertical: 15, alignItems: "center" }}>
+        <ActivityIndicator size={"large"} color={"green"} />
+      </View>
+    ) : null;
+  };
+
+  const loadMoreItem = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
 
   if (isLoading) {
     return (
@@ -147,7 +178,10 @@ const Spot = () => {
           <FlatList
             nestedScrollEnabled
             showsVerticalScrollIndicator={false}
-            data={data}
+            data={pageData}
+            ListFooterComponent={renderLoader}
+            onEndReached={loadMoreItem}
+            onEndReachedThreshold={0}
             renderItem={({ item, index }) => {
               return <CardView item={item} ratings={3} />;
             }}

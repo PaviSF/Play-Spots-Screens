@@ -1,17 +1,22 @@
 import Modal from "react-native-modal";
-import { useState, useEffect } from "react";
+import React,{
+  useState,
+  useEffect,
+  useImperativeHandle,
+  forwardRef,
+  useRef,
+} from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
-import { useDispatch } from "react-redux";
-import { setStartTime } from "../../features/booking";
-
+import { useDispatch, useSelector } from "react-redux";
+import { changeModalState, setStartTime } from "../../features/booking";
 import { deviceHeight, deviceWidth } from "../../constants/Dimension";
 import { TouchableOpacity } from "react-native";
 import {
-  filterTimeArray,
   generateAvailabilityStatusArray,
+  startTimeArray,
 } from "../../helper/DataSorting";
 
-let timeArray = [
+const timeArray = [
   "00:00",
   "00:30",
   "01:00",
@@ -61,78 +66,86 @@ let timeArray = [
   "23:00",
   "23:30",
 ];
-
-// Display the timeArray
+// Individual time box size
 const boxSize = 50;
+const filterTimeArrayForCurrentDate = (dateString, timeArray) => {
+  // Step 1: Get the current date and time
+  const currentDate = new Date();
 
-export default function TimeModal({
-  state,
-  changeState,
-  start_time,
-  end_time,
-  bookings,
-  unavailability,
-}) {
+  // Step 2: Convert the provided date string to a Date object
+  const providedDate = new Date(dateString);
+
+  // Step 3: Compare the current date and time with the provided date
+  if (currentDate.toDateString() === providedDate.toDateString()) {
+    // Step 4: Remove elements from timeArray based on the current time
+    const currentTime = currentDate.getHours() * 60 + currentDate.getMinutes();
+
+    // Filter the timeArray to keep only times greater than the current time
+    const filteredTimeArray = timeArray.filter((time) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      const timeInMinutes = hours * 60 + minutes;
+      return timeInMinutes > currentTime;
+    });
+
+    return filteredTimeArray;
+  } else {
+    // If the provided date is not the current date, return the original timeArray
+    return timeArray;
+  }
+};
+
+function removeValuesUntilElement(arr, element) {
+  // Find the index of the specified element in the array
+  const index = arr.indexOf(element);
+
+  // If the element is not found or is the last element, return an empty array
+  if (index === -1 || index === arr.length - 1) {
+    return [];
+  }
+
+  // Return a new array containing elements from the specified element onwards
+  return arr.slice(index + 1);
+}
+
+// Example usage:
+// const providedDateString = "2023-09-02"; // Replace with your provided date
+
+// const filteredArrayNew = filterTimeArrayForCurrentDate(bookingData.date, timeArray);
+
+const StartTimeModal = forwardRef(({ bookings, unavailability }, ref) => {
   const [isModalVisible, setModalVisible] = useState(false);
-  // const [startTime, setStartTime] = useState("00:00");
-  const [endTime, setEndTime] = useState("00:30");
-  const [start, setStart] = useState(true);
+  //const [startTime, setStartTime] = useState("00:00");
+  const bookingData = useSelector((state) => state.booking.value);
   const dispatch = useDispatch();
-  const closeModal = () => {
-    setModalVisible(!isModalVisible);
-    changeState();
-  };
+  const filteredArrayNew = filterTimeArrayForCurrentDate(
+    bookingData.date,
+    timeArray
+  );
 
-  useState(() => {
-    console.log(bookings);
-  }, []);
+  const filteredTimeArray = startTimeArray(
+    filteredArrayNew,
+    bookingData.turf_details.limit_round,
+    bookingData.turf_details.from_thirtieth_minute
+  );
 
-  const elementsAfterSearch = (arr, searchElement) => {
-    const index = arr.indexOf(searchElement);
-    if (index === -1) {
-      // If the search element is not found, return an empty array or handle the error as needed.
-      return [];
-    }
-    // Use the slice method to get all elements after the index.
-    return arr.slice(index + 1);
+  // const bottomSheetRef = useRef();
+
+  // Expose a method to change the bottom sheet state
+  useImperativeHandle(ref, () => ({
+    setBottomSheetState: (isOpen) => {
+      setModalVisible(isOpen);
+    },
+  }));
+
+  const closeBottomSheet = () => {
+    // Set the shared boolean value to false when closing
+    setModalVisible(false);
   };
 
   const startClicked = (number) => {
-    setStart(!start);
     dispatch(setStartTime(number));
+    closeBottomSheet();
   };
-
-  const endClicked = (number) => {
-    setStart(!start);
-    closeModal();
-  };
-
-  // const timing = {
-  //   start_time: "08:00",
-  //   end_time: "23:59",
-  // };
-
-  // const _bookings = [
-  //   {
-  //     start_time: "12:00",
-  //     end_time: "13:00",
-  //   },
-  //   {
-  //     start_time: "13:00",
-  //     end_time: "14:00",
-  //   },
-  // ];
-
-  // const _unavailability = [
-  //   {
-  //     start_time: "18:00",
-  //     end_time: "19:00",
-  //   },
-  //   {
-  //     start_time: "22:00",
-  //     end_time: "23:00",
-  //   },
-  // ];
 
   const BoxRow = ({ data }) => {
     return (
@@ -145,9 +158,7 @@ export default function TimeModal({
               number.unavailable ? styles.unavailability : null,
             ]}
             key={index}
-            onPress={() =>
-              start ? startClicked(number.time) : endClicked(number.time)
-            }
+            onPress={() => startClicked(number.time)}
           >
             <Text style={styles.numberText}>{number.time}</Text>
           </TouchableOpacity>
@@ -157,7 +168,7 @@ export default function TimeModal({
   };
 
   const modifiedRows = generateAvailabilityStatusArray(
-    filterTimeArray(timeArray, start_time, end_time),
+    filteredTimeArray,
     bookings,
     unavailability
   );
@@ -166,10 +177,6 @@ export default function TimeModal({
     const row = modifiedRows.slice(i, i + 6);
     rows.push(row);
   }
-  useEffect(() => {
-    // Update the modal visibility when the state prop changes
-    setModalVisible(state);
-  }, [state]);
 
   return (
     <Modal
@@ -177,14 +184,14 @@ export default function TimeModal({
       deviceWidth={deviceWidth}
       deviceHeight={deviceHeight}
       backdropOpacity={0.4}
-      onBackdropPress={() => closeModal()}
+      onBackdropPress={closeBottomSheet}
       style={{ margin: 0 }}
     >
       <View
         style={[styles.modal, { height: 80 + rows.length * (boxSize + 10) }]}
       >
         <Text style={{ textAlign: "center", padding: 10 }}>
-          {start ? "Choose Start Time" : "Choose End Time"}
+          {"Choose Start Time"}
         </Text>
         <View style={styles.container}>
           <FlatList
@@ -196,7 +203,9 @@ export default function TimeModal({
       </View>
     </Modal>
   );
-}
+});
+
+export default React.memo(StartTimeModal);
 
 const styles = StyleSheet.create({
   modal: {

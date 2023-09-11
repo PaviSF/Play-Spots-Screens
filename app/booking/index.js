@@ -1,35 +1,75 @@
-import { View, Text, Image } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, Image, ActivityIndicator } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native";
 import Modal from "react-native-modal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
 import DatePicker from "../../components/booking/DatePicker";
 import ClockCircle from "../../components/booking/ClockCircle";
 import { Link, useRouter, useSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import TimeModal from "../../components/modal/TimeModal";
-import { getTiming } from "../../helper/FetchData";
+import StartTimeModal from "../../components/modal/StartTimeModal";
+import { getPrice, getTiming } from "../../helper/FetchData";
 import { FlatList } from "react-native";
+import {
+  changeModalState,
+  setEndTime,
+  setPricing,
+  setStartTime,
+} from "../../features/booking";
+import { Button } from "react-native";
+import EndTimeModal from "../../components/modal/EndTimeModal";
 
 const booking = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [availabiltyLoading, setAvailabilityLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
-  const turfData = useSearchParams();
+  const [selectSport, setSelectSport] = useState("");
+  const [selectSlot, setSelectSlot] = useState("");
+  const [price, setPrice] = useState(0);
+  const startBottomSheetRef = useRef(null);
+  const endBottomSheetRef = useRef(null);
+  const selectSlotData = useMemo(() => selectSlot, [selectSlot]);
   const dateTime = useSelector((state) => state.booking.value);
+  const modalReduxState = dateTime.modal_state;
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const data = await getTiming(dateTime.date);
+      const data = await getTiming(
+        dateTime.date,
+        dateTime.turf_details.turf_id,
+        dateTime.turf_details.slot_id[0].sport_id.$oid,
+        dateTime.turf_details.slot_id[0].slot_id.$oid
+      );
+
       setData(data);
+      setSelectSport(dateTime.turf_details.slot_id[0].sport_id.$oid);
+      setSelectSlot(dateTime.turf_details.slot_id[0].slot_id.$oid);
+      setAvailabilityLoading(false);
       setLoading(false);
-      console.log("mellow" + dateTime.turf_details.sport_id[0].item_name);
     };
     getData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setAvailabilityLoading(true);
+      const data = await getTiming(
+        dateTime.date,
+        dateTime.turf_details.turf_id,
+        selectSport,
+        selectSlot
+      );
+      setData(data);
+      setPrice(0);
+      setAvailabilityLoading(false);
+    };
+    fetchData();
+  }, [dateTime.date]);
 
   const timeStringToFloat = (timeString) => {
     // Split the time string into hours and minutes
@@ -41,12 +81,56 @@ const booking = () => {
     return timeInHours;
   };
 
-  const changeModalState = () => {
-    setModalState(!modalState);
+  const changeStartTimeModalStates = () => {
+    // dispatch(changeModalState(true));
+    // setModalState(true);
+    startBottomSheetRef.current.setBottomSheetState(true);
+  };
+
+  const changeEndTimeModalStates = () => {
+    // dispatch(changeModalState(true));
+    // setModalState(true);
+    endBottomSheetRef.current.setBottomSheetState(true);
+  };
+
+  const changeSelectedSport = async (sportId) => {
+    setAvailabilityLoading(true);
+    setSelectSport(sportId);
+    const data = await getTiming(
+      dateTime.date,
+      dateTime.turf_details.turf_id,
+      sportId,
+      selectSlot
+    );
+    setData(data);
+    setPrice(0);
+    setAvailabilityLoading(false);
+  };
+
+  const changeSelectedSlot = async (slotId) => {
+    setAvailabilityLoading(true);
+    setSelectSlot(slotId);
+    const data = await getTiming(
+      dateTime.date,
+      dateTime.turf_details.turf_id,
+      selectSport,
+      slotId
+    );
+    setData(data);
+    setPrice(0);
+    setAvailabilityLoading(false);
+  };
+
+  const goToNextPage = () => {
+    if (selectSlot.length !== 0 && selectSport.length !== 0 && dateTime.pricing.price !== 0) {
+      router.push({pathname:"booking/next",params: {slotId: selectSlot, sportId: selectSport}});
+    }
   };
 
   return loading ? (
-    <Text>Loading</Text>
+    <View style={{ flex: 1, backgroundColor: "#ffffff" }}>
+      <ActivityIndicator color={"green"} size={40} style={{ flex: 1 }} />
+    </View>
   ) : (
     <SafeAreaView style={styles.mainContainer}>
       <LinearGradient
@@ -58,86 +142,161 @@ const booking = () => {
         <View style={styles.groundContainer}>
           <FlatList
             data={dateTime.turf_details.sport_id}
+            horizontal
             renderItem={({ item, index }) => (
-              <TouchableOpacity key={index} style={{ flex: 1 }}>
-                <Text style={{ flex: 1 }}>{item.item_name}</Text>
+              <TouchableOpacity
+                key={index}
+                onPress={() => changeSelectedSport(item.item_id.$oid)}
+                style={[
+                  styles.sportsListItem,
+                  selectSport === item.item_id.$oid
+                    ? styles.activeSportsListItem
+                    : null,
+                ]}
+              >
+                <Text
+                  style={
+                    selectSport === item.item_id.$oid
+                      ? styles.activeSportsListItemText
+                      : null
+                  }
+                >
+                  {item.item_name}
+                </Text>
               </TouchableOpacity>
-  )}
+            )}
+          />
+          <FlatList
+            data={dateTime.turf_details.slot_id}
+            style={{ alignSelf: "center" }}
+            horizontal
+            renderItem={({ item, index }) =>
+              selectSport === item.sport_id.$oid ? (
+                <TouchableOpacity
+                  style={styles.slotDetails}
+                  onPress={() => changeSelectedSlot(item.slot_id.$oid)}
+                >
+                  <Image
+                    source={require("../../assets/booking/pitch.png")}
+                    resizeMode="contain"
+                    style={styles.slotIcon}
+                  />
+                  <View
+                    style={[
+                      selectSlot === item.slot_id.$oid
+                        ? styles.activeSlotTitleContainer
+                        : null,
+                      styles.slotTitleContainer,
+                    ]}
+                  >
+                    <Text style={styles.slotTitle}>{item.slot_title}</Text>
+                  </View>
+                </TouchableOpacity>
+              ) : null
+            }
           />
         </View>
         <View style={{ flex: 1 }}>
           <DatePicker />
         </View>
       </LinearGradient>
-      <View style={styles.secondContainer}>
-        <View
-          style={{ flex: 0.7, justifyContent: "center", alignItems: "center" }}
-        >
-          <ClockCircle
-            startHourVariable={timeStringToFloat(dateTime.start_time)}
-            finishHourVariable={timeStringToFloat(dateTime.end_time)}
-          />
-        </View>
-        <View style={styles.timeSelectorContainer}>
-          <View style={styles.timeSelector}>
-            <Text style={styles.timeSelectorHeading}>From</Text>
-            <TouchableOpacity onPress={changeModalState}>
-              <Text style={styles.timeText}>{dateTime.start_time}</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{ height: "60%", width: 0.4, backgroundColor: "grey" }}
-          />
-          <View style={styles.timeSelector}>
-            <Text style={styles.timeSelectorHeading}>To</Text>
-            <TouchableOpacity onPress={changeModalState}>
-              <Text style={styles.timeText}>{dateTime.end_time}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-      <View style={styles.finalContainer}>
-        <View style={styles.priceContainer}>
-          <Text style={styles.priceHeading}>Total Price:</Text>
-          <Text style={styles.price}>₹900.00</Text>
-        </View>
+      {availabiltyLoading ? (
         <View
           style={{
-            height: 0.4,
-            width: "100%",
-            backgroundColor: "grey",
-            marginTop: 20,
+            flex: 0.48,
+            backgroundColor: "#ffffff",
+            justifyContent: "center",
+            alignItems: "center",
           }}
-        />
-        <View style={styles.bothButtons}>
-          <TouchableOpacity style={styles.scheduleContainer}>
-            <Text style={styles.schedule}>Add to Schedules</Text>
-            <MaterialCommunityIcons
-              name="progress-clock"
-              size={20}
-              color="black"
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => router.push("booking/next")}>
-            <LinearGradient
-              colors={["#03C254", "#00451E"]}
-              style={styles.nextContainer}
-              start={[0, 0]}
-              end={[1, 0]}
-            >
-              <Text style={styles.next}>Next</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+        >
+          <ActivityIndicator color={"green"} size={40} style={{ flex: 1 }} />
         </View>
-      </View>
+      ) : (
+        <>
+          <View style={styles.secondContainer}>
+            <View
+              style={{
+                flex: 0.7,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ClockCircle
+                startHourVariable={timeStringToFloat(dateTime.start_time)}
+                finishHourVariable={timeStringToFloat(dateTime.end_time)}
+              />
+            </View>
+            <View style={styles.timeSelectorContainer}>
+              <View style={styles.timeSelector}>
+                <Text style={styles.timeSelectorHeading}>From</Text>
+                <TouchableOpacity onPress={changeStartTimeModalStates}>
+                  <Text style={styles.timeText}>{dateTime.start_time}</Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{ height: "60%", width: 0.4, backgroundColor: "grey" }}
+              />
+              <View style={styles.timeSelector}>
+                <Text style={styles.timeSelectorHeading}>To</Text>
+                <TouchableOpacity onPress={changeEndTimeModalStates}>
+                  <Text style={styles.timeText}>{dateTime.end_time}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View style={styles.finalContainer}>
+            <View style={styles.priceContainer}>
+              <Text style={styles.priceHeading}>Total Price:</Text>
+              <Text style={styles.price}>
+                {dateTime.pricing.price === 0
+                  ? `--.--`
+                  : `${dateTime.turf_details.currency}${dateTime.pricing.price-dateTime.pricing.offer}`}
+              </Text>
+            </View>
+            <View
+              style={{
+                height: 0.4,
+                width: "100%",
+                backgroundColor: "grey",
+                marginTop: 20,
+              }}
+            />
+            <View style={styles.bothButtons}>
+              <TouchableOpacity style={styles.scheduleContainer}>
+                <Text style={styles.schedule}>Add to Schedules</Text>
+                <MaterialCommunityIcons
+                  name="progress-clock"
+                  size={20}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={goToNextPage}>
+                <LinearGradient
+                  colors={["#03C254", "#00451E"]}
+                  style={styles.nextContainer}
+                  start={[0, 0]}
+                  end={[1, 0]}
+                >
+                  <Text style={styles.next}>Next</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      )}
+
       {/* <Text>{data[0].timing.start_time}</Text> */}
-      <TimeModal
-        state={modalState}
-        changeState={changeModalState}
-        start_time={data[0].timing.start_time}
-        end_time={data[0].timing.end_time}
+      <StartTimeModal
+        ref={startBottomSheetRef}
         bookings={data[0].bookings}
         unavailability={data[0].unavailability}
+      />
+      <EndTimeModal
+        ref={endBottomSheetRef}
+        bookings={data[0].bookings}
+        unavailability={data[0].unavailability}
+        slotId={selectSlot}
+        sportId={selectSport}
       />
     </SafeAreaView>
   );
@@ -155,25 +314,43 @@ const styles = StyleSheet.create({
   },
   secondContainer: { flex: 0.48 },
   groundContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    flex: 1.8,
+    //flexDirection: "row",
+    // justifyContent: "center",
+    //flex: 1.8,
   },
-  ground: {},
-  groundImage: { height: 95, width: 160 },
-  groundTypesContainer: { flexDirection: "row" },
-  groundType: {
-    borderWidth: 0.5,
-    borderRadius: 7,
-    height: 50,
+  sportsListItem: {
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingVertical: 0,
+    paddingHorizontal: 25,
+    margin: 5,
+    // height: 35,
+  },
+  activeSportsListItem: {
+    backgroundColor: "#029E44",
+    borderWidth: 0,
+  },
+  activeSportsListItemText: {
+    color: "#ffffff",
+  },
+  slotDetails: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    marginHorizontal: 3,
-    marginVertical: 10,
   },
-  groundTypeText: { fontSize: 10 },
+  slotIcon: {
+    height: 120,
+    width: 120,
+    //backgroundColor: "black",
+  },
+  slotTitleContainer: {
+    borderWidth: 0.4,
+    borderRadius: 10,
+    paddingHorizontal: 30,
+    marginBottom: 15,
+  },
+  activeSlotTitleContainer: {
+    backgroundColor: "green",
+    borderWidth: 0,
+  },
   timeSelectorContainer: {
     flex: 0.2,
     flexDirection: "row",

@@ -15,6 +15,7 @@ import { getFormatedDate } from "react-native-modern-datepicker";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 import { setNote } from "../../features/notes";
+import { setDate } from "../../features/booking";
 import { useDispatch, useSelector } from "react-redux";
 import { deviceWidth } from "../../constants/Dimension";
 
@@ -29,7 +30,7 @@ const DatePick = () => {
     "YYYY-MM-DD"
   );
   const [selectedStartDate, setSelectedStartDate] = useState("");
-  const [startedDate, setStartedDate] = useState("12/12/2023");
+  const [startedDate, setStartedDate] = useState("2023-12-12");
   const dispatch = useDispatch();
   const note = useSelector((state) => state.note.value);
   useEffect(() => {
@@ -40,15 +41,15 @@ const DatePick = () => {
     // storeData(noteAndDate);
   }, []);
 
-  const storeData = async (value) => {
-    try {
-      const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem("my-notes", jsonValue);
-    } catch (e) {
-      console.error("Error storing data:", e);
-      // Handle the error here, or show an error message to the user
-    }
-  };
+  // const storeData = async (value) => {
+  //   try {
+  //     const jsonValue = JSON.stringify(value);
+  //     await AsyncStorage.setItem("my-notes", jsonValue);
+  //   } catch (e) {
+  //     console.error("Error storing data:", e);
+  //     // Handle the error here, or show an error message to the user
+  //   }
+  // };
 
   function handleChangeStartDate(propDate) {
     setStartedDate(propDate);
@@ -60,6 +61,11 @@ const DatePick = () => {
 
   const handleOnPressNext = () => {
     setDateLayout(!dateLayout);
+  };
+
+  const chooseDate = () => {
+    dispatch(setDate(selectedStartDate));
+    handleOnPressStartDate();
   };
 
   const setToSendNote = () => {
@@ -102,8 +108,8 @@ const DatePick = () => {
                   selected={startedDate}
                   onDateChanged={handleChangeStartDate}
                   onSelectedChange={(date) => {
-                    setSelectedStartDate(date);
-                    console.log(date.replace(/\//g, '-'));
+                    setSelectedStartDate(date.replace(/\//g, "-"));
+                    console.log(date.replace(/\//g, "-"));
                   }}
                   options={{
                     backgroundColor: "#3C6255",
@@ -116,7 +122,7 @@ const DatePick = () => {
                   }}
                 />
 
-                <TouchableOpacity onPress={handleOnPressNext}>
+                <TouchableOpacity onPress={chooseDate}>
                   <Ionicons
                     name="checkmark-done-circle-sharp"
                     size={30}

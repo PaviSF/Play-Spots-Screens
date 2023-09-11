@@ -8,6 +8,19 @@ const distanceToPlanetsMap = {};
 //Circular Orbit
 const generateOrbits = (spotsData, location) => {
   for (let i = 0; i < spotsData.length; i++) {
+
+    const impData = {
+      turf_id: spotsData[i]._id,
+      sport_id: spotsData[i].sports,
+      slot_id: spotsData[i].slot_details,
+      currency: spotsData[i].turf_currency_symbol,
+      turf_name: spotsData[i].turf_name,
+      turf_locality: spotsData[i].location.locality,
+      pay_at_venue: spotsData[i].pay_at_venue,
+      allow_half_hour: spotsData[i].allow_half_hour,
+      from_thirtieth_minute: spotsData[i].from_thirtieth_minute 
+    };
+    
     const distance = Math.ceil(
       calculateDistance(
         spotsData[i].location.coordinates[1],
@@ -30,6 +43,7 @@ const generateOrbits = (spotsData, location) => {
       image,
       distance,
       angle,
+      impData 
     };
 
     if (distance <= 2) {

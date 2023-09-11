@@ -14,7 +14,6 @@ const calculateDate = () => {
     const updatedDate = date.toLocaleDateString("en-US", options);
     nextFourDays.push(updatedDate);
   }
-  console.log(nextFourDays);
   return nextFourDays;
 };
 
@@ -37,7 +36,6 @@ const formatedDates = (dates) => {
     });
   });
 
-  console.log(dateObjects);
   return dateObjects;
 };
 
@@ -82,17 +80,43 @@ const formatDate = (dateObj) => {
 const timestampToIST = (timestamp) => {
   // Create a Date object from the timestamp (in milliseconds)
   // Create a new Date object and adjust for the IST time zone offset
-  const date = new Date(timestamp * 1000 + 5.5 * 60 * 60 * 1000);
+  // const date = new Date(timestamp * 1000 + 5.5 * 60 * 60 * 1000);
 
-  // Get the individual components of the date
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed, so add 1
-  const day = date.getDate().toString().padStart(2, "0");
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-
-  return `${hours}:${minutes}`;
+  // // Get the individual components of the date
+  // const year = date.getFullYear();
+  // const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed, so add 1
+  // const day = date.getDate().toString().padStart(2, "0");
+  // const hours = date.getHours().toString().padStart(2, "0");
+  // const minutes = date.getMinutes().toString().padStart(2, "0");
+  // const seconds = date.getSeconds().toString().padStart(2, "0");
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    timeZone: "Asia/Kolkata",
+    hour12: false,
+  }).format(timestamp);
+  return time;
 };
 
-export { calculateDate, formatedDates, formatDate, timestampToIST };
+const convertToDayMonthWeekDay = (inputDate) => {
+  // Create a JavaScript Date object from the input date string
+  const date = new Date(inputDate);
+
+  // Define options for formatting the date
+  const options = {
+    day: "2-digit", // 01
+    month: "short", // Sep
+    weekday: "short", // Fri
+  };
+
+  // Format the date using the options
+  return date.toLocaleDateString("en-US", options);
+};
+
+export {
+  calculateDate,
+  formatedDates,
+  formatDate,
+  timestampToIST,
+  convertToDayMonthWeekDay,
+};

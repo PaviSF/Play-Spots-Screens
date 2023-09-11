@@ -39,9 +39,16 @@ const CardView = ({ ratings, item }) => {
       turf_id: item._id,
       sport_id: item.sports,
       slot_id: item.slot_details,
+      currency: item.turf_currency_symbol,
+      turf_name: item.turf_name,
+      turf_locality: item.location.locality,
+      pay_at_venue: item.pay_at_venue,
+      allow_half_hour: item.allow_half_hour,
+      from_thirtieth_minute: item.from_thirtieth_minute, 
+      limit_round: item.limit_round,
     };
 
-   // console.log(newItem);
+    // console.log(newItem);
 
     dispatch(setTurfDetails(newItem));
     router.push("/booking");

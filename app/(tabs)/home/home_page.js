@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   useWindowDimensions,
   TouchableOpacity,
+  StatusBar,
+  FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -17,6 +19,7 @@ import { Entypo } from "@expo/vector-icons";
 
 //External imports
 import { faker } from "@faker-js/faker";
+import { useDispatch, useSelector } from "react-redux";
 
 //Internal imports
 import Header from "../../../components/header/Header";
@@ -24,10 +27,12 @@ import HorizontalTurfList from "../../../components/home/HorizontalTurfList";
 import CustomImageCarousal from "../../../components/carousel/Carousel";
 import { getDiscountBanner, getTurfData } from "../../../helper/FetchData";
 import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
-import { useDispatch, useSelector } from "react-redux";
 import { getGreeting } from "../../../helper/GiveGreetings";
 import { setTurfs } from "../../../features/turfs";
+import SearchBar from "../../../components/home/SearchBar";
+import { setTurfDetails } from "../../../features/booking";
 
+const topHeightSearchBar = deviceHeight * 0.129 + StatusBar.currentHeight + 82;
 
 const Home = () => {
   const fullName = faker.person.fullName();
@@ -38,14 +43,18 @@ const Home = () => {
   const turfBackground = require("../../../assets/turf-background.png");
 
   const windowHeight = useWindowDimensions().height;
+
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [bannerData, setBannerData] = useState([]);
   const [tData, setTData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
+  const filteredData = useSelector(
+    (state) => state.booking.value.filtered_data
+  );
   const location = useSelector((state) => state.location.value);
   const router = useRouter();
- 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,7 +62,6 @@ const Home = () => {
           location.longitude,
           location.latitude
         );
-        console.log("hello"+turfData);
         dispatch(setTurfs(turfData));
         setTData(turfData);
         const bData = await getDiscountBanner(
@@ -70,6 +78,23 @@ const Home = () => {
     fetchData();
   }, []);
 
+  const goToBookingPage = (item) => {
+    const newItem = {
+      turf_id: item._id,
+      sport_id: item.sports,
+      slot_id: item.slot_details,
+      currency: item.turf_currency_symbol,
+      turf_name: item.turf_name,
+      turf_locality: item.location.locality,
+      pay_at_venue: item.pay_at_venue,
+      allow_half_hour: item.allow_half_hour,
+      from_thirtieth_minute: item.from_thirtieth_minute, 
+      limit_hour: item.limit_hour,
+    };
+
+    
+    router.push("/booking");
+  }
   const handleSearchFocus = () => {
     setIsSearchFocused(true);
   };
@@ -77,7 +102,6 @@ const Home = () => {
   const handleSearchBlur = () => {
     setIsSearchFocused(false);
   };
-
 
   if (isLoading) {
     return (
@@ -104,13 +128,20 @@ const Home = () => {
       </View>
 
       {/* Search Bar */}
-      <TextInput
-        style={styles.searchBar}
-        onFocus={handleSearchFocus}
-        onBlur={handleSearchBlur}
-        placeholder="Search venues, events, sports"
-        placeholderTextColor={"#707170"}
-      />
+
+      <SearchBar data={tData} />
+      <View style={styles.searchResults}>
+        <FlatList
+          data={filteredData}
+          renderItem={({ item, index }) => (
+            <TouchableOpacity style={{ marginLeft: 10 }} onPress={()=>goToBookingPage(item)}>
+              <Text style={{ padding: 10, fontWeight: "500" }}>
+                {item.turf_name}
+              </Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
 
       {/* Recent Updates */}
       <View style={styles.recentUpdates}>
@@ -140,7 +171,6 @@ const Home = () => {
       </View>
 
       {/* Recent Spots  */}
-
       <HorizontalTurfList data={tData} />
       <View style={{ flex: 5 }}>
         <View style={{ flex: 0.3 }} />
@@ -198,6 +228,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#f1f1f1",
     color: "black",
     margin: 20,
+  },
+  searchResults: {
+    position: "absolute",
+    width: "90%",
+    marginHorizontal: 20,
+    borderRadius: 10,
+    top: topHeightSearchBar,
+    backgroundColor: "#f1f1f1",
+    zIndex: 999,
   },
   recentUpdates: {
     backgroundColor: "#e5ffef",

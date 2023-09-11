@@ -1,3 +1,6 @@
+import { useSelector } from "react-redux";
+
+//Get Turf Data
 const getTurfData = async (longitude, latitude) => {
   let data = [];
   try {
@@ -34,15 +37,53 @@ const getTurfData = async (longitude, latitude) => {
   return data;
 };
 
-const getTiming = async (date) => {
+//Get Turf Data
+const getPaginatedTurfData = async (currentPage, longitude, latitude) => {
+  let data = [];
+  try {
+    const apiUrl = `https://api.staging.playspots.app/v8/turfs/list?page=${currentPage}`;
+    const requestData = {
+      rating: 0,
+      longitude,
+      latitude,
+    };
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+      },
+      body: JSON.stringify(requestData),
+    });
+
+    const responseData = await response.json();
+
+    if (response.ok)
+      if (responseData.turfs && responseData.turfs.data) {
+        data = responseData.turfs.data;
+      } else {
+        console.error("Error: Invalid response data format");
+      }
+    else {
+      console.error("Request failed:", responseData.error);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+  return data;
+};
+
+//Get time availability information of Turf
+const getTiming = async (date, turf_id, sport_id, slot_id) => {
   let setData = [];
   const apiUrl =
     "https://api.staging.playspots.app/v8/bookings/check_availability";
 
   const inputData = {
-    turf_id: "5fbfe36af34259063060776d",
-    sport_id: "5e9a64f8c1639fd99a25290a",
-    slot_id: "5fbfe36af342590630607768",
+    turf_id,
+    sport_id,
+    slot_id,
     date,
   };
 
@@ -62,7 +103,7 @@ const getTiming = async (date) => {
     })
     .then((data) => {
       // Handle the API response data here
-     // console.log("API response:", data);
+      // console.log("API response:", data);
       setData[0] = data;
     })
     .catch((error) => {
@@ -72,6 +113,7 @@ const getTiming = async (date) => {
   return setData;
 };
 
+//Get the discount banners
 const getDiscountBanner = async (longitude, latitude) => {
   let data = [];
   let alteredData = [];
@@ -117,4 +159,61 @@ const getDiscountBanner = async (longitude, latitude) => {
   return alteredData;
 };
 
-export { getTurfData, getDiscountBanner, getTiming };
+// Get the price of the turf
+const getPrice = async (
+  turf_id,
+  sport_id,
+  slot_id,
+  date,
+  start_time,
+  end_time
+) => {
+  const apiUrl =
+    "https://api.staging.playspots.app/v8/bookings/get_booking_price";
+  const inputData = { turf_id, sport_id, slot_id, date, start_time, end_time };
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+    body: JSON.stringify(inputData),
+  });
+  const responseData = await response.json();
+
+  if (response.ok) {
+    console.log(responseData);
+  } else {
+    console.error("Request failed:", responseData.error);
+  }
+  return responseData;
+};
+
+const getCoins = async () => {
+  const apiUrl =
+    "https://api.staging.playspots.app/v8/loyalty_wallet/fetch_points";
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+  });
+  const responseData = await response.json();
+
+  if (response.ok) {
+    console.log(responseData);
+  } else {
+    console.error("Request failed:", responseData.error);
+  }
+  return responseData;
+};
+
+export {
+  getTurfData,
+  getDiscountBanner,
+  getTiming,
+  getPrice,
+  getCoins,
+  getPaginatedTurfData,
+};
