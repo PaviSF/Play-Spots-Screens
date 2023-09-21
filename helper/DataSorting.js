@@ -66,6 +66,76 @@ const generateAvailabilityStatusArray = (
   return availabilityStatusArray;
 };
 
+const markBookedTimes = (
+  timeSlots,
+  unfilteredBookings,
+  unfilteredUnavailablity
+) => {
+  const bookings = unfilteredBookings.map((booking) => [
+    Number(timestampToIST(booking.start_time).replace(":", "")),
+    Number(timestampToIST(booking.end_time).replace(":", "")),
+  ]);
+
+  const unavailability = unfilteredUnavailablity.map((unavailable) => [
+    Number(timestampToIST(unavailable.start_time).replace(":", "")),
+    Number(timestampToIST(unavailable.end_time).replace(":", "")),
+  ]);
+
+  return timeSlots.map((unFilteredTime) => {
+    const time = Number(unFilteredTime.replace(":", ""));
+    const isBooked = bookings.some((booking) => {
+      const [startTime, endTime] = booking;
+      return time >= startTime && time < endTime;
+    });
+
+    const isUnavailable = unavailability.some((unvailable) => {
+      const [startTime, endTime] = unvailable;
+      return time >= startTime && time < endTime;
+    });
+
+    return {
+      time: unFilteredTime,
+      booking: isBooked,
+      unavailable: isUnavailable,
+    };
+  });
+};
+
+const discardAfterUnavailableTimes = (
+  timeSlots,
+  unfilteredBookings,
+  unfilteredUnavailablity
+) => {
+  const bookings = unfilteredBookings.map((booking) => [
+    Number(timestampToIST(booking.start_time).replace(":", "")),
+    Number(timestampToIST(booking.end_time).replace(":", "")),
+  ]);
+
+  const unavailability = unfilteredUnavailablity.map((unavailable) => [
+    Number(timestampToIST(unavailable.start_time).replace(":", "")),
+    Number(timestampToIST(unavailable.end_time).replace(":", "")),
+  ]);
+
+  return timeSlots.map((unFilteredTime) => {
+    const time = Number(unFilteredTime.replace(":", ""));
+    const isBooked = bookings.some((booking) => {
+      const [startTime, endTime] = booking;
+      return time > startTime && time <= endTime;
+    });
+
+    const isUnavailable = unavailability.some((unvailable) => {
+      const [startTime, endTime] = unvailable;
+      return time > startTime && time <= endTime;
+    });
+
+    return {
+      time: unFilteredTime,
+      booking: isBooked,
+      unavailable: isUnavailable,
+    };
+  });
+};
+
 const timeAfterSelected = (timeArray, givenTime) => {
   const index = timeArray.indexOf(givenTime);
 
@@ -97,25 +167,20 @@ const startTimeArray = (timeArray, limit, thirtieth) => {
         (thirtieth ? timeArray[i].includes(":30") : false)
       ) {
         modifiedArray.push(timeArray[i]);
-      }
+      } 
     }
   }
   return modifiedArray;
 };
 
-const endTimeArray = (
-  timeArray,
-  limit,
-  thirtieth,
-  allow_half,
-  minimum,
-  pickedTime
-) => {
-  let modifiedEndArray = [];
+const endTimeArray = (timeArray, limit, thirtieth, allow_half, pickedTime) => {
+  const modifiedEndArray = [];
   let newArray = [];
   const index = timeArray.indexOf(pickedTime);
+  console.log(index)
   if (index !== -1) {
     newArray = timeArray.splice(index + 1);
+    console.log(newArray)
   }
   for (let i = 0; i < newArray.length; i++) {
     if (
@@ -128,16 +193,41 @@ const endTimeArray = (
       modifiedEndArray.push(newArray[i]);
     }
   }
-  const sendData =
-    allow_half && minimum !== 30 ? modifiedEndArray.shift() : modifiedEndArray;
-  console.log(sendData);
-  return sendData;
+  console.log(modifiedEndArray);
+  return modifiedEndArray;
+};
+
+const alteringAccordingToMinimumBookingTime = (
+  times,
+  startTime,
+  minBookableTime
+) => {
+  const bookableTimes = [];
+
+  // Convert startTime to minutes since midnight
+  const [startHour, startMinute] = startTime.split(":").map(Number);
+  const startMinutes = startHour * 60 + startMinute;
+
+  for (const time of times) {
+    const [hour, minute] = time.split(":").map(Number);
+    const minutes = hour * 60 + minute;
+
+    // Check if the time slot is within the bookable window
+    if (minutes >= startMinutes && startMinutes + minBookableTime <= minutes) {
+      bookableTimes.push(time);
+    }
+  }
+
+  return bookableTimes;
 };
 
 export {
   linearSearch,
   filterTimeArray,
   generateAvailabilityStatusArray,
+  markBookedTimes,
+  alteringAccordingToMinimumBookingTime,
+  discardAfterUnavailableTimes,
   timeAfterSelected,
   findSlotDetailsById,
   findSportDetailsById,

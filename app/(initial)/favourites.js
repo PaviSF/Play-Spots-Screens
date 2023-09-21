@@ -11,15 +11,15 @@ import { useRouter } from "expo-router";
 import { faker } from "@faker-js/faker";
 
 //Internal imports
-import Line from "../../components/Line";
-import BoxExample from "../../components/index/Boxes";
-import { deviceWidth } from "../../constants/Dimension";
-import LargeGradientButton from "../../components/buttons/LargeGradientButton";
-import { setLocation } from "../../features/location";
+import Line from "@components/Line";
+import BoxExample from "@components/index/Boxes";
+import { deviceWidth } from "@constants/Dimension";
+import LargeGradientButton from "@components/buttons/LargeGradientButton";
+import { setLocation } from "@features/location";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { findLocation, reverseGeocode } from "../../helper/FindLocation";
-import { setNote } from "../../features/notes";
+import { findLocation, reverseGeocode } from "@helper/FindLocation";
+import { setNote } from "@features/notes";
 import { ActivityIndicator } from "react-native";
 
 const name = faker.person.firstName();
@@ -42,7 +42,7 @@ export default function Favourites() {
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
       // error reading value
-      //console.log(e);
+      //
     }
   };
 
@@ -50,10 +50,6 @@ export default function Favourites() {
     async function fetchLocation() {
       const currentLocation = await findLocation();
       const geoLocation = await reverseGeocode(currentLocation);
-      console.log(
-        currentLocation.coords.latitude,
-        currentLocation.coords.longitude
-      );
       const location = {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
@@ -67,7 +63,6 @@ export default function Favourites() {
     async function prepare() {
       const data = await getData();
       if (data !== null) {
-        console.log(data);
         dispatch(setNote(data));
       }
     }

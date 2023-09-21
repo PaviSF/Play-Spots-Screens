@@ -11,7 +11,6 @@ export const noteSlice = createSlice({
   reducers: {
     setNote: (state, action) => {
       state.value = action.payload;
-      console.log(state.value.date + "hello");
     },
   },
 });

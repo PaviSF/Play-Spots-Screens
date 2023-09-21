@@ -66,6 +66,7 @@ export const {
   setTurfDetails,
   changeModalState,
   setPricing,
-  setFilteredData
+  setFilteredData,
+  resetData
 } = bookingSlice.actions;
 export default bookingSlice.reducer;

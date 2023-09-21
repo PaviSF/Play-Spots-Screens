@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { deviceWidth } from "../../constants/Dimension";
-import { removeAfterSecondComma } from "../../helper/StringManipulation";
+import { deviceWidth } from "@constants/Dimension";
+import { removeAfterSecondComma } from "@helper/StringManipulation";
 const imageBaseLink = "https://d3th8mtd05b6hz.cloudfront.net/turf/";
 const defaultImage =
   "https://assets.telegraphindia.com/telegraph/2021/Sep/1630669298_sky-turf.jpg";
@@ -52,7 +52,7 @@ export default function HorizontalTurfList({ data }) {
             <TouchableOpacity style={styles.rightButtom}>
               <Image
                 style={{ height: 50, width: 50 }}
-                source={require("../../assets/book.png")}
+                source={require("@assets/book.png")}
               />
             </TouchableOpacity>
           </View>

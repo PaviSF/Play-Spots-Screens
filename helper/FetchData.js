@@ -1,10 +1,12 @@
 import { useSelector } from "react-redux";
+import {ENV} from "../env"
+const baseUrl = ENV.staging.apiUrl
 
 //Get Turf Data
 const getTurfData = async (longitude, latitude) => {
   let data = [];
   try {
-    const apiUrl = "https://api.staging.playspots.app/v8/turfs/list";
+    const apiUrl = `${baseUrl}/turfs/list`;
     const requestData = {
       rating: 0,
       longitude,
@@ -41,7 +43,7 @@ const getTurfData = async (longitude, latitude) => {
 const getPaginatedTurfData = async (currentPage, longitude, latitude) => {
   let data = [];
   try {
-    const apiUrl = `https://api.staging.playspots.app/v8/turfs/list?page=${currentPage}`;
+    const apiUrl = `${baseUrl}/turfs/list?page=${currentPage}`;
     const requestData = {
       rating: 0,
       longitude,
@@ -78,7 +80,7 @@ const getPaginatedTurfData = async (currentPage, longitude, latitude) => {
 const getTiming = async (date, turf_id, sport_id, slot_id) => {
   let setData = [];
   const apiUrl =
-    "https://api.staging.playspots.app/v8/bookings/check_availability";
+    `${baseUrl}/bookings/check_availability`;
 
   const inputData = {
     turf_id,
@@ -118,7 +120,7 @@ const getDiscountBanner = async (longitude, latitude) => {
   let data = [];
   let alteredData = [];
   try {
-    const apiUrl = "https://api.staging.playspots.app/v8/user_dashboard";
+    const apiUrl = `${baseUrl}/user_dashboard`;
     const requestData = {
       rating: 0,
       longitude,
@@ -155,7 +157,6 @@ const getDiscountBanner = async (longitude, latitude) => {
   for (let i = 0; i < data.length; i++) {
     alteredData[i] = { image: data[i].image };
   }
-  console.log(alteredData);
   return alteredData;
 };
 
@@ -169,7 +170,7 @@ const getPrice = async (
   end_time
 ) => {
   const apiUrl =
-    "https://api.staging.playspots.app/v8/bookings/get_booking_price";
+  `${baseUrl}/bookings/get_booking_price`;
   const inputData = { turf_id, sport_id, slot_id, date, start_time, end_time };
   const response = await fetch(apiUrl, {
     method: "POST",
@@ -182,7 +183,6 @@ const getPrice = async (
   const responseData = await response.json();
 
   if (response.ok) {
-    console.log(responseData);
   } else {
     console.error("Request failed:", responseData.error);
   }
@@ -191,7 +191,7 @@ const getPrice = async (
 
 const getCoins = async () => {
   const apiUrl =
-    "https://api.staging.playspots.app/v8/loyalty_wallet/fetch_points";
+  `${baseUrl}/loyalty_wallet/fetch_points`;
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
@@ -202,12 +202,52 @@ const getCoins = async () => {
   const responseData = await response.json();
 
   if (response.ok) {
-    console.log(responseData);
   } else {
     console.error("Request failed:", responseData.error);
   }
   return responseData;
 };
+
+const sendOtp = async (phone) => {
+  const apiUrl = `${baseUrl}/user/staging-otp-send`;
+  const inputData = { phone };
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(inputData),
+  });
+  const responseData = await response.json();
+
+  if (response.ok) {
+  } else {
+    console.error("Request failed:", responseData.error);
+  }
+  return responseData;
+};
+
+const getProfileData = async () => {
+  const apiUrl = `${baseUrl}/user`;
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+  });
+  const responseData = await response.json();
+
+  if (response.ok) {
+  } else {
+    console.error("Request failed:", responseData.error);
+  }
+  return responseData;
+};
+
+const register = async () =>{
+  
+}
 
 export {
   getTurfData,
@@ -215,5 +255,7 @@ export {
   getTiming,
   getPrice,
   getCoins,
+  sendOtp,
   getPaginatedTurfData,
+  getProfileData,
 };

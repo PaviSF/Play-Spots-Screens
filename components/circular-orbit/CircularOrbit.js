@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 
 // You can import from local files
 import SolarSystem from "./SolarSystem";
-import { generateOrbits } from "../../helper/OrbitGeneration";
+import { generateOrbits } from "@helper/OrbitGeneration";
 
 
 const CircularOrbit = ({ data, location }) =>{

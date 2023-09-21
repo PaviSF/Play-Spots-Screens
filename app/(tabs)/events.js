@@ -7,15 +7,15 @@ import {
   ImageBackground,
 } from "react-native";
 import { Tabs } from "expo-router";
-import Header from "../../components/header/Header";
+import Header from "@components/header/Header";
 import React, { useRef } from "react";
-import LargeGradientButton from "../../components/buttons/LargeGradientButton";
-import SmallGradientButton from "../../components/buttons/SmallGradientButton";
+import LargeGradientButton from "@components/buttons/LargeGradientButton";
+import SmallGradientButton from "@components/buttons/SmallGradientButton";
 
-import { deviceWidth, deviceHeight } from "../../constants/Dimension";
+import { deviceWidth, deviceHeight } from "@constants/Dimension";
 import { faker, it } from "@faker-js/faker";
 import { Feather } from "@expo/vector-icons";
-import HorizontalSportsListItem from "../../components/spots/HorizontalSportsListItem";
+import HorizontalSportsListItem from "@components/spots/HorizontalSportsListItem";
 
 const sampleDate = "12 October 2023";
 const sampleTime = "07:00 PM";

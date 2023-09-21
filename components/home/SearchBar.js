@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { TextInput } from "react-native";
 import { FlatList } from "react-native";
 import { useDispatch } from "react-redux";
-import { setFilteredData } from "../../features/booking";
+import { setFilteredData } from "@features/booking";
 
 const SearchBar = ({ data }) => {
   const [searchText, setSearchText] = useState("");

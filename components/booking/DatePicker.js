@@ -5,9 +5,9 @@ import {
   calculateDate,
   formatedDates,
   formatDate,
-} from "../../helper/CalculateDate";
+} from "@helper/CalculateDate";
 import { TouchableOpacity } from "react-native";
-import { setDate } from "../../features/booking";
+import { setDate } from "@features/booking";
 import { useDispatch } from "react-redux";
 const DatePicker = () => {
   const dates = formatedDates(calculateDate());

@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { deviceWidth } from "../../constants/Dimension";
+import { deviceWidth } from "@constants/Dimension";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,

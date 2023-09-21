@@ -23,12 +23,12 @@ import { Stack, Tabs } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 
 //Internal imports
-import HorizontalSportsListItem from "../../../components/spots/HorizontalSportsListItem";
-import CircularOrbit from "../../../components/circular-orbit/CircularOrbit";
-import CardView from "../../../components/spots/CardView";
-import Header from "../../../components/header/Header";
-import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
-import { getPaginatedTurfData } from "../../../helper/FetchData";
+import HorizontalSportsListItem from "@components/spots/HorizontalSportsListItem";
+import CircularOrbit from "@components/circular-orbit/CircularOrbit";
+import CardView from "@components/spots/CardView";
+import Header from "@components/header/Header";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
+import { getPaginatedTurfData } from "@helper/FetchData";
 
 //constant styles
 const tabComponentColor = "#565657";

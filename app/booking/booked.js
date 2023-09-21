@@ -4,7 +4,7 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <Image
-        source={require('../../assets/booking/booked.png')}
+        source={require('@assets/booking/booked.png')}
         style={styles.imageStyle}
       />
       <Text style={styles.awesome}>Awesome!</Text>

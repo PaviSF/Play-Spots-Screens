@@ -5,7 +5,7 @@ import {
   MaterialCommunityIcons,
   Ionicons,
 } from "@expo/vector-icons";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
 
 const iconSize = 50;
 const inactiveColor = { icon: "#717071", label: "black" };

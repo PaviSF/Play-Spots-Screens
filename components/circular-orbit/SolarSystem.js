@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { deviceWidth } from "../../constants/Dimension";
+import { deviceWidth } from "@constants/Dimension";
 import { useDispatch } from "react-redux";
-import { setTurfDetails } from "../../features/booking";
+import { setTurfDetails } from "@features/booking";
 import { useRouter } from "expo-router";
 import { Touchable } from "react-native";
 
@@ -79,7 +79,7 @@ const SolarSystem = ({ orbits }) => {
           </View>
           {/* <View style={styles.centerImageContainer}>
             <Image
-              source={require("../../assets/247181.jpg")}
+              source={require("@assets/247181.jpg")}
               style={styles.centerImage}
             />
           </View> */}

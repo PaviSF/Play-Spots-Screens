@@ -3,17 +3,17 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { Feather } from "@expo/vector-icons";
 
-const profileIcon = require("../../assets/tab-icons/inactive-icons/user.png");
-const spotsIcon = require("../../assets/tab-icons/inactive-icons/stadium.png");
-//const homeIcon = require("../../assets/tab-icons/inactive-icons/house.png");
-const meetsIcon = require("../../assets/tab-icons/inactive-icons/support.png");
-const eventsIcon = require("../../assets/tab-icons/inactive-icons/sport.png");
+const profileIcon = require("@assets/tab-icons/inactive-icons/user.png");
+const spotsIcon = require("@assets/tab-icons/inactive-icons/stadium.png");
+//const homeIcon = require("@assets/tab-icons/inactive-icons/house.png");
+const meetsIcon = require("@assets/tab-icons/inactive-icons/support.png");
+const eventsIcon = require("@assets/tab-icons/inactive-icons/sport.png");
 
-const activeProfileIcon = require("../../assets/tab-icons/active-icons/active-user.png");
-const activeSpotsIcon = require("../../assets/tab-icons/active-icons/active-stadium.png");
-const activeHomeIcon = require("../../assets/tab-icons/active-icons/active-house.png");
-const activeMeetsIcon = require("../../assets/tab-icons/active-icons/active-support.png");
-const activeEventsIcon = require("../../assets/tab-icons/active-icons/active-sport.png");
+const activeProfileIcon = require("@assets/tab-icons/active-icons/active-user.png");
+const activeSpotsIcon = require("@assets/tab-icons/active-icons/active-stadium.png");
+const activeHomeIcon = require("@assets/tab-icons/active-icons/active-house.png");
+const activeMeetsIcon = require("@assets/tab-icons/active-icons/active-support.png");
+const activeEventsIcon = require("@assets/tab-icons/active-icons/active-sport.png");
 
 const tabComponentColor = "#565657";
 

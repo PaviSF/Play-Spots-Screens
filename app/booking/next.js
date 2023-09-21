@@ -21,12 +21,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
-import { getCoins } from "../../helper/FetchData";
-import { convertToDayMonthWeekDay } from "../../helper/CalculateDate";
+import { getCoins } from "@helper/FetchData";
+import { convertToDayMonthWeekDay } from "@helper/CalculateDate";
 import {
   findSlotDetailsById,
   findSportDetailsById,
-} from "../../helper/DataSorting";
+} from "@helper/DataSorting";
 const iconSize = 20;
 const iconColor = "#008A3B";
 
@@ -234,7 +234,7 @@ export default function FinalBooking() {
       <View>
         <Image
           style={styles.bannerImage}
-          source={require("../../assets/booking/banner.png")}
+          source={require("@assets/booking/banner.png")}
         />
         <Text style={styles.turfName}>
           {bookingData.turf_details.turf_name}
@@ -316,7 +316,7 @@ export default function FinalBooking() {
           <View style={{ flex: 1, flexDirection: "row" }}>
             <Image
               style={{ flex: 0.4, height: 100, width: 110 }}
-              source={require("../../assets/booking/wallet.png")}
+              source={require("@assets/booking/wallet.png")}
             />
             <View style={{ flex: 0.6 }}>
               <TouchableOpacity
@@ -399,7 +399,6 @@ export default function FinalBooking() {
                 : finalPrice.beforeCoins
             }`}
           </Text>
-          {console.log(playCoinsApplied)}
         </View>
       </View>
 

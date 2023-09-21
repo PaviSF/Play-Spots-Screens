@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { TouchableOpacity, Text, StyleSheet,View } from "react-native";
-import { deviceWidth } from "../../constants/Dimension";
+import { deviceWidth } from "@constants/Dimension";
 
 const RandomButton = ({ title, onPress }) => {
   return (

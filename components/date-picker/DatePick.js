@@ -14,10 +14,10 @@ import DatePicker from "react-native-modern-datepicker";
 import { getFormatedDate } from "react-native-modern-datepicker";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
-import { setNote } from "../../features/notes";
-import { setDate } from "../../features/booking";
+import { setNote } from "@features/notes";
+import { setDate } from "@features/booking";
 import { useDispatch, useSelector } from "react-redux";
-import { deviceWidth } from "../../constants/Dimension";
+import { deviceWidth } from "@constants/Dimension";
 
 const DatePick = () => {
   const [openStartDatePicker, setOpenStartDatePicker] = useState(false);
@@ -82,7 +82,6 @@ const DatePick = () => {
   const handleCloseModal = () => {
     handleOnPressNext();
     handleOnPressStartDate();
-    console.log(selectedStartDate);
     setToSendNote();
   };
   return (
@@ -109,7 +108,6 @@ const DatePick = () => {
                   onDateChanged={handleChangeStartDate}
                   onSelectedChange={(date) => {
                     setSelectedStartDate(date.replace(/\//g, "-"));
-                    console.log(date.replace(/\//g, "-"));
                   }}
                   options={{
                     backgroundColor: "#3C6255",

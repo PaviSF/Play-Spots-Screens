@@ -5,58 +5,45 @@ import { SafeAreaView } from "react-native";
 import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { LinearGradient } from "expo-linear-gradient";
-import DatePicker from "../../components/booking/DatePicker";
-import ClockCircle from "../../components/booking/ClockCircle";
+import DatePicker from "@components/booking/DatePicker";
+import ClockCircle from "@components/booking/ClockCircle";
 import { Link, useRouter, useSearchParams } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import StartTimeModal from "../../components/modal/StartTimeModal";
-import { getPrice, getTiming } from "../../helper/FetchData";
+import StartTimeModal from "@components/modal/StartTimeModal";
+import { getPrice, getTiming } from "@helper/FetchData";
 import { FlatList } from "react-native";
 import {
   changeModalState,
+  resetData,
   setEndTime,
   setPricing,
   setStartTime,
-} from "../../features/booking";
+} from "@features/booking";
 import { Button } from "react-native";
-import EndTimeModal from "../../components/modal/EndTimeModal";
+import EndTimeModal from "@components/modal/EndTimeModal";
 
 const booking = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [availabiltyLoading, setAvailabilityLoading] = useState(true);
   const [modalState, setModalState] = useState(false);
-  const [selectSport, setSelectSport] = useState("");
-  const [selectSlot, setSelectSlot] = useState("");
+  const dateTime = useSelector((state) => state.booking.value);
+  const [selectSport, setSelectSport] = useState(
+    dateTime.turf_details.slot_id[0].sport_id.$oid
+  );
+  const [selectSlot, setSelectSlot] = useState(
+    dateTime.turf_details.slot_id[0].slot_id.$oid
+  );
   const [price, setPrice] = useState(0);
   const startBottomSheetRef = useRef(null);
   const endBottomSheetRef = useRef(null);
   const selectSlotData = useMemo(() => selectSlot, [selectSlot]);
-  const dateTime = useSelector((state) => state.booking.value);
   const modalReduxState = dateTime.modal_state;
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const data = await getTiming(
-        dateTime.date,
-        dateTime.turf_details.turf_id,
-        dateTime.turf_details.slot_id[0].sport_id.$oid,
-        dateTime.turf_details.slot_id[0].slot_id.$oid
-      );
-
-      setData(data);
-      setSelectSport(dateTime.turf_details.slot_id[0].sport_id.$oid);
-      setSelectSlot(dateTime.turf_details.slot_id[0].slot_id.$oid);
-      setAvailabilityLoading(false);
-      setLoading(false);
-    };
-    getData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
       setAvailabilityLoading(true);
       const data = await getTiming(
         dateTime.date,
@@ -66,9 +53,12 @@ const booking = () => {
       );
       setData(data);
       setPrice(0);
+      //console.log(dateTime.turf_details.slot_id[0].sport_id.$oid)
       setAvailabilityLoading(false);
+      setLoading(false);
     };
-    fetchData();
+    getData();
+    return () => {console.log("hello")}
   }, [dateTime.date]);
 
   const timeStringToFloat = (timeString) => {
@@ -122,8 +112,15 @@ const booking = () => {
   };
 
   const goToNextPage = () => {
-    if (selectSlot.length !== 0 && selectSport.length !== 0 && dateTime.pricing.price !== 0) {
-      router.push({pathname:"booking/next",params: {slotId: selectSlot, sportId: selectSport}});
+    if (
+      selectSlot.length !== 0 &&
+      selectSport.length !== 0 &&
+      dateTime.pricing.price !== 0
+    ) {
+      router.push({
+        pathname: "booking/next",
+        params: { slotId: selectSlot, sportId: selectSport },
+      });
     }
   };
 
@@ -177,7 +174,7 @@ const booking = () => {
                   onPress={() => changeSelectedSlot(item.slot_id.$oid)}
                 >
                   <Image
-                    source={require("../../assets/booking/pitch.png")}
+                    source={require("@assets/booking/pitch.png")}
                     resizeMode="contain"
                     style={styles.slotIcon}
                   />
@@ -250,7 +247,9 @@ const booking = () => {
               <Text style={styles.price}>
                 {dateTime.pricing.price === 0
                   ? `--.--`
-                  : `${dateTime.turf_details.currency}${dateTime.pricing.price-dateTime.pricing.offer}`}
+                  : `${dateTime.turf_details.currency}${
+                      dateTime.pricing.price - dateTime.pricing.offer
+                    }`}
               </Text>
             </View>
             <View

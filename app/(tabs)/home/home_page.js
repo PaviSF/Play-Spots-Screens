@@ -22,25 +22,25 @@ import { faker } from "@faker-js/faker";
 import { useDispatch, useSelector } from "react-redux";
 
 //Internal imports
-import Header from "../../../components/header/Header";
-import HorizontalTurfList from "../../../components/home/HorizontalTurfList";
-import CustomImageCarousal from "../../../components/carousel/Carousel";
-import { getDiscountBanner, getTurfData } from "../../../helper/FetchData";
-import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
-import { getGreeting } from "../../../helper/GiveGreetings";
-import { setTurfs } from "../../../features/turfs";
-import SearchBar from "../../../components/home/SearchBar";
-import { setTurfDetails } from "../../../features/booking";
+import Header from "@components/header/Header";
+import HorizontalTurfList from "@components/home/HorizontalTurfList";
+import CustomImageCarousal from "@components/carousel/Carousel";
+import { getDiscountBanner, getTurfData } from "@helper/FetchData";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
+import { getGreeting } from "@helper/GiveGreetings";
+import { setTurfs } from "@features/turfs";
+import SearchBar from "@components/home/SearchBar";
+import { setTurfDetails } from "@features/booking";
 
 const topHeightSearchBar = deviceHeight * 0.129 + StatusBar.currentHeight + 82;
 
 const Home = () => {
   const fullName = faker.person.fullName();
-  const profilePic = require("../../../assets/247181.jpg");
-  const gift = require("../../../assets/gift.png");
-  const coins = require("../../../assets/coins.png");
-  const tournament = require("../../../assets/tournament.png");
-  const turfBackground = require("../../../assets/turf-background.png");
+  const profilePic = require("@assets/247181.jpg");
+  const gift = require("@assets/gift.png");
+  const coins = require("@assets/coins.png");
+  const tournament = require("@assets/tournament.png");
+  const turfBackground = require("@assets/turf-background.png");
 
   const windowHeight = useWindowDimensions().height;
 

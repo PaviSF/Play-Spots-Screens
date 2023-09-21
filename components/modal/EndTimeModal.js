@@ -1,5 +1,5 @@
 import Modal from "react-native-modal";
-import {
+import React, {
   useState,
   useEffect,
   useImperativeHandle,
@@ -13,23 +13,25 @@ import {
   setEndTime,
   setPricing,
   setStartTime,
-} from "../../features/booking";
+} from "@features/booking";
 
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
 import { TouchableOpacity } from "react-native";
 import {
   endTimeArray,
   findSlotDetailsById,
   generateAvailabilityStatusArray,
+  markBookedTimes,
+  discardAfterUnavailableTimes,
   timeAfterSelected,
-} from "../../helper/DataSorting";
-//import { timeArray } from "../../constants/TimeArray";
+  alteringAccordingToMinimumBookingTime,
+} from "@helper/DataSorting";
+//import { timeArray } from "@constants/TimeArray";
 import { current } from "@reduxjs/toolkit";
-import { notifyMessage } from "../../helper/NotificationUtils";
-import { getPrice } from "../../helper/FetchData";
+import { notifyMessage } from "@helper/NotificationUtils";
+import { getPrice } from "@helper/FetchData";
 
 const timeArray = [
-  "00:00",
   "00:30",
   "01:00",
   "01:30",
@@ -77,6 +79,7 @@ const timeArray = [
   "22:30",
   "23:00",
   "23:30",
+  "23:59",
 ];
 
 const boxSize = 50;
@@ -85,8 +88,9 @@ const EndTimeModal = forwardRef(
   ({ bookings, unavailability, slotId, sportId }, ref) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [filteredTimeArray, setFilteredTimeArray] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [rows, setRows] = useState([]);
-    //const [startTime, setStartTime] = useState("00:00");
+    // const [startTime, setStartTime] = useState("00:00");
     const bookingData = useSelector((state) => state.booking.value);
     const dispatch = useDispatch();
     const currentSlot = findSlotDetailsById(
@@ -95,36 +99,51 @@ const EndTimeModal = forwardRef(
     );
 
     useEffect(() => {
-      console.log(bookingData.start_time)
-
-      const data = endTimeArray(
+      setLoading(true);
+      // console.log("-------------------------------");
+      // console.log(bookingData.start_time);
+      // console.log("Set Loading to True");
+      let data = endTimeArray(
         timeArray,
         bookingData.turf_details.limit_round,
         bookingData.turf_details.from_thirtieth_minute,
         bookingData.turf_details.allow_half_hour,
-        currentSlot.minimum_bookable_time,
         bookingData.start_time
       );
-      console.log("The filtered array");
-      console.log(data);
+      // console.log("Get Time Data");
+      // console.log(data);
+      let dataAfterConsideringMinimumBookingTime =
+        alteringAccordingToMinimumBookingTime(
+          data,
+          bookingData.start_time,
+          currentSlot.minimum_bookable_time
+        );
+      // console.log("Delete data according to the minimum bookable time");
+      // console.log(dataAfterConsideringMinimumBookingTime);
       //setFilteredTimeArray(data);
-      const modifiedRows = generateAvailabilityStatusArray(
-        data,
+      let modifiedRows = discardAfterUnavailableTimes(
+        dataAfterConsideringMinimumBookingTime,
         bookings,
         unavailability
       );
-      console.log(
-        "the one wheer the filtered array is then changed to th new structure"
-      );
-      console.log(modifiedRows);
-      const rowss = [];
+      //  console.log(
+      //   "Append the boolean values for the booked and unavailability"
+      // );
+      // console.log(modifiedRows);
+      let rowss = [];
       for (let i = 0; i < modifiedRows.length; i += 6) {
         const row = modifiedRows.slice(i, i + 6);
         rowss.push(row);
       }
+      // console.log("To render horizontal");
       setRows(rowss);
-      console.log("The row by row structure");
-      console.log(rowss);
+      // console.log("store the Rows");
+      setLoading(false);
+      // console.log("Set loading to false");
+      return () => {
+        console.log("unmount");
+        setRows([]);
+      };
     }, [bookingData.start_time]);
 
     // Expose a method to change the bottom sheet state
@@ -168,19 +187,19 @@ const EndTimeModal = forwardRef(
     const BoxRow = ({ data }) => {
       return (
         <View style={styles.row}>
-          {data.map((number, index) => (
-            <TouchableOpacity
-              style={[
-                styles.box,
-                number.booking ? styles.bookedBox : null,
-                number.unavailable ? styles.unavailability : null,
-              ]}
-              key={index}
-              onPress={() => startClicked(number.time)}
-            >
-              <Text style={styles.numberText}>{number.time}</Text>
-            </TouchableOpacity>
-          ))}
+          {data.map((number, index) =>
+            !number.booking && !number.unavailable ? (
+              <TouchableOpacity
+                style={[styles.box]}
+                key={index}
+                onPress={() => startClicked(number.time)}
+              >
+                <Text style={styles.numberText}>
+                  {number.time === "23:59" ? "00:00" : number.time}
+                </Text>
+              </TouchableOpacity>
+            ) : null
+          )}
         </View>
       );
     };
@@ -216,7 +235,7 @@ const EndTimeModal = forwardRef(
         onBackdropPress={closeBottomSheet}
         style={{ margin: 0 }}
       >
-        {bookingData.start_time !== "00:00" ? (
+        {!loading && bookingData.start_time !== "00:00" ? (
           <View
             style={[
               styles.modal,
@@ -248,7 +267,7 @@ const EndTimeModal = forwardRef(
   }
 );
 
-export default EndTimeModal;
+export default React.memo(EndTimeModal);
 
 const styles = StyleSheet.create({
   modal: {

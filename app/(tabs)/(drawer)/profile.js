@@ -8,28 +8,29 @@ import {
   FlatList,
   useWindowDimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { faker } from "@faker-js/faker";
-import { formatDate } from "../../../helper/CalculateMonth";
-import { deviceHeight, deviceWidth } from "../../../constants/Dimension";
+import { formatDate } from "@helper/CalculateMonth";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { AntDesign, Foundation } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import DatePick from "../../../components/date-picker/DatePick";
+import DatePick from "@components/date-picker/DatePick";
 import { Stack } from "expo-router";
+import { getProfileData } from "@helper/FetchData";
 
-const profileName = faker.person.fullName();
-const profileEmail = faker.internet.email();
-const profileImage = require("../../../assets/247181.jpg");
+const profileImage = require("@assets/247181.jpg");
 
-const cricket = require("../../../assets/cricket-icon.png");
-const football = require("../../../assets/football-icon.png");
-const badminton = require("../../../assets/badminton.png");
-
+const cricket = require("@assets/cricket-icon.png");
+const football = require("@assets/football-icon.png");
+const badminton = require("@assets/badminton.png");
 const Profile = () => {
   const note = useSelector((state) => state.note.value);
+  const [loading,setLoading] = useState(true);
+  const [profileData, setProfileData] = useState(null);
   const { height, width } = useWindowDimensions();
   const [sportReport, setSportReport] = useState("WEEKLY");
 
@@ -46,18 +47,35 @@ const Profile = () => {
   const headerRight = () => {
     return (
       <TouchableOpacity>
-        <AntDesign name="setting" size={24} color="black" style={{padding:10}} />
+        <AntDesign
+          name="setting"
+          size={24}
+          color="black"
+          style={{ padding: 10 }}
+        />
       </TouchableOpacity>
     );
   };
+
+  useEffect(() => {
+    async function prepare() {
+      const data = await getProfileData();
+      setProfileData(data.user_data);
+      setLoading(false)
+    }
+    prepare();
+  }, []);
+  if(loading){
+    return <ActivityIndicator style={{alignItems:'center'}}/>
+  }
   return (
     <>
       <Stack.Screen
         options={{
           headerTitle: "My profile",
-            headerTitleAlign: "center",
-            headerTitleStyle: { fontWeight: "100", fontSize: 15 },
-         // headerRight,
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontWeight: "100", fontSize: 15 },
+          // headerRight,
         }}
       />
       <ScrollView
@@ -67,9 +85,9 @@ const Profile = () => {
         <View style={styles.accountDetailsContainer}>
           <Image style={styles.profileImage} source={profileImage} />
           <View style={styles.profileDetails}>
-            <Text style={styles.profileName}>{profileName}</Text>
-            <Text style={styles.profileEmail}>{profileEmail}</Text>
-            <Text></Text>
+            <Text style={styles.profileName}>{profileData.name}</Text>
+            <Text style={styles.profileEmail}>{profileData.phone}</Text>
+            <Text style={styles.profileEmail}>{profileData.email}</Text>
           </View>
         </View>
         <Text style={styles.activitiesLabel}>My Activities</Text>
@@ -78,7 +96,6 @@ const Profile = () => {
             style={styles.reportHeading}
             onPress={() => {
               setSportReport("WEEKLY");
-              console.log(note.date[0]);
             }}
           >
             <Text
@@ -305,7 +322,7 @@ const Profile = () => {
         >
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../../assets/booking.png")}
+              source={require("@assets/booking.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -313,7 +330,7 @@ const Profile = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../../assets/gift.png")}
+              source={require("@assets/gift.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -321,7 +338,7 @@ const Profile = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.extraOptionBoxes}>
             <Image
-              source={require("../../../assets/heart.png")}
+              source={require("@assets/heart.png")}
               resizeMode="contain"
               style={styles.extraOptionBoxesImages}
             />
@@ -337,7 +354,7 @@ const Profile = () => {
           >
             <View style={styles.referIconContainer}>
               <Image
-                source={require("../../../assets/referIcon.png")}
+                source={require("@assets/referIcon.png")}
                 style={styles.referIcon}
               />
             </View>

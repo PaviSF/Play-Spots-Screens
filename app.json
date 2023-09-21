@@ -12,20 +12,37 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.playspots.playspotslite"
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
-
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a4f6739e-325e-42df-b1cf-53bf33ebf8b2"
+      }
+    },
+    "plugins": [
+      "@react-native-firebase/app"
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/a4f6739e-325e-42df-b1cf-53bf33ebf8b2"
     }
   }
 }

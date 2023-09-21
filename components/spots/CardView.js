@@ -14,12 +14,12 @@ import {
 import { useFonts } from "expo-font";
 
 //Internal imports
-import { removeAfterSecondComma } from "../../helper/StringManipulation";
-import { linearSearch } from "../../helper/DataSorting";
-import { deviceWidth } from "../../constants/Dimension";
+import { removeAfterSecondComma } from "@helper/StringManipulation";
+import { linearSearch } from "@helper/DataSorting";
+import { deviceWidth } from "@constants/Dimension";
 import { Link, useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
-import { setTurfDetails } from "../../features/booking";
+import { setTurfDetails } from "@features/booking";
 
 const defaultImage =
   "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
@@ -29,7 +29,7 @@ const CardView = ({ ratings, item }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [fontsLoaded] = useFonts({
-    Roboto: require("../../assets/fonts/RobotoCondensed-Light.ttf"),
+    Roboto: require("@assets/fonts/RobotoCondensed-Light.ttf"),
   });
   const completeImage =
     "https://d3th8mtd05b6hz.cloudfront.net/turf/" + item.images[0];
@@ -55,7 +55,6 @@ const CardView = ({ ratings, item }) => {
   };
 
   useEffect(() => {
-    console.log(item);
   }, []);
   return (
     <View style={{ justifyContent: "center" }}>
@@ -68,7 +67,7 @@ const CardView = ({ ratings, item }) => {
           <Image
             source={{ uri: completeImage }}
             style={styles.image}
-            defaultSource={require("../../assets/247181.jpg")}
+            defaultSource={require("@assets/247181.jpg")}
             resizeMode="cover" // Resize the image to cover the container
           />
         </TouchableOpacity>

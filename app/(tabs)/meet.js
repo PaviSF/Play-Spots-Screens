@@ -27,15 +27,15 @@ import { faker } from "@faker-js/faker";
 import { useSelector } from "react-redux";
 
 //Internal imports
-import RandomButton from "../../components/buttons/RandomButton";
-import XSmallGradientButton from "../../components/buttons/XSmallGradientButton";
-import { removeAfterSecondComma } from "../../helper/StringManipulation";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import RandomButton from "@components/buttons/RandomButton";
+import XSmallGradientButton from "@components/buttons/XSmallGradientButton";
+import { removeAfterSecondComma } from "@helper/StringManipulation";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
 
 //constants
-const rightToLeft = require("../../assets/faces/right-to-left.png");
-const leftToRight = require("../../assets/faces/left-to-right.png");
-const random = require("../../assets/random.png");
+const rightToLeft = require("@assets/faces/right-to-left.png");
+const leftToRight = require("@assets/faces/left-to-right.png");
+const random = require("@assets/random.png");
 const MAX_TRANSLATAE_Y = -deviceHeight + StatusBar.currentHeight;
 
 const Meet = () => {
@@ -140,7 +140,7 @@ const Meet = () => {
         >
           <GestureDetector gesture={gesture}>
             <View>
-              <Text style={styles.modalHeader}>Hurry up!!! Join now</Text>
+              <Text style={styles.modalHeader}>{process.env.EXPO_PUBLIC_API_BASE_URL}</Text>
               <Text style={styles.modalSubHeading}>Matches around you</Text>
             </View>
           </GestureDetector>

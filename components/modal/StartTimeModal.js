@@ -1,5 +1,5 @@
 import Modal from "react-native-modal";
-import React,{
+import React, {
   useState,
   useEffect,
   useImperativeHandle,
@@ -8,13 +8,19 @@ import React,{
 } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { changeModalState, setStartTime } from "../../features/booking";
-import { deviceHeight, deviceWidth } from "../../constants/Dimension";
+import {
+  changeModalState,
+  setEndTime,
+  setStartTime,
+} from "@features/booking";
+import { deviceHeight, deviceWidth } from "@constants/Dimension";
 import { TouchableOpacity } from "react-native";
 import {
   generateAvailabilityStatusArray,
+  markBookedTimes,
   startTimeArray,
-} from "../../helper/DataSorting";
+} from "@helper/DataSorting";
+import { notifyMessage } from "@helper/NotificationUtils";
 
 const timeArray = [
   "00:00",
@@ -143,8 +149,13 @@ const StartTimeModal = forwardRef(({ bookings, unavailability }, ref) => {
   };
 
   const startClicked = (number) => {
-    dispatch(setStartTime(number));
-    closeBottomSheet();
+    number.booking && notifyMessage("This time is booked");
+    number.unavailable && notifyMessage("This time is unavailable");
+    !number.unavailable &&
+      !number.booking &&
+      dispatch(setStartTime(number.time)) &&
+      dispatch(setEndTime("00:00")) &&
+      closeBottomSheet();
   };
 
   const BoxRow = ({ data }) => {
@@ -158,7 +169,7 @@ const StartTimeModal = forwardRef(({ bookings, unavailability }, ref) => {
               number.unavailable ? styles.unavailability : null,
             ]}
             key={index}
-            onPress={() => startClicked(number.time)}
+            onPress={() => startClicked(number)}
           >
             <Text style={styles.numberText}>{number.time}</Text>
           </TouchableOpacity>
@@ -167,11 +178,12 @@ const StartTimeModal = forwardRef(({ bookings, unavailability }, ref) => {
     );
   };
 
-  const modifiedRows = generateAvailabilityStatusArray(
+  const modifiedRows = markBookedTimes(
     filteredTimeArray,
     bookings,
     unavailability
   );
+
   const rows = [];
   for (let i = 0; i < modifiedRows.length; i += 6) {
     const row = modifiedRows.slice(i, i + 6);
