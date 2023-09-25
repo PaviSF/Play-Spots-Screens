@@ -20,12 +20,14 @@ import { deviceWidth } from "@constants/Dimension";
 import { Link, useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
 import { setTurfDetails } from "@features/booking";
+import { getFavourites, toggleFavourites } from "../../helper/FetchData";
 
 const defaultImage =
   "https://5.imimg.com/data5/SELLER/Default/2022/12/GT/XH/CW/2451824/cricket-turf.jpg";
 
 const CardView = ({ ratings, item }) => {
   const [like, setLike] = useState(false);
+  const [favouritesData, setFavouritesData] = useState([]);
   const router = useRouter();
   const dispatch = useDispatch();
   const [fontsLoaded] = useFonts({
@@ -33,6 +35,26 @@ const CardView = ({ ratings, item }) => {
   });
   const completeImage =
     "https://d3th8mtd05b6hz.cloudfront.net/turf/" + item.images[0];
+
+  function searchById(array, idToFind) {
+    for (const item of array) {
+      if (item._id === idToFind) {
+        return true; // Found the id
+      }
+    }
+    return false; // ID not found
+  }
+
+  const clickFavourite = async () => {
+    setLike(!like);
+    //const data = await toggleFavourites(item._id);
+    let flag = true
+    while(flag) {
+      const data = await toggleFavourites(item._id);
+      flag = data.message === "success" ? false : true;
+    }
+    //data.message === "success" ? setLike(!like) : null;
+  }
 
   const sendToBookingPage = () => {
     const newItem = {
@@ -44,7 +66,7 @@ const CardView = ({ ratings, item }) => {
       turf_locality: item.location.locality,
       pay_at_venue: item.pay_at_venue,
       allow_half_hour: item.allow_half_hour,
-      from_thirtieth_minute: item.from_thirtieth_minute, 
+      from_thirtieth_minute: item.from_thirtieth_minute,
       limit_round: item.limit_round,
     };
 
@@ -55,6 +77,13 @@ const CardView = ({ ratings, item }) => {
   };
 
   useEffect(() => {
+    const prepare = async () => {
+      const data = await getFavourites();
+      searchById(data.favourites,item._id) && setLike(true)
+      // console.log(data.favourites);
+      setFavouritesData(data.favourites);
+    };
+    prepare();
   }, []);
   return (
     <View style={{ justifyContent: "center" }}>
@@ -176,9 +205,7 @@ const CardView = ({ ratings, item }) => {
         {/* Like And Rating Container */}
         <View style={styles.likeAndStarContainer}>
           <TouchableOpacity
-            onPress={() => {
-              setLike(!like);
-            }}
+            onPress={clickFavourite}
           >
             <AntDesign
               name={like ? "heart" : "hearto"}

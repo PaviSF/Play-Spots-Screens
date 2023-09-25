@@ -19,7 +19,7 @@ import { useState } from "react";
 import { AntDesign, Foundation } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import DatePick from "@components/date-picker/DatePick";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { getProfileData } from "@helper/FetchData";
 
 const profileImage = require("@assets/247181.jpg");
@@ -29,10 +29,11 @@ const football = require("@assets/football-icon.png");
 const badminton = require("@assets/badminton.png");
 const Profile = () => {
   const note = useSelector((state) => state.note.value);
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState(null);
   const { height, width } = useWindowDimensions();
   const [sportReport, setSportReport] = useState("WEEKLY");
+  const router = useRouter();
 
   function getDate(str) {
     var words = str.split(" ");
@@ -61,23 +62,26 @@ const Profile = () => {
     async function prepare() {
       const data = await getProfileData();
       setProfileData(data.user_data);
-      setLoading(false)
+      setLoading(false);
     }
     prepare();
   }, []);
-  if(loading){
-    return <ActivityIndicator style={{alignItems:'center'}}/>
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#ffffff",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator color="green" size={"large"} />
+      </View>
+    );
   }
   return (
     <>
-      <Stack.Screen
-        options={{
-          headerTitle: "My profile",
-          headerTitleAlign: "center",
-          headerTitleStyle: { fontWeight: "100", fontSize: 15 },
-          // headerRight,
-        }}
-      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.mainContainer}
@@ -328,7 +332,10 @@ const Profile = () => {
             />
             <Text style={styles.extraOptionBoxesText}>Booking</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.extraOptionBoxes}>
+          <TouchableOpacity
+            style={styles.extraOptionBoxes}
+            onPress={() => router.push("profile/booking")}
+          >
             <Image
               source={require("@assets/gift.png")}
               resizeMode="contain"
@@ -336,7 +343,10 @@ const Profile = () => {
             />
             <Text style={styles.extraOptionBoxesText}>Rewards</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.extraOptionBoxes}>
+          <TouchableOpacity
+            style={styles.extraOptionBoxes}
+            onPress={() => router.push("profile/favourites")}
+          >
             <Image
               source={require("@assets/heart.png")}
               resizeMode="contain"

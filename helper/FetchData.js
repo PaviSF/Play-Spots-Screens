@@ -1,6 +1,5 @@
-import { useSelector } from "react-redux";
-import {ENV} from "../env"
-const baseUrl = ENV.staging.apiUrl
+import { ENV } from "../env";
+const baseUrl = ENV.apiUrl;
 
 //Get Turf Data
 const getTurfData = async (longitude, latitude) => {
@@ -79,8 +78,7 @@ const getPaginatedTurfData = async (currentPage, longitude, latitude) => {
 //Get time availability information of Turf
 const getTiming = async (date, turf_id, sport_id, slot_id) => {
   let setData = [];
-  const apiUrl =
-    `${baseUrl}/bookings/check_availability`;
+  const apiUrl = `${baseUrl}/bookings/check_availability`;
 
   const inputData = {
     turf_id,
@@ -169,8 +167,7 @@ const getPrice = async (
   start_time,
   end_time
 ) => {
-  const apiUrl =
-  `${baseUrl}/bookings/get_booking_price`;
+  const apiUrl = `${baseUrl}/bookings/get_booking_price`;
   const inputData = { turf_id, sport_id, slot_id, date, start_time, end_time };
   const response = await fetch(apiUrl, {
     method: "POST",
@@ -190,8 +187,7 @@ const getPrice = async (
 };
 
 const getCoins = async () => {
-  const apiUrl =
-  `${baseUrl}/loyalty_wallet/fetch_points`;
+  const apiUrl = `${baseUrl}/loyalty_wallet/fetch_points`;
   const response = await fetch(apiUrl, {
     method: "POST",
     headers: {
@@ -245,9 +241,38 @@ const getProfileData = async () => {
   return responseData;
 };
 
-const register = async () =>{
-  
-}
+const getFavourites = async () => {
+  const apiUrl = `${baseUrl}/favourites/list`;
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+  });
+  const responseData = await response.json();
+  if (response.ok) {
+  } else {
+    console.error("Request failed:", responseData.error);
+  }
+  return responseData;
+};
+
+const toggleFavourites = async (turf_id) => {
+  const apiUrl = `${baseUrl}/favourites/toggle`;
+  const inputData = { turf_id };
+  const response = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      uid: "5c669f948ddcf427f0539cd2", // Replace this with the actual uid
+    },
+    body: JSON.stringify(inputData),
+  });
+  return await response.json();
+};
+
+const register = async () => {};
 
 export {
   getTurfData,
@@ -258,4 +283,6 @@ export {
   sendOtp,
   getPaginatedTurfData,
   getProfileData,
+  getFavourites,
+  toggleFavourites,
 };

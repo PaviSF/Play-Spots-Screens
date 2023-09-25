@@ -6,7 +6,7 @@ export default function Layout() {
       screenOptions={{
         drawerActiveTintColor: "green",
         drawerPosition: "right",
-        drawerType:'slide',
+        drawerType: "slide",
       }}
     >
       <Drawer.Screen
@@ -14,17 +14,20 @@ export default function Layout() {
         options={{
           drawerLabel: "Profile",
           drawerIcon: () => <Feather name="log-out" size={20} color="black" />,
+          headerTitle: "My profile",
+          headerTitleAlign: "center",
+          headerTitleStyle: { fontWeight: "100", fontSize: 15 },
         }}
       />
-        <Drawer.Screen
-          name="help"
-          options={{
-            drawerLabel: "Help & Support",
-            drawerIcon: () => (
-              <Feather name="headphones" size={20} color="black" />
-            ),
-          }}
-        />
+      <Drawer.Screen
+        name="help"
+        options={{
+          drawerLabel: "Help & Support",
+          drawerIcon: () => (
+            <Feather name="headphones" size={20} color="black" />
+          ),
+        }}
+      />
       <Drawer.Screen
         name="cancellation"
         options={{
